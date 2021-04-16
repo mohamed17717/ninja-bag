@@ -40,6 +40,8 @@ INSTALLED_APPS = [
 
     # apps
     'app',
+    'toolsframe',
+    'accounts',
 
     # third parties
     'django_user_agents',
