@@ -13,7 +13,7 @@ User = get_user_model()
 
 class Account(models.Model):
   # TODO: Define fields here
-  user = models.ForeignKey(User, related_name='user_profile', on_delete=models.CASCADE)
+  user = models.ForeignKey(User, related_name='user_account', on_delete=models.CASCADE)
   user_api_key = models.CharField(max_length=128, unique=True, editable=False, blank=True)
 
   picture = models.ImageField(upload_to='profile_pic', blank=True, null=True)

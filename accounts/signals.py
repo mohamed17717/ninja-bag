@@ -9,8 +9,8 @@ from .models import Account
 User = get_user_model()
 
 #example
-# create profile on create user
+# create account on create user
 @receiver(post_save, sender=User)
-def create_user_profile(sender, instance, created, **kwargs):
+def create_user_account(sender, instance, created, **kwargs):
   if created:
     Account.objects.create(user=instance)
