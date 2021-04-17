@@ -1,6 +1,6 @@
 from django.db import models
 from jsonfield import JSONField
-
+from django.shortcuts import resolve_url
 
 class Category(models.Model):
   name = models.CharField(max_length=128)
@@ -13,6 +13,10 @@ class Category(models.Model):
 
   def get_absolute_url(self):
     return ('')
+
+  # TODO: Define custom methods here
+  def get_tools(self):
+    return self.category_tools
 
 
 
@@ -54,6 +58,9 @@ class Tool(models.Model):
     pass
 
   def get_absolute_url(self):
-    return ('')
+    return resolve_url(self.url_reverser)
 
   # TODO: Define custom methods here
+  def increase_uses_count(self):
+    self.uses_count += 1
+    return self.save()
