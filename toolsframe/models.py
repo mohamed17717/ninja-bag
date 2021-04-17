@@ -54,9 +54,6 @@ class Tool(models.Model):
   def __str__(self):
     return self.name
 
-  def save(self):
-    pass
-
   def get_absolute_url(self):
     return resolve_url(self.url_reverser)
 

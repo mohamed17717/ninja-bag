@@ -5,6 +5,7 @@ from jsonfield import JSONField
 
 from toolsframe.models import Tool
 
+import secrets 
 from datetime import datetime
 
 User = get_user_model()
@@ -33,8 +34,11 @@ class Account(models.Model):
   def __str__(self):
     pass
 
-  def save(self):
-    pass
+  def save(self, *args, **kwargs):
+    if not self.pk:
+      self.user_api_key = secrets.token_hex(nbytes=16)
+    
+    return super(Account, self).save(*args, **kwargs)
 
   def get_absolute_url(self):
     return ('')
@@ -101,10 +105,11 @@ class PremiumToolOwnership(models.Model):
   def __str__(self):
     pass
 
-  def save(self):
+  def save(self, *args, **kwargs):
     if not self.pk:
       self.last_pay = datetime.now()
 
+    return super(PremiumToolOwnership, self).save(*args, **kwargs)
 
   def get_absolute_url(self):
     return ('')
