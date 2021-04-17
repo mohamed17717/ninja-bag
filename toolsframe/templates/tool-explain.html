@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Ninja-Bag | {{ tool.name }}</title>
+</head>
+<body>
+  
+  <h1>{{ tool.name }}</h1>
+  <p>{{ tool.description }}</p>
+
+  <div>
+    <h2>Endpoints</h2>
+
+    
+    {% for method, endpoints in tool.api_endpoints.items %}
+    <div>
+      <h3>{{ method }}</h3>
+      <ul>
+
+        {% for e in endpoints %}
+          <li>
+            <strong>{{ e.endpoint }} : </strong>
+            <span>{{ e.description }}</span>
+            <p>{{ e.example|safe }}</p>
+          </li>
+        {% endfor %}
+
+      </ul>
+    </div>
+    {% endfor %}
+      
+
+  </div>
+</body>
+</html>

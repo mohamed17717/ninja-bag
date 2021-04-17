@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Ninja-Bag | Home page</title>
+</head>
+<body>
+  
+  <h1>Welcome to Ninja-Bag</h1>
+
+  
+  {% for category in categories %}
+    <div>
+      <h2>
+        {{ category.name }}
+      </h2>
+
+      <ul>
+        
+        {% for tool in category.get_tools %}
+          <li>
+            {{ tool.name }} ->
+            
+            <a href="{{ tool.get_absolute_url }}"></a>
+          </li>
+        {% endfor %}
+
+        <style>
+          a::after {
+            content: attr(href);
+          }
+        </style>
+          
+      </ul>
+    </div>
+  {% endfor %}
+    
+
+</body>
+</html>
