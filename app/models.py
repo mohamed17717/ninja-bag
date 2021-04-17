@@ -15,21 +15,6 @@ def get_client_ip(request):
     ip = request.META.get('REMOTE_ADDR')
   return ip
 
-class Profile(models.Model):
-  user = models.ForeignKey(User, related_name='user_profile', on_delete=models.CASCADE)
-  name = models.CharField(max_length=50, blank=True, null=True)
-  age = models.IntegerField(blank=True, null=True)
-
-  picture = models.ImageField(upload_to='thumbnails', default='thumbnails/default.jpg')
-  shitty_data = JSONField()
-
-  def serialize(self):
-    return {
-      'user': self.user.__dict__, # user.serialize(),
-      'name': self.name,
-      'age': self.age
-    }
-
 class WebRequest(models.Model):
   time = models.DateTimeField(auto_now_add=True)
   host = models.CharField(max_length=1000)
