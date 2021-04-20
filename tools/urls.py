@@ -19,8 +19,8 @@ urlpatterns = [
   path('get-my-proxy-anonimity/', get_my_proxy_anonimity, name='get-my-proxy-anonimity'),
   path('get-my-request-headers/', get_my_request_headers, name='get-my-request-headers'),
 
-  path('get-image-placeholder/<int:width>x<int:height>/', get_image_placeholder, name='get-image-placeholder'),
-  path('get-image-placeholder/<int:width>/<int:height>/', get_image_placeholder, name='get-image-placeholder'),
-  path('get-image-placeholder/<int:width>x<int:height>/<str:color>/', get_image_placeholder, name='get-image-placeholder'),
-  path('get-image-placeholder/<int:width>/<int:height>/<str:color>/', get_image_placeholder, name='get-image-placeholder'),
+  path('get-image-placeholder/<int:width>x<int:height>/', get_image_placeholder, name='get-image-placeholder1'),
+  path('get-image-placeholder/<int:width>/<int:height>/', get_image_placeholder, name='get-image-placeholder2'),
+  path('get-image-placeholder/<int:width>x<int:height>/<str:color>/', get_image_placeholder, name='get-image-placeholder3'),
+  path('get-image-placeholder/<int:width>/<int:height>/<str:color>/', get_image_placeholder, name='get-image-placeholder4'),
 ]
