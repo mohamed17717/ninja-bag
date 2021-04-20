@@ -10,5 +10,18 @@
         }
       }
     ]
+  },
+
+  "get-my-proxy-anonimity": {
+    "get": [
+      {
+        "endpoint": "tools:get-my-proxy-anonimity",
+        "description": "Tool return the anonimity of incoming your proxy",
+        "example": {
+          "input": "",
+          "output": "elite || <br>anonymous || <br>transparent"
+        }
+      }
+    ]
   }
 }
