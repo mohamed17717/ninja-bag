@@ -39,3 +39,13 @@ def get_my_proxy_anonimity(request):
     anonimity = 'transparent'
 
   return HttpResponse(anonimity)
+
+def get_my_request_headers(request):
+  headers = {}
+
+  for key, value in request.META.items():
+    if key.startswith('HTTP_'):
+      key = key.replace('HTTP_', '')
+      headers[key] = value
+
+  return JsonResponse(headers)
