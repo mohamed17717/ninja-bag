@@ -1,10 +1,19 @@
 from django.shortcuts import render
-from django.http import HttpResponse, JsonResponse
+from django.http import HttpResponse, JsonResponse, FileResponse, HttpResponseBadRequest
 
 import json
+import re
+from random import randint
+
+from PIL import Image
+from io import StringIO, BytesIO
+import base64
+
+
 
 def index(request):
   return HttpResponse('Hiiii')
+
 
 def get_my_ip(request):
   x_forwarded_for = request.META.get('HTTP_X_FORWARDED_FOR')
@@ -40,6 +49,7 @@ def get_my_proxy_anonimity(request):
 
   return HttpResponse(anonimity)
 
+
 def get_my_request_headers(request):
   headers = {}
 
@@ -49,3 +59,18 @@ def get_my_request_headers(request):
       headers[key] = value
 
   return JsonResponse(headers)
+
+
+def get_image_placeholder(request, width, height, color=None):
+  if color == None:
+    color = 'rgb({}, {}, {})'.format(*[randint(0, 255) for _ in range(3)])
+  elif not (re.fullmatch(r'[a-z]+', color) or color.startswith('rgb')):
+    color = f'#{color}'
+
+  try:
+    red = Image.new('RGB', (width, height), color)
+    response = HttpResponse(content_type="image/jpeg")
+    red.save(response, "jpeg")
+  except Exception as e:
+    response = HttpResponseBadRequest(e)
+  return response
