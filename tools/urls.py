@@ -6,7 +6,8 @@ from .views import (
   get_my_ip,
   get_my_proxy_anonimity,
   get_my_request_headers,
-  get_image_placeholder
+  get_image_placeholder,
+  convert_username_to_profile_pic
 )
 
 app_name = 'tools'
@@ -23,4 +24,8 @@ urlpatterns = [
   path('get-image-placeholder/<int:width>/<int:height>/', get_image_placeholder, name='get-image-placeholder2'),
   path('get-image-placeholder/<int:width>x<int:height>/<str:color>/', get_image_placeholder, name='get-image-placeholder3'),
   path('get-image-placeholder/<int:width>/<int:height>/<str:color>/', get_image_placeholder, name='get-image-placeholder4'),
+
+  path('username-to-profile-pic/<int:size>/<str:username>/', convert_username_to_profile_pic, name='username-to-profile-pic1'),
+  path('username-to-profile-pic/<int:size>/<str:username>/<str:color>/', convert_username_to_profile_pic, name='username-to-profile-pic2'),
+  
 ]
