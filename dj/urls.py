@@ -10,6 +10,8 @@ from django.conf.urls.static import static
 urlpatterns = [
   # path('', home, name='homepage'),
   path('', include('toolsframe.urls', namespace='toolsframe')),
+  path('t/', include('tools.urls', namespace='tools')),
+
   path('app/', include('app.urls', namespace='app')),
   path('admin/', admin.site.urls),
 ]

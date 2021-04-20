@@ -1,0 +1,14 @@
+{
+  "get-my-ip": {
+    "get": [
+      {
+        "endpoint": "tools:get-my-ip",
+        "description": "Tool return the ip of incoming request",
+        "example": {
+          "input": "",
+          "output": "192.168.1.5"
+        }
+      }
+    ]
+  }
+}

@@ -21,9 +21,20 @@
 
         {% for e in endpoints %}
           <li>
-            <strong>{{ e.endpoint }} : </strong>
+            <strong>{% url e.endpoint %} : </strong>
             <span>{{ e.description }}</span>
-            <p>{{ e.example|safe }}</p>
+            <div>
+              <h5>example</h5>
+              <strong>{{ method }}</strong>&nbsp;&nbsp;&nbsp;&nbsp;<span>{% url e.endpoint %}</span>
+
+              {% if e.example.input %}
+              <p>input: {{ e.example.input|safe }}</p>
+              {% endif %}
+
+              {% if e.example.output %}
+              <p>output: {{ e.example.output|safe }}</p>
+              {% endif %}
+            </div>
           </li>
         {% endfor %}
 
