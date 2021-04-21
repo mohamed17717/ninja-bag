@@ -126,3 +126,27 @@ def convert_username_to_profile_pic(request, size, username, color=None):
     response = HttpResponseBadRequest(e)
 
   return response
+
+
+def convert_image_to_thumbnail(request):
+  if request.method == 'GET':
+    response = render(request, 'test.html')
+
+  elif request.method == 'POST':
+    image = request.FILES.get('image')
+    new_width = int(request.POST.get('width') or 128)
+
+    if not image:
+      response = HttpResponse('make sure you name input "image"')
+    else:
+      im = Image.open(image)
+      width, height = im.size
+      new_height = new_width * height / width
+
+      # convert to thumbnail image
+      im.thumbnail((new_width, new_height), Image.ANTIALIAS)
+
+      response = HttpResponse(content_type="image/jpeg")
+      im.save(response, "jpeg")
+
+  return response

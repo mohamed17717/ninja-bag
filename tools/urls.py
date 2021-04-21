@@ -7,7 +7,8 @@ from .views import (
   get_my_proxy_anonimity,
   get_my_request_headers,
   get_image_placeholder,
-  convert_username_to_profile_pic
+  convert_username_to_profile_pic,
+  convert_image_to_thumbnail
 )
 
 app_name = 'tools'
@@ -17,7 +18,9 @@ urlpatterns = [
   path('', index, name='tools-home'),
 
   path('get-my-ip/', get_my_ip, name='get-my-ip'),
+
   path('get-my-proxy-anonimity/', get_my_proxy_anonimity, name='get-my-proxy-anonimity'),
+
   path('get-my-request-headers/', get_my_request_headers, name='get-my-request-headers'),
 
   path('get-image-placeholder/<int:width>x<int:height>/', get_image_placeholder, name='get-image-placeholder1'),
@@ -28,4 +31,5 @@ urlpatterns = [
   path('username-to-profile-pic/<int:size>/<str:username>/', convert_username_to_profile_pic, name='username-to-profile-pic1'),
   path('username-to-profile-pic/<int:size>/<str:username>/<str:color>/', convert_username_to_profile_pic, name='username-to-profile-pic2'),
   
+  path('image-to-thumbnail/', convert_image_to_thumbnail, name='image-to-thumbnail'),
 ]
