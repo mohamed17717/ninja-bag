@@ -26,9 +26,9 @@ class WebRequestMiddleware(object):
     response = self.get_response(request)
     return self.process_response(request, response)
 
-  def process_exception(self, request, exception): 
-    print('\n\n\n\n\n', exception, '\n\n\n\n\n')
-    return HttpResponse("in exception")
+  # def process_exception(self, request, exception): 
+  #   print('\n\n\n\n\n', exception, '\n\n\n\n\n')
+  #   return HttpResponse("in exception")
 
   def process_response(self, request, response):
     if request.path.endswith('/favicon.ico'):
