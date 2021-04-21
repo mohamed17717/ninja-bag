@@ -9,6 +9,7 @@ from PIL import Image, ImageDraw, ImageFont
 from io import StringIO, BytesIO
 import base64
 
+from .classes.MyImageHandler import MyImageHandler
 
 
 def index(request):
@@ -61,46 +62,21 @@ def get_my_request_headers(request):
   return JsonResponse(headers)
 
 
-def calc_random_color(color):
-  # it must return tuple of 3 nums
-  #  it must be another function convert tuple to rgb(x,y,z) format
-  calculated_color = color
-  if color == None:
-    calculated_color = 'rgb({}, {}, {})'.format(*[randint(0, 255) for _ in range(3)])
-  elif not (re.fullmatch(r'[a-z]+', color) or color.startswith('rgb')):
-    calculated_color = f'#{color}'
-
-  return calculated_color
-
-def contrast_color(color):
-  nums = list(map(int, color[4:-1].replace(' ', '').split(',')))
-  avr = sum(nums) / len(nums)
-
-  contrast_color = (0,0,0)
-  if avr <= 127.5:
-    contrast_color = (255,255,255)
-
-  return contrast_color
-
-
 def get_image_placeholder(request, width, height, color=None):
-  color = calc_random_color(color)
+  color = MyImageHandler.handle_user_color(color)
 
   try:
     image = Image.new('RGB', (width, height), color)
-
-    response = HttpResponse(content_type="image/jpeg")
-    image.save(response, "jpeg")
+    response = MyImageHandler.image_response(image)
   except Exception as e:
     response = HttpResponseBadRequest(e)
+
   return response
 
 
 def convert_username_to_profile_pic(request, size, username, color=None):
-  color = calc_random_color(color)
-  text_color = (0, 0, 0)
-  if color.startswith('rgb('):
-    text_color = contrast_color(color)
+  color = MyImageHandler.handle_user_color(color)
+  text_color = MyImageHandler.get_color_best_contrast_bw(color)
 
   width = height = size
   text = ''.join([name[0] for name in username.split(' ')[:2]]).upper()
@@ -120,8 +96,7 @@ def convert_username_to_profile_pic(request, size, username, color=None):
     # draw text
     draw.text((x, y), text, fill=text_color, font=font)
 
-    response = HttpResponse(content_type="image/jpeg")
-    image.save(response, "jpeg")
+    response = MyImageHandler.image_response(image)
   except Exception as e:
     response = HttpResponseBadRequest(e)
 
@@ -133,20 +108,19 @@ def convert_image_to_thumbnail(request):
     response = render(request, 'test.html')
 
   elif request.method == 'POST':
-    image = request.FILES.get('image')
+    image_file = request.FILES.get('image')
     new_width = int(request.POST.get('width') or 128)
 
-    if not image:
+    if not image_file:
       response = HttpResponse('make sure you name input "image"')
     else:
-      im = Image.open(image)
-      width, height = im.size
+      image = Image.open(image_file)
+
+      width, height = image.size
       new_height = new_width * height / width
-
       # convert to thumbnail image
-      im.thumbnail((new_width, new_height), Image.ANTIALIAS)
+      image.thumbnail((new_width, new_height), Image.ANTIALIAS)
 
-      response = HttpResponse(content_type="image/jpeg")
-      im.save(response, "jpeg")
+      response = MyImageHandler.image_response(image)
 
   return response
