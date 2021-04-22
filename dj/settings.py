@@ -46,6 +46,7 @@ INSTALLED_APPS = [
 
     # third parties
     'django_user_agents',
+    'crispy_forms',
 ]
 
 MIDDLEWARE = [

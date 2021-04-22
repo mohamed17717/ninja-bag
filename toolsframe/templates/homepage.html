@@ -7,7 +7,13 @@
 </head>
 <body>
   
+  {% if user.is_authenticated %}
+  <h1>Welcome to Ninja-Bag | {{ user }}</h1>
+  <p><a href="{% url 'accounts:logout' %}">Logout</a></p>
+  {% else %}
   <h1>Welcome to Ninja-Bag</h1>
+  {% endif %}
+    
 
   
   {% for category in categories %}

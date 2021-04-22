@@ -32,7 +32,7 @@ class Account(models.Model):
     verbose_name_plural = 'Accounts'
 
   def __str__(self):
-    pass
+    return self.user.username
 
   def save(self, *args, **kwargs):
     if not self.pk:

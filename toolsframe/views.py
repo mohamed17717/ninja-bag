@@ -8,7 +8,8 @@ from decorators import require_http_methods
 @require_http_methods(['GET'])
 def index(request):
   context = {
-    'categories': Category.objects.all()
+    'categories': Category.objects.all(),
+    'user': request.user
   }
 
   return render(request, 'homepage.html', context)

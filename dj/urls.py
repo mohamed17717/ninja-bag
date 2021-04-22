@@ -11,6 +11,7 @@ urlpatterns = [
   # path('', home, name='homepage'),
   path('', include('toolsframe.urls', namespace='toolsframe')),
   path('t/', include('tools.urls', namespace='tools')),
+  path('account/', include('accounts.urls', namespace='accounts')),
 
   path('app/', include('app.urls', namespace='app')),
   path('admin/', admin.site.urls),
