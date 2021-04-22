@@ -135,3 +135,21 @@ def get_fb_user_id(request):
 
   return HttpResponse(user_id or 'Not Found')
 
+
+@require_http_methods(['POST'])
+def remove_image_meta_data(request):
+  image_file = request.FILES.get('image')
+
+  if not image_file:
+    response = HttpResponse('make sure you name input "image"')
+  else:
+    image = Image.open(image_file)
+
+    data = list(image.getdata())
+    image_without_exif = Image.new(image.mode, image.size)
+    image_without_exif.putdata(data)
+
+    response = MyImageHandler.image_response(image_without_exif)
+
+  return response
+

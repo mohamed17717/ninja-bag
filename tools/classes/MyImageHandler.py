@@ -37,7 +37,9 @@ class MyImageHandler:
     return clr
 
   @staticmethod
-  def image_response(image:PIL.Image, image_type='jpeg') -> HttpResponse:
+  def image_response(image:PIL.Image) -> HttpResponse:
+    image_type = 'png' if image.mode == 'RGBA' else 'jpeg'
+
     response = HttpResponse(content_type=f"image/{image_type}")
     image.save(response, image_type)
 
