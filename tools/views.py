@@ -153,3 +153,19 @@ def remove_image_meta_data(request):
 
   return response
 
+
+@require_http_methods(['POST'])
+def convert_image_to_b64(request):
+  image_file = request.FILES.get('image')
+  image_name = image_file.name
+
+  image_ext = 'jpeg'
+  if '.' in image_name:
+    image_ext = image_name.split('.')[-1]
+
+  image_b64 = base64.b64encode(image_file.read())
+  image_b64 = str(image_b64)[2:-1]
+
+  prefix = f'data:image/{image_ext};base64,'
+  return HttpResponse(prefix + image_b64)
+

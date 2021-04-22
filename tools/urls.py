@@ -10,7 +10,8 @@ from .views import (
   convert_username_to_profile_pic,
   convert_image_to_thumbnail,
   get_fb_user_id,
-  remove_image_meta_data
+  remove_image_meta_data,
+  convert_image_to_b64
 )
 
 app_name = 'tools'
@@ -38,5 +39,7 @@ urlpatterns = [
   path('fb-user-id/', get_fb_user_id, name='fb-user-id'),
 
   path('remove-image-meta-data/', remove_image_meta_data, name='remove-image-meta-data'),
+
+  path('image-to-b64/', convert_image_to_b64, name='image-to-b64'),
 
 ]
