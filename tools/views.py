@@ -18,6 +18,7 @@ def index(request):
   return HttpResponse('Hiiii')
 
 
+@require_http_methods(['GET'])
 def get_my_ip(request):
   x_forwarded_for = request.META.get('HTTP_X_FORWARDED_FOR')
   if x_forwarded_for:
@@ -27,6 +28,7 @@ def get_my_ip(request):
   return HttpResponse(ip)
 
 
+@require_http_methods(['GET'])
 def get_my_proxy_anonimity(request):
   rename_header = lambda h: f'http-{h}'.upper().replace('-', '_')
   proxy_headers = map(rename_header, [
@@ -53,6 +55,7 @@ def get_my_proxy_anonimity(request):
   return HttpResponse(anonimity)
 
 
+@require_http_methods(['GET'])
 def get_my_request_headers(request):
   headers = {}
 
@@ -64,6 +67,7 @@ def get_my_request_headers(request):
   return JsonResponse(headers)
 
 
+@require_http_methods(['GET'])
 def get_image_placeholder(request, width, height, color=None):
   color = MyImageHandler.handle_user_color(color)
 
@@ -76,10 +80,10 @@ def get_image_placeholder(request, width, height, color=None):
   return response
 
 
+@require_http_methods(['GET'])
 def convert_username_to_profile_pic(request, size, username, color=None):
   color = MyImageHandler.handle_user_color(color)
   text_color = MyImageHandler.get_color_best_contrast_bw(color)
-
   width = height = size
   text = ''.join([name[0] for name in username.split(' ')[:2]]).upper()
 
@@ -105,25 +109,20 @@ def convert_username_to_profile_pic(request, size, username, color=None):
   return response
 
 
+@require_http_methods(['POST'])
 def convert_image_to_thumbnail(request):
-  if request.method == 'GET':
-    response = render(request, 'test.html')
+  image_file = request.FILES.get('image')
+  new_width = int(request.POST.get('width') or 128)
 
-  elif request.method == 'POST':
-    image_file = request.FILES.get('image')
-    new_width = int(request.POST.get('width') or 128)
+  if not image_file:
+    response = HttpResponse('make sure you name input "image"')
+  else:
+    image = Image.open(image_file)
+    width, height = image.size
+    new_height = new_width * height / width
+    image.thumbnail((new_width, new_height), Image.ANTIALIAS)
 
-    if not image_file:
-      response = HttpResponse('make sure you name input "image"')
-    else:
-      image = Image.open(image_file)
-
-      width, height = image.size
-      new_height = new_width * height / width
-      # convert to thumbnail image
-      image.thumbnail((new_width, new_height), Image.ANTIALIAS)
-
-      response = MyImageHandler.image_response(image)
+    response = MyImageHandler.image_response(image)
 
   return response
 
@@ -135,3 +134,4 @@ def get_fb_user_id(request):
   user_id = acc.get_fb_user_id()
 
   return HttpResponse(user_id or 'Not Found')
+
