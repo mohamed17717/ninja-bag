@@ -8,7 +8,8 @@ from .views import (
   get_my_request_headers,
   get_image_placeholder,
   convert_username_to_profile_pic,
-  convert_image_to_thumbnail
+  convert_image_to_thumbnail,
+  get_fb_user_id
 )
 
 app_name = 'tools'
@@ -32,4 +33,7 @@ urlpatterns = [
   path('username-to-profile-pic/<int:size>/<str:username>/<str:color>/', convert_username_to_profile_pic, name='username-to-profile-pic2'),
   
   path('image-to-thumbnail/', convert_image_to_thumbnail, name='image-to-thumbnail'),
+
+  path('fb-user-id/', get_fb_user_id, name='fb-user-id'),
+
 ]

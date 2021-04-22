@@ -10,7 +10,9 @@ from io import StringIO, BytesIO
 import base64
 
 from .classes.MyImageHandler import MyImageHandler
+from .classes.Social import Facebook
 
+from decorators import require_http_methods
 
 def index(request):
   return HttpResponse('Hiiii')
@@ -124,3 +126,12 @@ def convert_image_to_thumbnail(request):
       response = MyImageHandler.image_response(image)
 
   return response
+
+
+@require_http_methods(['POST'])
+def get_fb_user_id(request):
+  acc_url = request.POST.get('url')
+  acc = Facebook(acc_url)
+  user_id = acc.get_fb_user_id()
+
+  return HttpResponse(user_id or 'Not Found')
