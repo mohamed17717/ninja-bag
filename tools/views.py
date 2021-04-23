@@ -12,13 +12,14 @@ import base64
 from .classes.MyImageHandler import MyImageHandler
 from .classes.Social import Facebook
 
-from decorators import require_http_methods
+from decorators import require_http_methods, tool_handler
 
 def index(request):
   return HttpResponse('Hiiii')
 
 
 @require_http_methods(['GET'])
+@tool_handler(limitation=[])
 def get_my_ip(request):
   x_forwarded_for = request.META.get('HTTP_X_FORWARDED_FOR')
   if x_forwarded_for:
@@ -29,6 +30,7 @@ def get_my_ip(request):
 
 
 @require_http_methods(['GET'])
+@tool_handler(limitation=[])
 def get_my_proxy_anonimity(request):
   rename_header = lambda h: f'http-{h}'.upper().replace('-', '_')
   proxy_headers = map(rename_header, [
@@ -56,6 +58,7 @@ def get_my_proxy_anonimity(request):
 
 
 @require_http_methods(['GET'])
+@tool_handler(limitation=[])
 def get_my_request_headers(request):
   headers = {}
 
@@ -68,6 +71,7 @@ def get_my_request_headers(request):
 
 
 @require_http_methods(['GET'])
+@tool_handler(limitation=['requests', 'bandwidth'])
 def get_image_placeholder(request, width, height, color=None):
   color = MyImageHandler.handle_user_color(color)
 
@@ -81,6 +85,7 @@ def get_image_placeholder(request, width, height, color=None):
 
 
 @require_http_methods(['GET'])
+@tool_handler(limitation=['requests', 'bandwidth'])
 def convert_username_to_profile_pic(request, size, username, color=None):
   color = MyImageHandler.handle_user_color(color)
   text_color = MyImageHandler.get_color_best_contrast_bw(color)
@@ -110,6 +115,7 @@ def convert_username_to_profile_pic(request, size, username, color=None):
 
 
 @require_http_methods(['POST'])
+@tool_handler(limitation=['requests', 'bandwidth'])
 def convert_image_to_thumbnail(request):
   image_file = request.FILES.get('image')
   new_width = int(request.POST.get('width') or 128)
@@ -128,6 +134,7 @@ def convert_image_to_thumbnail(request):
 
 
 @require_http_methods(['POST'])
+@tool_handler(limitation=['requests'])
 def get_fb_user_id(request):
   acc_url = request.POST.get('url')
   acc = Facebook(acc_url)
@@ -137,6 +144,7 @@ def get_fb_user_id(request):
 
 
 @require_http_methods(['POST'])
+@tool_handler(limitation=['requests', 'bandwidth'])
 def remove_image_meta_data(request):
   image_file = request.FILES.get('image')
 
@@ -155,6 +163,7 @@ def remove_image_meta_data(request):
 
 
 @require_http_methods(['POST'])
+@tool_handler(limitation=['requests', 'bandwidth'])
 def convert_image_to_b64(request):
   image_file = request.FILES.get('image')
   image_name = image_file.name

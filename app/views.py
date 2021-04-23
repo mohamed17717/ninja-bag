@@ -10,10 +10,16 @@ from decorators import(
   check_unique_fields,
   cache_request
 )
-
+from PIL import Image
 # Create your views here.
 def index(request):
-  return HttpResponse('Hello from app')
+  # return HttpResponse('Hello from app')
+  image = Image.new('RGB', (400, 400), 'red')
+  response = HttpResponse(content_type=f"image/jpeg")
+  image.save(response, 'jpeg')
+
+
+  return render(request, 'test.html', {'size': len(response.content) })
 
 def home(request):
   return HttpResponse('welcome user')
