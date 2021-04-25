@@ -182,6 +182,22 @@ def convert_image_to_b64(request):
   prefix = f'data:image/{image_ext};base64,'
   return HttpResponse(prefix + image_b64)
 
+@require_http_methods(['POST'])
+def convert_b64_to_image(request):
+  image_b64 = request.POST.get('image')
+  if not image_b64:
+    return HttpResponseBadRequest('missing field "image"')
+
+  image_b64 = re.sub(r'^data:image/\w+?;base64,', '', image_b64)
+  try: 
+    image = Image.open(BytesIO(base64.b64decode(image_b64)))
+    response = MyImageHandler.image_response(image)
+  except:
+    response = HttpResponseBadRequest('Not valid image')
+  
+  return response
+
+
 
 def unshorten_url(full_track=False):
 

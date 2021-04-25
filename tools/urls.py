@@ -12,6 +12,7 @@ from .views import (
   get_fb_user_id,
   remove_image_meta_data,
   convert_image_to_b64,
+  convert_b64_to_image,
   unshorten_url,
   get_user_agent_details
 )
@@ -43,6 +44,7 @@ urlpatterns = [
   path('remove-image-meta-data/', remove_image_meta_data, name='remove-image-meta-data'),
 
   path('image-to-b64/', convert_image_to_b64, name='image-to-b64'),
+  path('b64-to-image/', convert_b64_to_image, name='b64-to-image'),
 
   path('unshorten-url/', unshorten_url(full_track=False), name='unshorten-url'),
   path('unshorten-url/full-track/', unshorten_url(full_track=True), name='unshorten-url'),
