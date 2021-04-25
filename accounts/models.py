@@ -33,10 +33,13 @@ def get_folder_size(location, unit='MB'):
   return convert_size(size, unit)
 
 def get_request_size(request, unit):
-  size = len(request.read())
+  size = len(request.body)
   return convert_size(size, unit)
 
-def get_reponse_size(response, unit):
+def get_response_size(response, unit):
+  if response.status_code > 250:
+    return 0
+
   size = len(response.content)
   return convert_size(size, unit)
 
@@ -102,7 +105,7 @@ class Account(models.Model):
   def check_bandwidth_limit_hookafter(self, request, response):
     unit = 'MB'
     request_size = get_request_size(request, unit)
-    response_size = get_request_size(response, unit)
+    response_size = get_response_size(response, unit)
 
     self.bandwidth_used += (request_size + response_size)
     self.save()
