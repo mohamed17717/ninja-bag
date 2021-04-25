@@ -14,7 +14,8 @@ from .views import (
   convert_image_to_b64,
   convert_b64_to_image,
   unshorten_url,
-  get_user_agent_details
+  get_user_agent_details,
+  generate_qrcode
 )
 
 app_name = 'tools'
@@ -50,5 +51,9 @@ urlpatterns = [
   path('unshorten-url/full-track/', unshorten_url(full_track=True), name='unshorten-url'),
 
   path('user-agent-details/', get_user_agent_details, name='get-user-agent-detail'),
+
+  path('gen-qrcode/', generate_qrcode, name='gen-qrcode'),
+
+
 
 ]

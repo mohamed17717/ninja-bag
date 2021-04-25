@@ -12,6 +12,8 @@ from PIL import Image, ImageDraw, ImageFont
 from io import StringIO, BytesIO
 import base64
 
+import qrcode
+
 from .classes.MyImageHandler import MyImageHandler
 from .classes.Social import Facebook
 from .classes.helpers import ua_details
@@ -183,6 +185,7 @@ def convert_image_to_b64(request):
   return HttpResponse(prefix + image_b64)
 
 @require_http_methods(['POST'])
+@tool_handler(limitation=['requests', 'bandwidth'])
 def convert_b64_to_image(request):
   image_b64 = request.POST.get('image')
   if not image_b64:
@@ -196,7 +199,6 @@ def convert_b64_to_image(request):
     response = HttpResponseBadRequest('Not valid image')
   
   return response
-
 
 
 def unshorten_url(full_track=False):
@@ -238,3 +240,15 @@ def get_user_agent_details(request):
 
   return response
 
+
+@require_http_methods(['POST'])
+@tool_handler(limitation=['requests', 'bandwidth'])
+def generate_qrcode(request):
+  string = request.POST.get('text')
+  if not string:
+    return HttpResponseBadRequest('missing field "text"')
+
+  image = qrcode.make(string)
+  response = MyImageHandler.image_response(image)
+
+  return response
