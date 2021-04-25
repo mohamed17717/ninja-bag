@@ -12,7 +12,8 @@ from .views import (
   get_fb_user_id,
   remove_image_meta_data,
   convert_image_to_b64,
-  unshorten_url
+  unshorten_url,
+  get_user_agent_details
 )
 
 app_name = 'tools'
@@ -46,5 +47,6 @@ urlpatterns = [
   path('unshorten-url/', unshorten_url(full_track=False), name='unshorten-url'),
   path('unshorten-url/full-track/', unshorten_url(full_track=True), name='unshorten-url'),
 
+  path('user-agent-details/', get_user_agent_details.as_view(), name='get-user-agent-detail'),
 
 ]

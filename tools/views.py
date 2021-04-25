@@ -1,5 +1,6 @@
 from django.shortcuts import render
 from django.http import HttpResponse, JsonResponse, FileResponse, HttpResponseBadRequest
+from django.views import View
 
 import json
 import re
@@ -12,6 +13,7 @@ import base64
 
 from .classes.MyImageHandler import MyImageHandler
 from .classes.Social import Facebook
+from .classes.helpers import ua_details
 
 from decorators import require_http_methods, tool_handler
 
@@ -204,4 +206,24 @@ def unshorten_url(full_track=False):
   return wrapper
 
 
+
+
+class get_user_agent_details(View):
+  def get_reponse(self, ua):
+    if ua:
+      data = ua_details(ua)
+      response = JsonResponse(data, safe=False)
+    else:
+      response = HttpResponseBadRequest('missed post key "user-agnet"')
+
+    return response
+
+
+  def post(self, request):
+    ua = request.POST.get('user-agent')
+    return self.get_reponse(ua)
+
+  def get(self, request):
+    ua = request.META['HTTP_USER_AGENT']
+    return self.get_reponse(ua)
 
