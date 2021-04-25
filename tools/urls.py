@@ -47,6 +47,6 @@ urlpatterns = [
   path('unshorten-url/', unshorten_url(full_track=False), name='unshorten-url'),
   path('unshorten-url/full-track/', unshorten_url(full_track=True), name='unshorten-url'),
 
-  path('user-agent-details/', get_user_agent_details.as_view(), name='get-user-agent-detail'),
+  path('user-agent-details/', get_user_agent_details, name='get-user-agent-detail'),
 
 ]

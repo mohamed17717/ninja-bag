@@ -1,6 +1,7 @@
 from django.shortcuts import render
 from django.http import HttpResponse, JsonResponse, FileResponse, HttpResponseBadRequest
 from django.views import View
+from django.utils.decorators import method_decorator
 
 import json
 import re
@@ -206,24 +207,18 @@ def unshorten_url(full_track=False):
   return wrapper
 
 
-
-
-class get_user_agent_details(View):
-  def get_reponse(self, ua):
-    if ua:
-      data = ua_details(ua)
-      response = JsonResponse(data, safe=False)
-    else:
-      response = HttpResponseBadRequest('missed post key "user-agnet"')
-
-    return response
-
-
-  def post(self, request):
-    ua = request.POST.get('user-agent')
-    return self.get_reponse(ua)
-
-  def get(self, request):
+@tool_handler(limitation=['requests'])
+def get_user_agent_details(request):
+  if request.method == 'GET':
     ua = request.META['HTTP_USER_AGENT']
-    return self.get_reponse(ua)
+  elif request.method == 'POST':
+    ua = request.POST.get('user-agent')
+
+  if ua:
+    data = ua_details(ua)
+    response = JsonResponse(data, safe=False)
+  else:
+    response = HttpResponseBadRequest('missed post key "user-agnet"')
+
+  return response
 
