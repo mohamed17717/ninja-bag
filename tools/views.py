@@ -1,4 +1,4 @@
-from django.shortcuts import render
+from django.shortcuts import render, reverse
 from django.http import HttpResponse, JsonResponse, FileResponse, HttpResponseBadRequest
 from django.views import View
 from django.utils.decorators import method_decorator
@@ -7,6 +7,7 @@ import json
 import re
 import requests
 from random import randint
+import secrets
 
 from PIL import Image, ImageDraw, ImageFont
 from io import StringIO, BytesIO
@@ -17,8 +18,11 @@ import qrcode
 from .classes.MyImageHandler import MyImageHandler
 from .classes.Social import Facebook
 from .classes.helpers import ua_details
+from .classes.FileManager import FileManager
 
 from decorators import require_http_methods, tool_handler
+
+from accounts.models import Account
 
 def index(request):
   return HttpResponse('Hiiii')
@@ -252,3 +256,88 @@ def generate_qrcode(request):
   response = MyImageHandler.image_response(image)
 
   return response
+
+
+class TextSaver:
+  @staticmethod
+  def get_account(request):
+    token = request.GET.get('token')
+    acc = Account.get_user_by_api_key(token)
+    return acc
+
+  @staticmethod
+  def get_folder(acc):
+    return acc.get_user_folder_location() + 'text-saver/'
+
+  @staticmethod
+  def get_file_url(request, file_name):
+    path = reverse('tools:textsaver-read', kwargs={'file_name': file_name})
+    url = request.build_absolute_uri(path)
+    return url
+
+  @staticmethod
+  @require_http_methods(['POST'])
+  @tool_handler(limitation=['requests', 'bandwidth', 'storage'])
+  def add(request, file_name=None):
+    acc = TextSaver.get_account(request)
+    fm = FileManager()
+
+    text = request.POST.get('text')
+    if not text:
+      return HttpResponseBadRequest('missing field "text"')
+
+    file_name = file_name or f'{secrets.token_hex(nbytes=8)}.txt'
+
+    location = TextSaver.get_folder(acc) + file_name
+    fm.write(location, text+'\n', mode='a', force_location=True)
+
+    file_url = TextSaver.get_file_url(request, file_name)
+    return HttpResponse(file_url)
+
+  @staticmethod
+  @require_http_methods(['GET'])
+  @tool_handler(limitation=['requests', 'bandwidth'])
+  def read(request, file_name):
+    acc = TextSaver.get_account(request)
+    location = TextSaver.get_folder(acc) + file_name
+
+    response = HttpResponse(open(location), content_type='application/text charset=utf-8')
+    response['Content-Disposition'] = f'attachment; filename="{file_name}"'
+    return response
+
+  @staticmethod
+  @require_http_methods(['GET'])
+  @tool_handler(limitation=['requests'])
+  def delete(request, file_name):
+    acc = TextSaver.get_account(request)
+    location = TextSaver.get_folder(acc) + file_name
+
+    fm = FileManager()
+    delete_status = fm.delete(location)
+
+    if delete_status: reponse = HttpResponse(status=200)
+    else: reponse = HttpResponseBadRequest('filename is not exist')
+
+    return reponse
+
+  @staticmethod
+  @require_http_methods(['GET'])
+  @tool_handler(limitation=['requests'])
+  def list_all(request):
+    acc = TextSaver.get_account(request)
+    location = TextSaver.get_folder(acc)
+
+    fm = FileManager()
+    files_names = fm.listdir(location)
+
+    files_urls = list(map(lambda fn: TextSaver.get_file_url(request, fn), files_names))
+    return JsonResponse(files_urls, safe=False)
+
+  @staticmethod
+  def action_handler(request, file_name):
+    if request.method == 'GET':
+      response = TextSaver.read(request, file_name)
+    elif request.method == 'POST':
+      response = TextSaver.add(request, file_name)
+    return response
+

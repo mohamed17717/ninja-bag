@@ -156,7 +156,7 @@ def tool_handler(limitation=[]):
 
       # check if user limits can access the tool or not
       limits = {
-        'stroage': {
+        'storage': {
           'before': acc.check_storage_limit_hookbefore,
           'after': lambda x,y: True
         },

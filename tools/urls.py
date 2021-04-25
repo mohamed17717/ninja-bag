@@ -15,7 +15,9 @@ from .views import (
   convert_b64_to_image,
   unshorten_url,
   get_user_agent_details,
-  generate_qrcode
+  generate_qrcode,
+
+  TextSaver
 )
 
 app_name = 'tools'
@@ -53,6 +55,18 @@ urlpatterns = [
   path('user-agent-details/', get_user_agent_details, name='get-user-agent-detail'),
 
   path('gen-qrcode/', generate_qrcode, name='gen-qrcode'),
+
+  # path('save-text/add/', TextSaver.add, name='textsaver-add'),
+  # path('save-text/read/<str:file_name>/', TextSaver.read, name='textsaver-read'),
+  # path('save-text/delete/<str:file_name>/', TextSaver.delete, name='textsaver-delete'),
+  # path('save-text/list/', TextSaver.list_all, name='textsaver-list'),
+
+
+  path('save-text/', TextSaver.add, name='textsaver-add'),
+  path('save-text/list/', TextSaver.list_all, name='textsaver-list'),
+  path('save-text/<str:file_name>/', TextSaver.action_handler, name='textsaver-add-2'),
+  path('save-text/<str:file_name>/', TextSaver.action_handler, name='textsaver-read'),
+  path('save-text/<str:file_name>/delete/', TextSaver.delete, name='textsaver-delete'),
 
 
 

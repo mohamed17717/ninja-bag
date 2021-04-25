@@ -118,11 +118,11 @@ class Account(models.Model):
 
     return self.save()
 
-  def get_user_storage_folder_location(self):
+  def get_user_folder_location(self):
     return f'./users_storage/{self.user_api_key[:16]}/'
 
   def get_user_folder_size(self, unit):
-    location = self.get_user_storage_folder_location()
+    location = self.get_user_folder_location()
 
     try: size = get_folder_size(location, unit)
     except: size = 0
