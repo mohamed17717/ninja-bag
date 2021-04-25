@@ -3,6 +3,7 @@ from django.http import HttpResponse, JsonResponse, FileResponse, HttpResponseBa
 
 import json
 import re
+import requests
 from random import randint
 
 from PIL import Image, ImageDraw, ImageFont
@@ -177,4 +178,30 @@ def convert_image_to_b64(request):
 
   prefix = f'data:image/{image_ext};base64,'
   return HttpResponse(prefix + image_b64)
+
+
+def unshorten_url(full_track=False):
+
+  @require_http_methods(['POST'])
+  @tool_handler(limitation=['requests', 'bandwidth'])
+  def wrapper(request):
+    shortened_url = request.POST.get('url')
+
+    if shortened_url:
+      try:
+        res = requests.head(shortened_url, allow_redirects=True)
+        if full_track:
+          response = JsonResponse([r.url for r in res.history] + [res.url], safe=False)
+        else:
+          response = HttpResponse(res.url)
+
+      except requests.exceptions.MissingSchema:
+        response = HttpResponseBadRequest('you must provide protocol for the url')
+    else:
+      response = HttpResponseBadRequest('missing url in post body')
+
+    return response
+  return wrapper
+
+
 
