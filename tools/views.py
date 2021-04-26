@@ -276,18 +276,30 @@ class TextSaver:
     return url
 
   @staticmethod
+  def get_text(request):
+    data = request.POST.dict()
+
+    if len(data) == 1 and 'text' in data.keys():
+      text = data.get('text')
+    elif len(data) >= 1:
+      text = json.dumps(data)
+    else:
+      text = request.body.encode('utf8')
+
+    return text
+
+  @staticmethod
   @require_http_methods(['POST'])
   @tool_handler(limitation=['requests', 'bandwidth', 'storage'])
   def add(request, file_name=None):
     acc = TextSaver.get_account(request)
     fm = FileManager()
 
-    text = request.POST.get('text')
+    text = TextSaver.get_text(request)
     if not text:
-      return HttpResponseBadRequest('missing field "text"')
+      return HttpResponseBadRequest('cant find any text in the reponse')
 
     file_name = file_name or f'{secrets.token_hex(nbytes=8)}.txt'
-
     location = TextSaver.get_folder(acc) + file_name
     fm.write(location, text+'\n', mode='a', force_location=True)
 
