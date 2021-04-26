@@ -47,11 +47,14 @@ INSTALLED_APPS = [
     # third parties
     'django_user_agents',
     'crispy_forms',
+    'corsheaders',
 ]
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
+    # allow cors
+    'corsheaders.middleware.CorsMiddleware',
     'django.middleware.common.CommonMiddleware',
     
     # comment this line if you working with api
@@ -144,3 +147,5 @@ MEDIA_ROOT = os.path.join(VENV_PATH, 'media_root')
 # Name of cache backend to cache user agents. If it not specified default
 # cache alias will be used. Set to `None` to disable caching.
 USER_AGENTS_CACHE = 'default'
+
+CORS_ALLOW_ALL_ORIGINS = True

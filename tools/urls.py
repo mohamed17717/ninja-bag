@@ -17,7 +17,9 @@ from .views import (
   get_user_agent_details,
   generate_qrcode,
 
-  TextSaver
+  TextSaver,
+  # cors_proxy,
+  CorsProxy
 )
 
 app_name = 'tools'
@@ -56,12 +58,6 @@ urlpatterns = [
 
   path('gen-qrcode/', generate_qrcode, name='gen-qrcode'),
 
-  # path('save-text/add/', TextSaver.add, name='textsaver-add'),
-  # path('save-text/read/<str:file_name>/', TextSaver.read, name='textsaver-read'),
-  # path('save-text/delete/<str:file_name>/', TextSaver.delete, name='textsaver-delete'),
-  # path('save-text/list/', TextSaver.list_all, name='textsaver-list'),
-
-
   path('save-text/', TextSaver.add, name='textsaver-add'),
   path('save-text/list/', TextSaver.list_all, name='textsaver-list'),
   path('save-text/<str:file_name>/', TextSaver.action_handler, name='textsaver-add-2'),
@@ -69,5 +65,6 @@ urlpatterns = [
   path('save-text/<str:file_name>/delete/', TextSaver.delete, name='textsaver-delete'),
 
 
+  path('cors-proxy/', CorsProxy.proxy, name='cors-proxy'),
 
 ]
