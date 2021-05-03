@@ -21,24 +21,24 @@ body {
   background-color: var(--color-primary-900);
 }
 
-#homepage {
+#homepage, #api {
   max-width: 1440px;
   margin: auto;
 }
 
-#homepage header {
+#homepage header, #api header {
   padding: 15px 7.5%;
 }
 
-#homepage .content {
+#homepage .content, #api .content {
   padding: 50px 7.5%;
 }
 
-#homepage main {
+#homepage main, #api main {
   margin: 0 auto;
 }
 
-#homepage main .card {
+#homepage main .card, #api main .card {
   background-color: var(--color-primary-700);
   min-width: 250px;
   max-width: 400px;
@@ -50,38 +50,38 @@ body {
   margin-right: 15px;
 }
 
-#homepage main .card header {
+#homepage main .card header, #api main .card header {
   background-color: var(--color-primary-600);
 }
 
-#homepage main .card header h3 {
+#homepage main .card header h3, #api main .card header h3 {
   color: var(--color-primary-100);
 }
 
-#homepage main .card .content {
+#homepage main .card .content, #api main .card .content {
   color: var(--color-primary-200);
 }
 
-#homepage main .card footer ul li {
+#homepage main .card footer ul li, #api main .card footer ul li {
   background-color: var(--color-primary-800);
   color: var(--color-primary-300);
   margin-right: 3px;
 }
 
-#homepage main .card footer ul li:last-child {
+#homepage main .card footer ul li:last-child, #api main .card footer ul li:last-child {
   margin-right: 0;
 }
 
-#homepage main .card footer button {
+#homepage main .card footer button, #api main .card footer button {
   background-color: var(--color-accent);
   color: var(--color-button-text);
 }
 
-#homepage aside {
+#homepage aside, #api aside {
   width: 300px;
 }
 
-#homepage aside > * {
+#homepage aside > *, #api aside > * {
   background-color: var(--color-primary-700);
   overflow-x: hidden;
   overflow-y: auto;
@@ -89,73 +89,136 @@ body {
   margin-bottom: 30px;
 }
 
-#homepage aside > *:last-child {
+#homepage aside > *:last-child, #api aside > *:last-child {
   margin-bottom: 0;
 }
 
-#homepage aside > * h2 {
+#homepage aside > * h2, #api aside > * h2 {
   color: var(--color-primary-100);
 }
 
-#homepage aside > *::-webkit-scrollbar {
+#homepage aside > *::-webkit-scrollbar, #api aside > *::-webkit-scrollbar {
   width: .5rem;
 }
 
-#homepage aside > *::-webkit-scrollbar-track {
+#homepage aside > *::-webkit-scrollbar-track, #api aside > *::-webkit-scrollbar-track {
   -webkit-box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.3);
           box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.3);
 }
 
-#homepage aside > *::-webkit-scrollbar-thumb {
+#homepage aside > *::-webkit-scrollbar-thumb, #api aside > *::-webkit-scrollbar-thumb {
   background-color: var(--color-primary-600);
   outline: 1px solid slategrey;
 }
 
-#homepage aside .acc-info .limitation-progress .progress-bar {
+#homepage aside .acc-info .limitation-progress .progress-bar, #api aside .acc-info .limitation-progress .progress-bar {
   background-color: var(--color-primary-800);
 }
 
-#homepage aside .acc-info .limitation-progress .progress-bar div {
+#homepage aside .acc-info .limitation-progress .progress-bar div, #api aside .acc-info .limitation-progress .progress-bar div {
   width: 20%;
   background-color: var(--color-primary-200);
 }
 
-#homepage aside .acc-info .note span {
+#homepage aside .acc-info .note span, #api aside .acc-info .note span {
   background-color: var(--color-accent);
+  margin-right: 7px;
 }
 
-#homepage aside .upcoming-tools {
+#homepage aside .upcoming-tools, #api aside .upcoming-tools {
   max-height: 300px;
 }
 
-#homepage aside .upcoming-tools .upcoming-tool {
+#homepage aside .upcoming-tools .upcoming-tool, #api aside .upcoming-tools .upcoming-tool {
   border-bottom: 2px solid var(--color-primary-600);
 }
 
-#homepage aside .upcoming-tools .upcoming-tool:last-child {
+#homepage aside .upcoming-tools .upcoming-tool:last-child, #api aside .upcoming-tools .upcoming-tool:last-child {
   border-bottom: 0;
 }
 
-#homepage aside .tool-suggestion {
+#homepage aside .tool-suggestion, #api aside .tool-suggestion {
   max-height: 300px;
 }
 
-#homepage aside .tool-suggestion textarea {
+#homepage aside .tool-suggestion textarea, #api aside .tool-suggestion textarea {
   background-color: var(--color-primary-600);
 }
 
-#homepage aside .tool-suggestion textarea:focus {
+#homepage aside .tool-suggestion textarea:focus, #api aside .tool-suggestion textarea:focus {
   outline: none;
 }
 
-#homepage aside .tool-suggestion button {
+#homepage aside .tool-suggestion button, #api aside .tool-suggestion button {
   background-color: var(--color-accent);
   color: var(--color-button-text);
 }
 
-#homepage footer, #homepage header {
+#homepage footer, #homepage header, #api footer, #api header {
   color: var(--color-primary-200);
   background-color: var(--color-primary-700);
+}
+
+#api {
+  color: var(--color-primary-100);
+}
+
+#api .tool-info {
+  background-color: var(--color-primary-700);
+}
+
+#api .tool-info .description {
+  color: var(--color-primary-200);
+}
+
+#api .end-points li {
+  background-color: var(--color-primary-700);
+  border: 2px solid var(--color-primary-600);
+  color: var(--color-primary-200);
+}
+
+#api .end-points li .method-name {
+  color: var(--color-button-text);
+}
+
+#api .end-points li .props > div {
+  border-bottom: 2px solid var(--color-primary-600);
+}
+
+#api .end-points li .props div:last-child {
+  border-bottom: 0;
+}
+
+#api .end-points li .link-params span {
+  color: var(--color-accent);
+}
+
+#api .end-points li .props .example .http-request {
+  background-color: var(--color-primary-800);
+}
+
+#api .end-points li .props .example .http-request button {
+  background-color: var(--color-accent);
+  color: var(--color-button-text);
+}
+
+#api .end-points li .props .example .params > div {
+  border-bottom: 2px solid var(--color-primary-600);
+  margin-bottom: 24px;
+}
+
+#api .end-points li .props .example .params > div:last-child {
+  border-bottom: 0;
+  margin-bottom: 0;
+}
+
+#api .end-points li .props .example .params input {
+  background-color: var(--color-primary-800);
+  border: 0;
+}
+
+#api .end-points li .props .example .params input:focus {
+  outline: none;
 }
 
 #login-page {
