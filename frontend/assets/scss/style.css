@@ -17,8 +17,104 @@
   --screen-height-reduction: 0px;
 }
 
+.bg-primary-100 {
+  background-color: var(--color-primary-100);
+}
+
+.text-primary-100 {
+  color: var(--color-primary-100);
+}
+
+.bg-primary-200 {
+  background-color: var(--color-primary-200);
+}
+
+.text-primary-200 {
+  color: var(--color-primary-200);
+}
+
+.bg-primary-300 {
+  background-color: var(--color-primary-300);
+}
+
+.text-primary-300 {
+  color: var(--color-primary-300);
+}
+
+.bg-primary-600 {
+  background-color: var(--color-primary-600);
+}
+
+.text-primary-600 {
+  color: var(--color-primary-600);
+}
+
+.bg-primary-700 {
+  background-color: var(--color-primary-700);
+}
+
+.text-primary-700 {
+  color: var(--color-primary-700);
+}
+
+.bg-primary-800 {
+  background-color: var(--color-primary-800);
+}
+
+.text-primary-800 {
+  color: var(--color-primary-800);
+}
+
+.bg-primary-900 {
+  background-color: var(--color-primary-900);
+}
+
+.text-primary-900 {
+  color: var(--color-primary-900);
+}
+
+.bg-accent {
+  background-color: var(--color-accent);
+}
+
+.text-accent {
+  color: var(--color-accent);
+}
+
+.bg-accent-hover {
+  background-color: var(--color-accent-hover);
+}
+
+.text-accent-hover {
+  color: var(--color-accent-hover);
+}
+
+.bg-accent-disabled {
+  background-color: var(--color-accent-disabled);
+}
+
+.text-accent-disabled {
+  color: var(--color-accent-disabled);
+}
+
+.bg-button-text {
+  background-color: var(--color-button-text);
+}
+
+.text-button-text {
+  color: var(--color-button-text);
+}
+
 body {
   background-color: var(--color-primary-900);
+}
+
+body button:focus, body input:focus, body textarea:focus {
+  outline: none;
+}
+
+body [contenteditable] {
+  caret-color: var(--color-accent);
 }
 
 #homepage, #api {
@@ -30,7 +126,7 @@ body {
   padding: 15px 7.5%;
 }
 
-#homepage .content, #api .content {
+#homepage > .content, #api > .content {
   padding: 50px 7.5%;
 }
 
@@ -41,7 +137,6 @@ body {
 #homepage main .card, #api main .card {
   background-color: var(--color-primary-700);
   min-width: 250px;
-  max-width: 400px;
   width: 40%;
   -webkit-box-flex: 1;
       -ms-flex-positive: 1;
@@ -62,19 +157,8 @@ body {
   color: var(--color-primary-200);
 }
 
-#homepage main .card footer ul li, #api main .card footer ul li {
-  background-color: var(--color-primary-800);
-  color: var(--color-primary-300);
-  margin-right: 3px;
-}
-
 #homepage main .card footer ul li:last-child, #api main .card footer ul li:last-child {
   margin-right: 0;
-}
-
-#homepage main .card footer button, #api main .card footer button {
-  background-color: var(--color-accent);
-  color: var(--color-button-text);
 }
 
 #homepage aside, #api aside {
@@ -141,26 +225,33 @@ body {
   max-height: 300px;
 }
 
-#homepage aside .tool-suggestion textarea, #api aside .tool-suggestion textarea {
-  background-color: var(--color-primary-600);
-}
-
-#homepage aside .tool-suggestion textarea:focus, #api aside .tool-suggestion textarea:focus {
-  outline: none;
-}
-
-#homepage aside .tool-suggestion button, #api aside .tool-suggestion button {
-  background-color: var(--color-accent);
-  color: var(--color-button-text);
-}
-
 #homepage footer, #homepage header, #api footer, #api header {
   color: var(--color-primary-200);
   background-color: var(--color-primary-700);
 }
 
+button.bg-accent:hover {
+  background-color: var(--color-accent-hover);
+}
+
+button.bg-accent:disabled {
+  background-color: var(--color-accent-disabled);
+}
+
+button.bg-primary-700:hover {
+  background-color: var(--color-primary-600);
+}
+
+button.bg-primary-700:disabled {
+  opacity: .5;
+}
+
 #api {
   color: var(--color-primary-100);
+}
+
+#api main {
+  max-width: 700px;
 }
 
 #api .tool-info {
@@ -185,21 +276,12 @@ body {
   border-bottom: 2px solid var(--color-primary-600);
 }
 
-#api .end-points li .props div:last-child {
+#api .end-points li .props > div:last-child {
   border-bottom: 0;
 }
 
 #api .end-points li .link-params span {
   color: var(--color-accent);
-}
-
-#api .end-points li .props .example .http-request {
-  background-color: var(--color-primary-800);
-}
-
-#api .end-points li .props .example .http-request button {
-  background-color: var(--color-accent);
-  color: var(--color-button-text);
 }
 
 #api .end-points li .props .example .params > div {
@@ -214,11 +296,22 @@ body {
 
 #api .end-points li .props .example .params input {
   background-color: var(--color-primary-800);
-  border: 0;
 }
 
-#api .end-points li .props .example .params input:focus {
-  outline: none;
+#api .end-points li .param .name, #api .end-points li .param .type {
+  width: 120px;
+  -ms-flex-negative: 0;
+      flex-shrink: 0;
+}
+
+#api .end-points li .param .description {
+  -webkit-box-flex: 1;
+      -ms-flex-positive: 1;
+          flex-grow: 1;
+}
+
+#api .model-try-request .dialog .dialog-header, #api .model-try-request .dialog .response-content {
+  border: 3px solid var(--color-primary-600);
 }
 
 #login-page {

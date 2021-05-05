@@ -17,8 +17,55 @@
   --screen-height-reduction: 0px;
 }
 
+
+// tailwind colors
+.bg-primary-100{ background-color: var(--color-primary-100) }
+.text-primary-100{ color: var(--color-primary-100) }
+
+.bg-primary-200{ background-color: var(--color-primary-200) }
+.text-primary-200{ color: var(--color-primary-200) }
+
+.bg-primary-300{ background-color: var(--color-primary-300) }
+.text-primary-300{ color: var(--color-primary-300) }
+
+.bg-primary-600{ background-color: var(--color-primary-600) }
+.text-primary-600{ color: var(--color-primary-600) }
+
+.bg-primary-700{ background-color: var(--color-primary-700) }
+.text-primary-700{ color: var(--color-primary-700) }
+
+.bg-primary-800{ background-color: var(--color-primary-800) }
+.text-primary-800{ color: var(--color-primary-800) }
+
+.bg-primary-900{ background-color: var(--color-primary-900) }
+.text-primary-900{ color: var(--color-primary-900) }
+
+.bg-accent{ background-color: var(--color-accent) }
+.text-accent{ color: var(--color-accent) }
+
+.bg-accent-hover{ background-color: var(--color-accent-hover) }
+.text-accent-hover{ color: var(--color-accent-hover) }
+
+.bg-accent-disabled{ background-color: var(--color-accent-disabled) }
+.text-accent-disabled{ color: var(--color-accent-disabled) }
+
+.bg-button-text{ background-color: var(--color-button-text) }
+.text-button-text{ color: var(--color-button-text) }
+
+
+
+
 body {
   background-color: var(--color-primary-900);
+
+  button:focus, input:focus, textarea:focus {
+    outline: none;
+  }
+
+
+  [contenteditable] {
+    caret-color: var(--color-accent);
+  }
 }
 
 #homepage, #api {
@@ -29,7 +76,7 @@ body {
     padding: 15px 7.5%;
   }
 
-  .content {
+  & > .content {
     padding: 50px 7.5%;
   }
 
@@ -39,7 +86,7 @@ body {
 
       background-color: var(--color-primary-700);
       min-width: 250px;
-      max-width: 400px;
+      // max-width: 400px;
       width: 40%;
       flex-grow: 1;
 
@@ -63,22 +110,12 @@ body {
 
       footer {
         ul {
-          li {
-            background-color: var(--color-primary-800);
-            color: var(--color-primary-300);
-            margin-right: 3px;
-          }
 
           li:last-child {
-            // display: none;
             margin-right: 0;
           }
         }
 
-        button {
-          background-color: var(--color-accent);
-          color: var(--color-button-text);
-        }
       }
     }
   }
@@ -148,24 +185,7 @@ body {
 
     .tool-suggestion {
       max-height: 300px;
-
-      textarea {
-        background-color: var(--color-primary-600);
-
-        &:focus {
-          outline: none;
-        }
-      }
-
-      button {
-        background-color: var(--color-accent);
-        color: var(--color-button-text)
-      }
     }
-
-  
-
-
   }
 
   footer, header {
@@ -174,8 +194,32 @@ body {
   }
 }
 
+button.bg-accent {
+  &:hover {
+    background-color: var(--color-accent-hover);
+  }
+
+  &:disabled {
+    background-color: var(--color-accent-disabled);
+  }
+}
+
+button.bg-primary-700 {
+  &:hover {
+    background-color: var(--color-primary-600);
+  }
+
+  &:disabled {
+    opacity: .5;
+  }
+}
+
 #api {
   color: var(--color-primary-100);
+
+  main {
+    max-width: 700px;
+  }
 
   .tool-info {
     background-color: var(--color-primary-700);
@@ -192,21 +236,17 @@ body {
 
       color: var(--color-primary-200);
 
-      // span {
-      //   display: inline-block;
-      // }
 
 
       .method-name {
         color: var(--color-button-text);
-        // background-color: #0c7445;
       }
 
       .props > div {
         border-bottom: 2px solid var(--color-primary-600);
       }
 
-      .props div:last-child {
+      .props > div:last-child {
         border-bottom: 0;
       }
 
@@ -218,14 +258,6 @@ body {
 
       .props {
         .example {
-          .http-request {
-            background-color: var(--color-primary-800);
-
-            button {
-              background-color: var(--color-accent);
-              color: var(--color-button-text);
-            }
-          }
 
           .params {
             & > div {
@@ -240,15 +272,24 @@ body {
 
             input {
               background-color: var(--color-primary-800);
-              border: 0;
-              &:focus {
-                outline: none;
-              }
             }
           }
         }
       }
 
+      .param {
+        .name, .type { width: 120px; flex-shrink: 0; }
+        .description { flex-grow: 1; }
+      }
+
+    }
+  }
+
+  .model-try-request {
+    .dialog {
+      .dialog-header, .response-content {
+        border: 3px solid var(--color-primary-600);
+      }
     }
   }
 }
