@@ -82,8 +82,9 @@ def get_my_request_headers(request):
 
 @require_http_methods(['GET'])
 @tool_handler(limitation=['requests', 'bandwidth'])
-def get_image_placeholder(request, width, height, color=None):
+def get_image_placeholder(request, width, height=None, color=None):
   color = MyImageHandler.handle_user_color(color)
+  height = height or width
 
   try:
     image = Image.new('RGB', (width, height), color)

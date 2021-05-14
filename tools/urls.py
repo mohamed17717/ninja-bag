@@ -34,6 +34,7 @@ urlpatterns = [
 
   path('get-my-request-headers/', get_my_request_headers, name='get-my-request-headers'),
 
+  path('get-image-placeholder/<int:width>/', get_image_placeholder, name='get-image-placeholder5'),
   path('get-image-placeholder/<int:width>x<int:height>/', get_image_placeholder, name='get-image-placeholder1'),
   path('get-image-placeholder/<int:width>/<int:height>/', get_image_placeholder, name='get-image-placeholder2'),
   path('get-image-placeholder/<int:width>x<int:height>/<str:color>/', get_image_placeholder, name='get-image-placeholder3'),
