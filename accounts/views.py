@@ -20,11 +20,17 @@ def go_login():
 
 class register_account(View):
   def get(self, request, form=None):
+    if request.user.is_authenticated:
+      return go_homepage()
+
     context = { 'register_form': form or RegisterAccountForm }
     return render(request, 'register.html', context)
 
 
   def post(self, request):
+    if request.user.is_authenticated:
+      return go_homepage()
+
     form = RegisterAccountForm(request.POST)
     if form.is_valid():
       user = form.save()
@@ -38,10 +44,16 @@ class register_account(View):
 
 class login_account(View):
   def get(self, request, form=None):
+    if request.user.is_authenticated:
+      return go_homepage()
+
     context = { 'login_form': form or AuthenticationForm() }
     return render(request, 'login.html', context)
 
   def post(self, request):
+    if request.user.is_authenticated:
+      return go_homepage()
+
     form = AuthenticationForm(request, data=request.POST)
     if form.is_valid():
       username = form.cleaned_data.get('username')
