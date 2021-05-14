@@ -58,12 +58,11 @@ urlpatterns = [
 
   path('gen-qrcode/', generate_qrcode, name='gen-qrcode'),
 
-  path('save-text/', TextSaver.add, name='textsaver-add'),
+  path('save-text/', TextSaver.add, name='textsaver-create'),
   path('save-text/list/', TextSaver.list_all, name='textsaver-list'),
-  path('save-text/<str:file_name>/', TextSaver.action_handler, name='textsaver-add-2'),
+  path('save-text/<str:file_name>/', TextSaver.action_handler, name='textsaver-update'),
   path('save-text/<str:file_name>/', TextSaver.action_handler, name='textsaver-read'),
   path('save-text/<str:file_name>/delete/', TextSaver.delete, name='textsaver-delete'),
-
 
   path('cors-proxy/', CorsProxy.proxy, name='cors-proxy'),
 

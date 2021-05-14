@@ -25,7 +25,7 @@ from decorators import require_http_methods, tool_handler
 from accounts.models import Account
 
 def index(request):
-  return HttpResponse('Hiiii')
+  return render(request, 'test.html')
 
 
 @require_http_methods(['GET'])
