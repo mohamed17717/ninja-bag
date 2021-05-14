@@ -360,6 +360,46 @@ button.bg-primary-700:disabled {
   background-color: var(--color-primary-600);
 }
 
+#login-page .login-form div.username-input,
+#login-page .login-form div.password-input {
+  position: relative;
+  height: 48px;
+}
+
+#login-page .login-form div.username-input::after,
+#login-page .login-form div.password-input::after {
+  position: absolute;
+  left: 0;
+  top: 50%;
+  -webkit-transform: translateY(-50%);
+          transform: translateY(-50%);
+  margin-left: 16px;
+  cursor: text;
+}
+
+#login-page .login-form div.username-input::after,
+#login-page .login-form div.password-input::after {
+  color: var(--color-primary-200);
+  -webkit-transition: all 150ms ease-in-out;
+  transition: all 150ms ease-in-out;
+}
+
+#login-page .login-form div.username-input.active::after,
+#login-page .login-form div.password-input.active::after {
+  -webkit-transform: translateY(-150%);
+          transform: translateY(-150%);
+  background-color: var(--color-primary-800);
+  padding: 0 16px;
+}
+
+#login-page .login-form div.username-input::after {
+  content: "Username";
+}
+
+#login-page .login-form div.password-input::after {
+  content: "Password";
+}
+
 #login-page footer {
   bottom: 0;
 }

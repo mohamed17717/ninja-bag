@@ -8,20 +8,22 @@
   <link rel="stylesheet" href="/assets/css/tailwind.css">
   <link rel="stylesheet" href="/assets/scss/style.css">
   <link rel="stylesheet" href="/assets/fontawesome-free-5.15.3-web/css/all.css">
+
+  <script src="https://cdn.jsdelivr.net/gh/alpinejs/alpine@v2.x.x/dist/alpine.min.js" defer></script>
 </head>
 <body>
 
   <div id="login-page" class="flex flex-col justify-between items-center relative">
     <div></div>
-    
-    <div class="login-form py-12 px-10 mx-auto rounded-lg">
+
+    <div class="login-form py-12 px-10 mx-auto rounded-lg" x-data="{}">
       <h2 class="text-3xl font-bold mb-4">Welcome</h2>
       <p class="mb-10">
         By logging in, you accept our 
         <a href="#">Privacy Policy</a> and 
         <a href="#">Terms of Service</a>.
       </p>
-
+      <!-- 
       <button class="font-bold w-full py-4 flex items-center justify-center rounded-lg mb-8">
         <i class="fab fa-github text-2xl mr-4"></i>
         <span>Log in with GitHub</span>
@@ -30,6 +32,81 @@
       <button class="font-bold w-full py-4 flex items-center justify-center rounded-lg">
         <i class="fab fa-twitter text-2xl mr-4"></i>
         <span>Log in with Twitter</span>
+      </button>
+      -->
+
+
+      <div
+        class="username-input rounded-lg px-5 py-3 mb-5"
+        style="border: 2px solid var(--color-primary-600);"
+        @click="$refs.usernameInput.focus()"
+      >
+        <input 
+          x-ref="usernameInput"
+          class="bg-transparent font-bold w-full"
+          type="text" 
+          name="username"
+          autocomplete="off"
+          x-on:focus="$refs.usernameInput.parentElement.classList.add('active')"
+          x-on:blur="$refs.usernameInput.value.length === 0 ? $refs.usernameInput.parentElement.classList.remove('active'): ''"
+        />
+      </div>
+
+      <div
+        class="password-input rounded-lg px-5 py-3 mb-5 flex justify-end items-center"
+        style="border: 2px solid var(--color-primary-600);"
+        @click="$refs.passwordInput.focus()"
+      >
+        <input 
+          x-ref="passwordInput"
+          class="bg-transparent font-bold w-full"
+          type="password" 
+          name="password"
+          autocomplete="off"
+          x-on:focus="$refs.passwordInput.parentElement.classList.add('active')"
+          x-on:blur="$refs.passwordInput.value.length === 0 ? $refs.passwordInput.parentElement.classList.remove('active'): ''"
+
+        />
+
+        <i
+          x-ref="eyeIcon"
+          @click.stop="
+            const t = $refs.passwordInput.type;
+            if(t==='text'){
+              $refs.passwordInput.type = 'password'
+              $refs.eyeIcon.classList.remove('fa-eye-slash')
+              $refs.eyeIcon.classList.add('fa-eye')
+            } else {
+              $refs.passwordInput.type = 'text'
+              $refs.eyeIcon.classList.add('fa-eye-slash')
+              $refs.eyeIcon.classList.remove('fa-eye')
+            }
+          " 
+          class="fas fa-eye pl-4 w-8 py-2 cursor-pointer" 
+          style="border-left: 2px solid var(--color-primary-600);"
+        ></i>
+      </div>
+
+      <div
+        class="username-input rounded-lg px-5 py-3 mb-5"
+        style="border: 2px solid var(--color-primary-600);"
+        @click="$refs.emailInput.focus()"
+      >
+        <input 
+          x-ref="emailInput"
+          class="bg-transparent font-bold w-full"
+          type="text" 
+          name="username"
+          autocomplete="off"
+          x-on:focus="$refs.emailInput.parentElement.classList.add('active')"
+          x-on:blur="$refs.emailInput.value.length === 0 ? $refs.emailInput.parentElement.classList.remove('active'): ''"
+
+        />
+      </div>
+
+      <button class="font-bold w-full py-4 flex items-center justify-center rounded-lg leading-relaxed">
+        <span class="capitalize mr-2">Login</span>
+        <i class="fas fa-sign-in-alt text-2xl"></i>
       </button>
     </div>
 

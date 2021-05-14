@@ -340,6 +340,50 @@ button.bg-primary-700 {
         background-color: var(--color-primary-600);
       }
     }
+
+    div.username-input,
+    div.password-input {
+      position: relative;
+      height: 48px;
+      cursor: text;
+
+
+      &::after {
+        position: absolute;
+        left: 0;
+        top: 50%;
+        transform: translateY(-50%);
+        margin-left: 16px;
+      }
+
+      &::after {
+
+        color: var(--color-primary-200);
+        transition: all 150ms ease-in-out;
+        
+      }
+
+      &.active::after {
+        transform: translateY(-150%);
+        background-color: var(--color-primary-800);
+        padding: 0 16px;
+      }
+
+      input {
+        // background-color: #080;
+        // z-index: 999999;
+        // width: calc(100% - 32px);
+      }
+
+    }
+
+    div.username-input::after {
+      content: "Username";
+    }
+
+    div.password-input::after {
+      content: "Password";
+    }
   }
 
   footer {
