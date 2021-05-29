@@ -1,23 +1,48 @@
 from django.shortcuts import render
-from django.http import HttpResponse
+from django.http import HttpResponse, HttpResponseBadRequest
 from django.shortcuts import get_object_or_404
 
-from .models import Category, Tool
+from .models import Category, Tool, UpcomingTool, SuggestedTool
 from decorators import require_http_methods
+
+import json
+
+def get_default_context(request):
+  return {
+    'user': request.user,
+    'account': request.user.user_account.get(),
+    'upcoming_tools': UpcomingTool.list_all_active(),
+  }
 
 @require_http_methods(['GET'])
 def index(request):
   context = {
-    'categories': Category.objects.all(),
-    'user': request.user
+    **get_default_context(request),
+    'tools': Tool.list_for_homepage()
   }
 
-  return render(request, 'homepage.html', context)
+  return render(request, 'd_homepage.html', context)
 
 
 @require_http_methods(['GET'])
 def get_tool_page(request, tool_id):
   context = {
+    **get_default_context(request),
     'tool': get_object_or_404(Tool, tool_id=tool_id)
   }
-  return render(request, 'tool-explain.html', context)
+  return render(request, 'd_tool-doc.html', context)
+
+
+@require_http_methods(['POST'])
+def suggest_tool(request):
+  user = request.user
+
+  data = request.POST or json.loads(request.body.decode('utf8'))
+  description = data.get('description', '').strip()
+
+  if not user or not description:
+    return HttpResponseBadRequest()
+
+  SuggestedTool.objects.create(user=user, description=description)
+  return HttpResponse(status=201)
+

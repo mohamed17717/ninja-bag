@@ -9,7 +9,12 @@ from .forms import RegisterAccountForm
 
 
 def index(request):
-  return HttpResponse('Welcome accounts')
+  if request.user.is_authenticated:
+    response = go_homepage()
+  else:
+    response = render(request, 'd_login.html', {})
+
+  return response
 
 def go_homepage():
   return redirect('toolsframe:homepage')

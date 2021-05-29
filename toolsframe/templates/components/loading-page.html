@@ -1,0 +1,28 @@
+<div 
+    class="
+      loading-page 
+      fixed top-0 bottom-0 right-0 left-0 
+      bg-primary-800 
+      transition-opacity opacity-100"
+  >
+    <div class="lds-ripple" style="top: 50%;left: 50%;transform: translate(-50%, -50%);"><div></div><div></div></div>
+    <style>
+      .loading-page + [id] { opacity: 0; }
+    </style>
+    <script>
+      document.addEventListener('DOMContentLoaded', () => {
+        const loadingElm = document.querySelector('.loading-page')
+        const pageRoot = document.querySelector('.loading-page + [id]')
+
+        setTimeout(() => {
+          pageRoot.style.opacity = '1'
+          loadingElm.style.opacity = '0'
+
+          setTimeout(() => {
+            loadingElm.remove()
+          }, 1000)
+        }, 1000)
+
+      })
+    </script>
+  </div>

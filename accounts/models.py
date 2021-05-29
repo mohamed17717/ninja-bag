@@ -121,7 +121,7 @@ class Account(models.Model):
   def get_user_folder_location(self):
     return f'./users_storage/{self.user_api_key[:16]}/'
 
-  def get_user_folder_size(self, unit):
+  def get_user_folder_size(self, unit='MB'):
     location = self.get_user_folder_location()
 
     try: size = get_folder_size(location, unit)
@@ -133,6 +133,10 @@ class Account(models.Model):
     now = datetime.now()
     return (now - self.created).days
 
+
+  def get_user_name(self):
+    name = f'{self.user.first_name} {self.user.last_name}'.strip() or self.user.username
+    return name
 
   @staticmethod
   def get_user_by_api_key(api_key):

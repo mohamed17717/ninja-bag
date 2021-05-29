@@ -1,0 +1,83 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  {% include 'components/head.html' %}
+
+  <title>Ninja-Bag | Homepage</title>
+</head>
+<body>
+  {% include 'components/loading-page.html' %}
+
+  <div id="homepage">
+    {% include 'components/header.html' %}
+
+    <div class="content flex justify-evenly items-start">
+      <main 
+        class="cards flex flex-wrap justify-evenly items-stretch"
+        x-data="homepageData()"
+      >
+        <script>
+          function homepageData() {
+            return {
+              getShrinkedText(text, maxChars) {
+                if (text.length <= maxChars)
+                  return text.replace(/\n/g, '<br>')
+                return text.slice(0, maxChars-3).replace(/\n/g, '<br>') + '...'
+              }
+            }
+          }
+        </script>
+
+        
+        {% for tool in tools %}
+        <div class="card rounded-lg overflow-hidden relative pb-6">
+          <header class="flex items-center justify-start px-5 py-3">
+            <div 
+              class="w-14 h-14 rounded-full overflow-hidden bg-center bg-cover bg-no-repeat mr-5"
+              style="background-image: url(/media/{{ tool.logo }});"
+            ></div>
+            <div>
+              <h3 class="text-xl font-bold capitalize" 
+                x-text="getShrinkedText(`{{ tool.name }}`, 25)"
+              ></h3>
+            </div>
+          </header>
+
+          <div 
+            class="content px-5 py-8 overflow-hidden  leading-7 " 
+            x-html="getShrinkedText(`{{ tool.description }}`, 240)"
+          ></div>
+
+          <footer class="px-5 pt-1 pb-4 absolute bottom-0 right-0">
+            <!--
+            <ul class="flex flex-wrap">
+              <li class="text-sm rounded bg-primary-800 text-primary-300 mr-1 hover:bg-gray-700 hover:text-gray-300"><a class="px-2 py-1 inline-block" href="#">social media</a></li>
+              <li class="text-sm rounded bg-primary-800 text-primary-300 mr-1 hover:bg-gray-700 hover:text-gray-300"><a class="px-2 py-1 inline-block" href="#">network</a></li>
+              <li class="text-sm rounded bg-primary-800 text-primary-300 mr-1 hover:bg-gray-700 hover:text-gray-300"><a class="px-2 py-1 inline-block" href="#">science</a></li>
+            </ul>
+            -->
+  
+            <div class="text-right pt-2">
+              <button 
+                role="link" data-href="{% url tool.url_reverser tool.tool_id %}" 
+                class="text-sm uppercase font-bold px-3 py-2 rounded-lg bg-accent text-button-text"
+              >view</button>
+            </div>
+          </footer>
+        </div>
+        {% endfor %}
+          
+
+
+      </main>
+
+      {% include 'components/aside.html' %}
+    </div>
+
+    {% include 'components/footer.html' %}
+  </div>
+
+</body>
+</html>
