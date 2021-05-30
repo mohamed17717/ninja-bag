@@ -31,38 +31,36 @@ class Category(models.Model):
 
 
 class Tool(models.Model):
+  # required
   name = models.CharField(max_length=128)
-  genre = models.CharField(max_length=32) # api || web based
+  app_type = models.CharField(max_length=32) # api || web based
   tool_id = models.CharField(max_length=128, unique=True, editable=False, blank=True) # generated 32 char
-
   logo = models.ImageField(upload_to='tool_logo', blank=True, null=True)
   description = models.TextField(blank=True, null=True) # SEO && after title
-  notes = models.TextField(blank=True, null=True) # its limited or totally free
-
-  app_name = models.CharField(max_length=128, blank=True, null=True)
   url_reverser = models.CharField(max_length=64, default='toolsframe:tool') # 'app_name:home'
-
-  api_endpoints = JSONField(blank=True, null=True)
-
+  # fill with script
+  endpoints = JSONField(blank=True, null=True)
+  # extra
   category = models.ForeignKey(Category, on_delete=models.SET_NULL, related_name='category_tools', blank=True, null=True)
-
-  access_lvl = models.IntegerField(default=0) # 0 not-require auth | 1 require auth | 2 premium | 3 partial premium
-  # limitation is upon the user account
-
-  # add field boolean for acrive
-
+  active = models.BooleanField(default=True)
+  status = models.CharField(max_length=32, blank=True, null=True) # alpha || beta
   # counters
   uses_count = models.IntegerField(default=0)
-
+  views_count = models.IntegerField(default=0)
+  # dates
   created = models.DateField(auto_now_add=True)
   updated = models.DateField(auto_now=True)
+
+  # notes = models.TextField(blank=True, null=True) # its limited or totally free
+  # app_name = models.CharField(max_length=128, blank=True, null=True)
+  # access_lvl = models.IntegerField(default=0) # 0 not-require auth | 1 require auth | 2 premium | 3 partial premium
 
   class Meta:
     verbose_name = 'Tool'
     verbose_name_plural = 'Tools'
 
   def __str__(self):
-    return self.name
+    return self.tool_id
 
   def save(self, *args, **kwargs):
     if not self.pk:
@@ -82,9 +80,13 @@ class Tool(models.Model):
     self.uses_count += 1
     return self.save()
 
+  def increase_views_count(self):
+    self.views_count += 1
+    return self.save()
+
   @staticmethod
   def list_for_homepage():
-    return Tool.objects.values('name', 'description', 'logo', 'url_reverser', 'tool_id')
+    return Tool.objects.filter(active=True).values('name', 'description', 'logo', 'url_reverser', 'tool_id')
 
 
 class UpcomingTool(models.Model):
