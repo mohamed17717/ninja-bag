@@ -69,14 +69,15 @@
 
                   <div class="http-request px-5 py-3 rounded-lg bg-primary-800">
                     
-                    <div class="text-sm font-mono" contenteditable="true">
+                    <div class="text-sm font-mono">
                       <div 
+                        contenteditable="true"
                         class="request-header mb-8"
                         x-html="toHTML(`POST /config_api_v1/login HTTP/1.1\nHost: api.dotcom-monitor.com\nContent-Type: application/json`)"
                       ></div>
                       <div 
                         class="request-body"
-                        x-html='toHTML(`{\n  "UID":"0E206D45650A4ACD8EB689B8CC25FA7F"\n}`)'
+                        x-html='toHTML(`fileName: <input type="file" name="fileName" >`)'
                       ></div>
                     </div>
 
@@ -114,7 +115,7 @@
                           <div class="dialog-header px-1 py-1 text-sm rounded-lg flex items-center justify-between bg-primary-800">
                             <div class="flex items-center overflow-x-hidden">
                               <span class="method-name mr-2 flex-shrink-0 w-16 text-center uppercase font-bold text-xs py-1 inline-block bg-green-700">get</span>
-                              <span class="url flex-shrink-0">
+                              <span class="url break-all">
                                 http://127.0.0.1:8000/t/get-image-placeholder/400x400/?token=376cdea03b018705554df0a2fed4629a
                               </span>
                             </div>

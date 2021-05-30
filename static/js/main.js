@@ -38,8 +38,8 @@ function escapeHTML(unsafeText) {
 }
 
 function toHTML(text){
-  let t =  escapeHTML(text);
-  t = t.replace(/\n/g, '<br>').replace(/ /g, '&nbsp;')
+  let t =  text // escapeHTML(text);
+  t = t.replace(/\n/g, '<br>').replace(/^ /gm, '&nbsp;')
   return t
 }
 
