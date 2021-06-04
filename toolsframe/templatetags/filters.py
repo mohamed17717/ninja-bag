@@ -1,4 +1,5 @@
 from django import template
+import json
 
 register = template.Library()
 
@@ -11,3 +12,7 @@ def percent_of(value, arg):
 @register.filter
 def to_int(value):
   return round(value)
+
+@register.filter
+def to_json(value):
+  return json.dumps(value)

@@ -37,9 +37,11 @@ function escapeHTML(unsafeText) {
   return div.innerHTML;
 }
 
-function toHTML(text){
+function toHTML(text, forceSpace=true){
   let t =  text // escapeHTML(text);
-  t = t.replace(/\n/g, '<br>').replace(/^ /gm, '&nbsp;')
+  t = t.replace(/\n/g, '<br>')
+  if (forceSpace)
+    t = t.replace(/ /g, '&nbsp;')
   return t
 }
 
@@ -57,5 +59,3 @@ function setButtonLink(){
     })
   })
 }
-
-setButtonLink()
