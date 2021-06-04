@@ -40,13 +40,13 @@
               "default": 400,
               "type": "number",
               "required": true,
-              "descriptiosn": "width of the image"
+              "description": "width of the image"
             }, {
               "name": "height",
               "default": 400,
               "type": "number",
               "required": true,
-              "descriptiosn": "height of the image"
+              "description": "height of the image"
             }
           ]
         }
