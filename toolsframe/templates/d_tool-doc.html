@@ -1,4 +1,5 @@
 {% load static %}
+{% load filters %}
 
 <!DOCTYPE html>
 <html lang="en">
@@ -6,6 +7,11 @@
   {% include 'components/head.html' %}
 
   <title>Ninja-Bag</title>
+
+  <script>
+    const djangoEndpoints = `{{ tool.endpoints|to_json|safe }}`
+  </script>
+  <script src="{% static 'js/endpoint-handler.js' %}"></script>
 </head>
 <body>
   {% include 'components/loading-page.html' %}
@@ -30,203 +36,40 @@
 
         <div class="end-points">
           <h2 class="text-2xl font-bold capitalize mb-6">end points</h2>
-          <ul x-data="{isOpen: false, popup: false}">
-            <li class="rounded-lg px-5 py-3 method-get mb-4">
-              <div class="flex justify-start items-center" @click="isOpen = !isOpen" x-bind:class="isOpen ? 'mb-6':''">
-                <span class="method-name flex-shrink-0 w-16 text-center uppercase font-bold text-xs py-1 inline-block bg-green-700">get</span>
-                <span class="flex-shrink-0 mx-8 font-normal tracking-widest">/redirect-to</span>
-                <span class="text-sm">
-                  302/3XX Redirects to the given URL. 
-                  Lorem ipsum dolor sit amet, consectetur adipisicing elit. 
-                  Iste dignissimos nulla maiores consequatur quasi? Lorem ipsum, dolor sit amet consectetur adipisicing elit. 
-                  Ipsam, facilis molestiae. Sequi.
-                </span>
-              </div>
 
-              <div class="props" x-show="isOpen">
-                <div class="limits flex justify-between items-center py-3">
-                  <h4 class="text-lg capitalize font-bold mr-3">limits</h4>
-                  <div class="flex justify-end items-center">
 
-                    <div class="text-center">
-                      <i class="far fa-hdd text-lg mr-1"></i>
-                      <span class="capitalize">storage</span>
-                    </div>
-                    <div class="ml-10 text-center">
-                      <i class="fas fa-wifi text-lg mr-1"></i>
-                      <span class="capitalize">bandwidth</span>
-                    </div>
-                    <div class="ml-10 text-center">
-                      <i class="fas fa-paper-plane text-lg mr-1"></i>
-                      <span class="capitalize">requests</span>
+          <ul x-data="renderEndpoints()">
+
+            <template x-for="(endpoint, index) in endpoints" :key="index">
+              <li class="rounded-lg px-5 py-3 method-get mb-4">
+
+                {% include 'endpoint-components/ep-basic-info.html' %}
+
+                <div class="endpoint-full-info props" x-show="endpoint.isOpen">
+
+                  {% include 'endpoint-components/ep-limits.html' %}
+
+                  <div class="example py-3">
+                    <h4 class="text-lg capitalize font-bold mr-3 mb-5">example</h4>
+
+                    <div class="http-request px-5 py-3 rounded-lg bg-primary-800">
+
+                      {% include 'endpoint-components/ep-request-http-syntax.html' %}
+
+                      <div class="mt-4 flex justify-between items-center">
+                        <span class="font-bold text-accent">Double click to start update request to try it</span>
+
+                        {% include 'endpoint-components/ep-request-action-buttons.html' %}
+                        {% include 'endpoint-components/ep-request-popup-try.html' %}
+                      </div>
                     </div>
 
+                    {% include 'endpoint-components/ep-params.html' %}
                   </div>
                 </div>
+              </li>
+            </template>
 
-                <div class="example py-3">
-                  <h4 class="text-lg capitalize font-bold mr-3 mb-5">example</h4>
-
-                  <div class="http-request px-5 py-3 rounded-lg bg-primary-800">
-                    
-                    <div class="text-sm font-mono">
-                      <div 
-                        contenteditable="true"
-                        class="request-header mb-8"
-                        x-html="toHTML(`POST /config_api_v1/login HTTP/1.1\nHost: api.dotcom-monitor.com\nContent-Type: application/json`)"
-                      ></div>
-                      <div 
-                        class="request-body"
-                        x-html='toHTML(`fileName: <input type="file" name="fileName" >`)'
-                      ></div>
-                    </div>
-
-                    <div class="mt-4 flex justify-between items-center">
-                      <span class="font-bold text-accent">Double click to start update request to try it</span>
-                      
-                      <div>
-                        <button 
-                          class="font-bold uppercase px-4 py-1 text-xs bg-accent text-button-text"
-                          @click="popup = !popup"
-                        >
-                          run request
-                        </button>
-                        <button class="font-bold uppercase px-4 py-1 text-xs bg-primary-700 text-button-text">
-                          reset
-                        </button>
-                      </div>
-
-                      <div 
-                        class="model-try-request fixed top-0 right-0 left-0 bottom-0"
-                        x-show="popup"
-                      >
-                        <div
-                          class="bg-primary-800 opacity-70 w-full h-full"
-                          @click="popup = false"
-                        ></div>
-                        
-                        <div 
-                          class="dialog px-5 py-3 rounded-md bg-primary-700 z-20 absolute"
-                          style="
-                            top: 50%; left: 50%; transform: translate(-50%, -50%);
-                            max-width: 500px; width: 80%;
-                          "
-                        >
-                          <div class="dialog-header px-1 py-1 text-sm rounded-lg flex items-center justify-between bg-primary-800">
-                            <div class="flex items-center overflow-x-hidden">
-                              <span class="method-name mr-2 flex-shrink-0 w-16 text-center uppercase font-bold text-xs py-1 inline-block bg-green-700">get</span>
-                              <span class="url break-all">
-                                http://127.0.0.1:8000/t/get-image-placeholder/400x400/?token=376cdea03b018705554df0a2fed4629a
-                              </span>
-                            </div>
-
-                            <span
-                              @click="popup = false" 
-                              class="text-2xl text-button-text cursor-pointer mx-3">&times;</span>
-                          </div>
-
-                          <div class="dialog-content mt-5">
-
-                            <div class="text-right mb-2">
-                              <div class="text-sm justify-end items-center bg-accent inline-block px-3 py-1 rounded text-button-text font-bold">
-                                <div class="inline-block mr-3">200</div>
-                                <div class="inline-block capitalize">application/json</div>
-                              </div>
-                            </div>
-
-                            <div 
-                              class="response-content bg-primary-800 px-5 py-3 overflow-auto" 
-                              x-html='toHTML(`{\n  "name": "mohamed",\n  "age": 23\n}`)'>
-
-                            </div>
-
-                          </div>
-                        </div>
-
-                      </div>
-
-                    </div>
-                  </div>
-
-                  <div class="params mt-8">
-                    <div class="url-params">
-                      <h4 class="text-sm font-bold capitalize mb-4">URL params</h4>
-
-                      <div class="param flex justify-start items-center font-mono mb-8">
-                        <div class="name flex">location <span class="text-red-500 text-xl">*</span></div>
-                        <div class="type font-mono text-sm">&lt;type:string&gt;</div>
-                        <div class="description text-sm">
-                          Lorem ipsum dolor sit amet consectetur adipisicing elit. Quibusdam alias ipsum deleniti enim provident doloremque temporibus commodi quae!
-                        </div>
-
-                      </div>
-
-                      <div class="param flex justify-start items-center font-mono mb-8">
-                        <div class="name">location</div>
-                        <div class="type font-mono text-sm">&lt;type:string&gt;</div>
-                        <div class="description text-sm">
-                          Lorem ipsum dolor sit amet consectetur adipisicing elit.
-                        </div>
-
-                      </div>
-
-                    </div>
-
-                    <div class="post-params">
-                      <h4 class="text-sm font-bold capitalize mb-4">POST params</h4>
-
-                      <div class="param flex justify-start items-center font-mono mb-8">
-                        <div class="name">location</div>
-                        <div class="type font-mono text-sm">&lt;type:string&gt;</div>
-                        <div class="description hidden text-sm">
-                          Lorem ipsum dolor sit amet!
-                        </div>
-
-                      </div>
-                    </div>
-
-                    <div class="get-params">
-                      <h4 class="text-sm font-bold capitalize mb-4">GET params</h4>
-
-                      <div class="param flex justify-start items-center font-mono mb-8">
-                        <div class="name">location</div>
-                        <div class="type font-mono text-sm">&lt;type:string&gt;</div>
-                        <div class="description text-sm">
-                          Lorem ipsum dolor sit amet consectetur adipisicing elit.
-                        </div>
-
-                      </div>
-
-                      <div class="param flex justify-start items-center font-mono mb-8">
-                        <div class="name">location</div>
-                        <div class="type font-mono text-sm">&lt;type:string&gt;</div>
-                        <div class="description hidden text-sm">
-                          Lorem ipsum dolor sit amet!
-                        </div>
-
-                      </div>
-
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </li>
-
-            <li class="rounded-lg px-5 py-3 method-post mb-4">
-              <div class="flex justify-start items-center">
-                <span class="method-name flex-shrink-0 w-16 text-center uppercase font-bold text-xs py-1 inline-block bg-yellow-700">post</span>
-                <span class="flex-shrink-0 mx-8 font-normal tracking-widest">/redirect-to/{location}</span>
-                <span class="text-sm">302/3XX Redirects to the given URL.</span>
-              </div>
-            </li>
-
-            <li class="rounded-lg px-5 py-3 method-delete mb-4">
-              <div class="flex justify-start items-center">
-                <span class="method-name flex-shrink-0 w-16 text-center uppercase font-bold text-xs py-1 inline-block bg-red-700">delete</span>
-                <span class="flex-shrink-0 mx-8 font-normal tracking-wider">/redirect-to</span>
-                <span class="text-sm">302/3XX Redirects to the given URL.</span>
-              </div>
-            </li>
           </ul>
         </div>
       </main>

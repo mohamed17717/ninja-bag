@@ -1,0 +1,48 @@
+<div 
+  class="model-try-request fixed top-0 right-0 left-0 bottom-0"
+  x-show="endpoint.popup"
+>
+  <div
+    class="bg-primary-800 opacity-70 w-full h-full"
+    @click="endpoint.popup = false"
+  ></div>
+  
+  <div 
+    class="dialog px-5 py-3 rounded-md bg-primary-700 z-20 absolute"
+    style="
+      top: 50%; left: 50%; transform: translate(-50%, -50%); 
+      max-width: 500px; width: 80%;"
+  >
+    <div class="dialog-header px-1 py-1 text-sm rounded-lg flex items-center justify-between bg-primary-800">
+      <div class="flex items-center overflow-x-hidden">
+        <span class="method-name mr-2 flex-shrink-0 w-16 text-center uppercase font-bold text-xs py-1 inline-block bg-green-700">get</span>
+        <span class="url break-all">
+          http://127.0.0.1:8000/t/get-image-placeholder/400x400/?token=376cdea03b018705554df0a2fed4629a
+        </span>
+      </div>
+
+      <span
+        @click="endpoint.popup = false" 
+        class="text-2xl text-button-text cursor-pointer mx-3"
+      >&times;</span>
+    </div>
+
+    <div class="dialog-content mt-5">
+
+      <div class="text-right mb-2">
+        <div class="text-sm justify-end items-center bg-accent inline-block px-3 py-1 rounded text-button-text font-bold">
+          <div class="inline-block mr-3">200</div>
+          <div class="inline-block capitalize">application/json</div>
+        </div>
+      </div>
+
+      <div 
+        class="response-content bg-primary-800 px-5 py-3 overflow-auto" 
+        x-html='toHTML(`{\n  "name": "mohamed",\n  "age": 23\n}`)'>
+
+      </div>
+
+    </div>
+  </div>
+
+</div>
