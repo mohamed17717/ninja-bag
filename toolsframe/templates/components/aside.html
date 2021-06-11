@@ -5,7 +5,7 @@
     <div class="user px-5 py-3 flex flex-col items-center">
       <div 
         class="w-24 h-24 mb-3 rounded-full overflow-hidden bg-center bg-cover bg-no-repeat"
-        style="background-image: url({{ account.picture.url }});"
+        style="background-image: url({{ account.get_user_picture }});"
       >
       </div>
       <h2 class="text-2xl font-bold capitalize ">

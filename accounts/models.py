@@ -45,7 +45,9 @@ def get_response_size(response, unit):
 
 
 class Account(models.Model):
-  # TODO: Define fields here
+  DEFAULT_USER_PICTURE = 'https://variety.com/wp-content/uploads/2015/07/naruto_movie-lionsgate.jpg?w=681&h=383&crop=1'
+
+
   user = models.ForeignKey(User, related_name='user_account', on_delete=models.CASCADE)
   user_api_key = models.CharField(max_length=128, unique=True, editable=False, blank=True)
 
@@ -137,6 +139,14 @@ class Account(models.Model):
   def get_user_name(self):
     name = f'{self.user.first_name} {self.user.last_name}'.strip() or self.user.username
     return name
+
+  def get_user_picture(self):
+    if self.picture:
+      picture = self.picture.url
+    else:
+      picture = self.DEFAULT_USER_PICTURE
+
+    return picture
 
   @staticmethod
   def get_user_by_api_key(api_key):
