@@ -229,20 +229,24 @@ body [contenteditable] {
   background-color: var(--color-primary-700);
 }
 
-button.bg-accent:hover {
+button.bg-accent:hover,
+.login-form a.btn.bg-accent:hover {
   background-color: var(--color-accent-hover);
 }
 
-button.bg-accent:disabled {
+button.bg-accent:disabled,
+.login-form a.btn.bg-accent:disabled {
   /* background-color: var(--color-accent-disabled); */
   opacity: .5;
 }
 
-button.bg-primary-700:hover {
+button.bg-primary-700:hover,
+.login-form a.btn.bg-primary-700:hover {
   background-color: var(--color-primary-600);
 }
 
-button.bg-primary-700:disabled {
+button.bg-primary-700:disabled,
+.login-form a.btn.bg-primary-700:disabled {
   opacity: .5;
 }
 
@@ -337,12 +341,15 @@ button.bg-primary-700:disabled {
   text-decoration: underline;
 }
 
-#login-page .login-form button {
+#login-page .login-form button,
+#login-page .login-form a.btn {
   color: var(--color-button-text);
   background-color: var(--color-primary-700);
+  text-decoration: none;
 }
 
-#login-page .login-form button:focus {
+#login-page .login-form button:focus,
+#login-page .login-form a.btn:focus {
   outline: none;
   --tw-ring-inset: var(--tw-empty,/*!*/ /*!*/);
   --tw-ring-offset-width: 0px;
@@ -356,7 +363,8 @@ button.bg-primary-700:disabled {
           box-shadow: var(--tw-ring-offset-shadow), var(--tw-ring-shadow), var(--tw-shadow, 0 0 transparent);
 }
 
-#login-page .login-form button:hover {
+#login-page .login-form button:hover,
+#login-page .login-form a.btn:hover {
   background-color: var(--color-primary-600);
 }
 

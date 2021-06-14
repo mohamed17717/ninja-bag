@@ -1,4 +1,4 @@
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from django.http import HttpResponse, HttpResponseBadRequest
 from django.shortcuts import get_object_or_404
 
@@ -6,6 +6,7 @@ from .models import Category, Tool, UpcomingTool, SuggestedTool
 from decorators import require_http_methods
 
 import json
+from classes.Redirector import Redirector
 
 def get_default_context(request):
   return {
@@ -16,6 +17,9 @@ def get_default_context(request):
 
 @require_http_methods(['GET'])
 def index(request):
+  if not request.user.is_authenticated:
+    return Redirector.go_login()
+
   context = {
     **get_default_context(request),
     'tools': Tool.list_for_homepage()

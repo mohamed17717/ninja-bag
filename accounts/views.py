@@ -7,26 +7,25 @@ from django.contrib.auth.forms import AuthenticationForm
 
 from .forms import RegisterAccountForm
 
+from classes.Redirector import Redirector
 
 def index(request):
+  response = render(request, 'd_login.html', {})
   if request.user.is_authenticated:
-    response = go_homepage()
-  else:
-    response = render(request, 'd_login.html', {})
+    response = Redirector.go_home()
 
   return response
 
-def go_homepage():
-  return redirect('toolsframe:homepage')
-
-def go_login():
-  return redirect('accounts:login')
+def logout_account(request):
+  logout(request)
+  messages.info(request, "You have successfully logged out.") 
+  return Redirector.go_login()
 
 
 class register_account(View):
   def get(self, request, form=None):
     if request.user.is_authenticated:
-      return go_homepage()
+      return Redirector.go_home()
 
     context = { 'register_form': form or RegisterAccountForm }
     return render(request, 'register.html', context)
@@ -34,14 +33,14 @@ class register_account(View):
 
   def post(self, request):
     if request.user.is_authenticated:
-      return go_homepage()
+      return Redirector.go_home()
 
     form = RegisterAccountForm(request.POST)
     if form.is_valid():
       user = form.save()
       login(request, user)
       messages.success(request, 'Registration successful.' )
-      return go_homepage()
+      return Redirector.go_home()
 
     messages.error(request, 'Unsuccessful registration. Invalid information.')
     return self.get(request, form)
@@ -50,14 +49,14 @@ class register_account(View):
 class login_account(View):
   def get(self, request, form=None):
     if request.user.is_authenticated:
-      return go_homepage()
+      return Redirector.go_home()
 
     context = { 'login_form': form or AuthenticationForm() }
     return render(request, 'login.html', context)
 
   def post(self, request):
     if request.user.is_authenticated:
-      return go_homepage()
+      return Redirector.go_home()
 
     form = AuthenticationForm(request, data=request.POST)
     if form.is_valid():
@@ -66,14 +65,7 @@ class login_account(View):
       user = authenticate(username=username, password=password)
       if user is not None:
         login(request, user)
-        return go_homepage()
+        return Redirector.go_home()
 
     messages.error(request,'Invalid username or password.')
     return self.get(request, form)
-
-
-def logout_account(request):
-  logout(request)
-  messages.info(request, "You have successfully logged out.") 
-  return go_login()
-

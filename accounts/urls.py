@@ -12,7 +12,7 @@ app_name = 'accounts'
 
 
 urlpatterns = [
-  path('', index),
+  path('', index, name='auth'),
   path('register/', register_account.as_view(), name='register'),
   path('login/', login_account.as_view(), name='login'),
   path('logout/', logout_account, name='logout'),
