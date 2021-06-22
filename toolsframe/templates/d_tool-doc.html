@@ -10,6 +10,7 @@
 
   <script>
     const djangoEndpoints = `{{ tool.endpoints|to_json|safe }}`
+    const userToken = `{{ account.user_api_key }}`
   </script>
   <script src="{% static 'js/endpoint-handler.js' %}"></script>
 </head>

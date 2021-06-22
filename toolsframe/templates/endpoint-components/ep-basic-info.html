@@ -1,13 +1,13 @@
 <div 
   class="endpoint-basic-info flex justify-start items-center cursor-pointer" 
-  @click="endpoint.isOpen = !endpoint.isOpen" 
+  @click="showEndpointInfo(endpoint)" 
   x-bind:class="endpoint.isOpen ? 'mb-6':''"
 >
 
   <span 
     class="endpoint-method method-name flex-shrink-0 w-16 text-center uppercase font-bold text-xs py-1 inline-block"
     x-text="endpoint.method"
-    x-bind:class="getMethodColor(endpoint)"
+    x-bind:class="getMethodColor(endpoint.method)"
     ></span>
 
   <span 

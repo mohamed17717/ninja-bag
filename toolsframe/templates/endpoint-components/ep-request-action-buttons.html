@@ -1,13 +1,13 @@
 <div class="request-actions-buttons">
   <button 
     class="font-bold uppercase px-4 py-1 text-xs bg-accent text-button-text"
-    @click="endpoint.popup = !endpoint.popup"
+    @click="runRequest(endpoint)"
   >
     run request
   </button>
   <button 
     class="font-bold uppercase px-4 py-1 text-xs bg-primary-700 text-button-text"
-    @click="getHttpSyntax(endpoint, true)"
+    @click="resetHttpSyntax(endpoint)"
   >
     reset
   </button>

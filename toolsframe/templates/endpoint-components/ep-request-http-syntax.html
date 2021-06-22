@@ -16,7 +16,7 @@
     x-html="endpoint.httpSyntaxBody"
     :x-ref="`y${index}`"
     x-on:blur="endpoint.dataType === 'json' ? 
-      endpoint.httpSyntaxBody=$refs[`y${index}`].innerHTML : console.log('helo')
+      endpoint.httpSyntaxBody=$refs[`y${index}`].innerHTML : ''
     "
   ></div>
   </template>
