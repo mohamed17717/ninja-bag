@@ -2,7 +2,7 @@
   "tool_id": {
     "endpoints": [
       {
-        "url": "/redirect-to",
+        "url": "/redirect-to/",
         "method": "POST",
         "description": "Lorem32",
         "limits": ["storage", "bandwidth", "requests"],
@@ -29,7 +29,7 @@
   "this-is-anoher-tool-b451c1a2": {
     "endpoints": [
       {
-        "url": "/image-placeholder/{width}x{height}",
+        "url": "/image-placeholder/{width}x{height}/",
         "method": "GET",
         "description": "Return image with specific width and height",
         "limits": ["bandwidth", "requests"],
@@ -51,7 +51,7 @@
           ]
         }
       }, {
-        "url": "/get-user-avatar",
+        "url": "/get-user-avatar/",
         "method": "POST",
         "description": "return a profile picture customized to the user name with random colors",
         "limits": ["requests", "bandwidth"],
@@ -78,7 +78,7 @@
         }
 
       }, {
-        "url": "/generate-thumbnail",
+        "url": "/generate-thumbnail/",
         "method": "POST",
         "description": "take an image, new width and return new thumbnail of this image",
         "limits": ["storage", "bandwidth", "requests"],
@@ -101,7 +101,7 @@
           ]
         }
       }, {
-        "url": "/delete-image",
+        "url": "/delete-image/",
         "method": "DELETE",
         "description": "delete random image from the database",
         "limits": ["requests"]
