@@ -36,7 +36,7 @@ function getHttpSyntaxBodyForm(formSyntax) {
 
   const formId = match[1]
   const form = document.querySelector(`#${formId}`)
-  console.log('gotm: ', form)
+
   let serializedForm
   if(isFormValid(form))
     serializedForm = new FormData(form)
@@ -45,17 +45,12 @@ function getHttpSyntaxBodyForm(formSyntax) {
 }
 
 function getHttpSyntaxBodyJson(bodySyntax) {
-  console.log(bodySyntax)
-
   const bodyText = htmlToText(bodySyntax.replace(/\&nbsp\;/g, ''))
-  console.log(bodyText)
-
   return bodyText
 }
 
 
 function renderEndpoints() {
-  console.log('this is data object')
   let endpoints = JSON.parse(djangoEndpoints).map(item => ({
     ...item, isOpen: false, 
     popup: false, popupInfo: {
@@ -112,7 +107,6 @@ function renderEndpoints() {
     // http syntax -- body -- form
     getParamInputAtributes (param) {
       const paramName = param.name
-      console.log('paramINputAttribute')
       const value = paramsDataStore[paramName] || param.default || ''
       const acceptImage = 'accept="image/png, image/jpeg"'
       const required = param.required ? 'required' : ''
@@ -134,15 +128,12 @@ function renderEndpoints() {
 
     inputChange(paramName, elm) {
       // handle file later
-      console.log('change')
       const name = elm.name
       const value = elm.value
       paramsDataStore[name] = value
-      console.log(paramsDataStore)
     },
 
     generateHttpBodySyntax (endpoint) {
-      console.log('generate HTTP body')
       const dataType = endpoint.dataType // json | form
       let httpBody = ''
 
@@ -231,12 +222,10 @@ function renderEndpoints() {
 
       let url = `${window.location.protocol}//${window.location.host}${pathPart}${getPart}` // set token
       if(invalidRequest) return
-      console.log(url)
       // -_* step 2 - get method
       let method = httpSyntaxHeader.split(' ').shift()
       invalidRequest = endpoint.method !== method 
       if(invalidRequest) return
-      console.log(method)
       // -_* step 3 - get http headers 
       let httpHeadersLines = httpSyntaxHeader
                           .replace(/<\/*?\w+?.+?>/gm, '\n')
@@ -249,12 +238,10 @@ function renderEndpoints() {
       })
 
       delete headers['Content-Type']
-      console.log(headers)
       // -_* step 4 - get the body if exist and set the defualt if value is null
 
       const body = endpoint.dataType === 'json' ? 
         getHttpSyntaxBodyJson(endpoint.httpSyntaxBody): getHttpSyntaxBodyForm(endpoint.httpSyntaxBody)
-      console.log('body: ', body)
       if(this.isHttpHasBody(endpoint) && body === undefined) return
 
 
@@ -272,38 +259,22 @@ function renderEndpoints() {
       endpoint.popup = true
 
       // -_* step 6 - send request
-      console.log('run fetch')
       fetch(url, { method, body, headers })
         .then(res => {
           endpoint.popupInfo.response.code = res.status
           endpoint.popupInfo.response.type = res.statusText
 
-          console.log('this is response header: ', res.headers)
-          // return res.text()
           return res.blob()
         })
         .then((blob) => {
           const resStatusText = endpoint.popupInfo.response.type
-          const fileUrl = URL.createObjectURL(blob)
-          endpoint.popupInfo.response.blobUrl = fileUrl
-          if(fileUrl) {
-            endpoint.popupInfo.response.type = `${resStatusText} (${blob.type})`
-            endpoint.popupInfo.response.blobHasView = blob.size > 0
-          }
-          // endpoint.popupInfo.response.html = blob
-          console.log(blob)
-        })
-        .catch(err => {
-          console.log(err)
-        })
-        .finally(() => {
-          endpoint.popupInfo.isLoading = false
-          console.log('finally')
-        })
 
-
-      console.log('valid')
-      return null
+          endpoint.popupInfo.response.blobUrl = URL.createObjectURL(blob)
+          endpoint.popupInfo.response.type = `${resStatusText} (${blob.type})`
+          endpoint.popupInfo.response.blobHasView = blob.size > 0
+        })
+        .catch(err => console.error(err))
+        .finally(() => endpoint.popupInfo.isLoading = false )
     },
 
     showEndpointInfo(endpoint) {
