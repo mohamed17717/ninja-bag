@@ -44,6 +44,15 @@ function getHttpSyntaxBodyForm(formSyntax) {
 
 }
 
+function getHttpSyntaxBodyJson(bodySyntax) {
+  console.log(bodySyntax)
+
+  const bodyText = htmlToText(bodySyntax.replace(/\&nbsp\;/g, ''))
+  console.log(bodyText)
+
+  return bodyText
+}
+
 
 function renderEndpoints() {
   console.log('this is data object')
@@ -52,7 +61,7 @@ function renderEndpoints() {
     popup: false, popupInfo: {
       isLoading: true,
       url: '',method: '',body: '',headers: '', 
-      response: {code: 0, html: '', type: ''}
+      response: {code: 0, html: '', type: '', blobUrl: '', blobHasView: false}
     },
     httpSyntaxHeader: '', httpSyntaxBody: ''
   }))
@@ -238,11 +247,13 @@ function renderEndpoints() {
         let [name, value] = line.split(':')
         headers[name.trim()] = value.trim()
       })
+
+      delete headers['Content-Type']
       console.log(headers)
       // -_* step 4 - get the body if exist and set the defualt if value is null
 
       const body = endpoint.dataType === 'json' ? 
-        htmlToText(endpoint.httpSyntaxBody): getHttpSyntaxBodyForm(endpoint.httpSyntaxBody)
+        getHttpSyntaxBodyJson(endpoint.httpSyntaxBody): getHttpSyntaxBodyForm(endpoint.httpSyntaxBody)
       console.log('body: ', body)
       if(this.isHttpHasBody(endpoint) && body === undefined) return
 
@@ -252,6 +263,11 @@ function renderEndpoints() {
       endpoint.popupInfo.method = method
       endpoint.popupInfo.body = body
       endpoint.popupInfo.headers = headers
+      endpoint.popupInfo.response.html = ''
+      endpoint.popupInfo.response.type = ''
+      endpoint.popupInfo.response.blobUrl = ''
+      endpoint.popupInfo.response.blobHasView = false
+      endpoint.popupInfo.response.code = 0
       endpoint.popupInfo.isLoading = true
       endpoint.popup = true
 
@@ -262,12 +278,20 @@ function renderEndpoints() {
           endpoint.popupInfo.response.code = res.status
           endpoint.popupInfo.response.type = res.statusText
 
-          console.log(res.headers)
-          return res.text()
+          console.log('this is response header: ', res.headers)
+          // return res.text()
+          return res.blob()
         })
-        .then((text) => {
-          endpoint.popupInfo.response.html = text
-          console.log(text)
+        .then((blob) => {
+          const resStatusText = endpoint.popupInfo.response.type
+          const fileUrl = URL.createObjectURL(blob)
+          endpoint.popupInfo.response.blobUrl = fileUrl
+          if(fileUrl) {
+            endpoint.popupInfo.response.type = `${resStatusText} (${blob.type})`
+            endpoint.popupInfo.response.blobHasView = blob.size > 0
+          }
+          // endpoint.popupInfo.response.html = blob
+          console.log(blob)
         })
         .catch(err => {
           console.log(err)
