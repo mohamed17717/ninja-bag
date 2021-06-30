@@ -1,0 +1,70 @@
+body {
+  margin: 0;
+  padding: 0;
+  border: 0;
+  -webkit-box-sizing: border-box;
+          box-sizing: border-box;
+}
+
+#ninja-bag {
+  min-height: 100vh;
+}
+
+#ninja-bag .logo {
+  -webkit-transform: rotate(-15deg);
+          transform: rotate(-15deg);
+}
+
+#ninja-bag .logo > .top {
+  margin-bottom: 22.85714px;
+}
+
+#ninja-bag .logo > .bottom {
+  margin-top: 22.85714px;
+}
+
+#ninja-bag .logo .top,
+#ninja-bag .logo .bottom {
+  background: #b2bdcd;
+  background: #dee3ea;
+  height: 80px;
+  width: 208px;
+}
+
+#ninja-bag .logo .top {
+  border-radius: 50% / 100% 100% 0 0;
+}
+
+#ninja-bag .logo .bottom {
+  border-radius: 50% / 0 0 100% 100%;
+}
+
+#ninja-bag .logo .eyes .bottom {
+  height: 12.8px;
+  width: 33.28px;
+}
+
+#ninja-bag .logo2 {
+  width: 200px;
+  height: 200px;
+  border-radius: 50%;
+  -webkit-transform: rotate(-15deg);
+          transform: rotate(-15deg);
+  font-size: 0;
+  overflow: hidden;
+}
+
+#ninja-bag .logo2 .eyes {
+  height: 30%;
+  position: relative;
+  top: 45%;
+  -webkit-transform: translateY(-50%);
+          transform: translateY(-50%);
+}
+
+#ninja-bag .logo2 .eyes .eye {
+  height: 22%;
+  width: 17%;
+  border-radius: 50%;
+}
+/*# sourceMappingURL=logo.css.map */
