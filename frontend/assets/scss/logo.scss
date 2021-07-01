@@ -1,51 +1,7 @@
-body{
-  margin: 0;
-  padding: 0;
-  border: 0;
-  box-sizing: border-box;
-}
+.logo {
 
-#ninja-bag {
-  min-height: 100vh;
-
-  .logo {
-    transform: rotate(-15deg);
-    $size: 80px;
-    $width-ratio: 2.6;
-    $eye-ratio: .16;
-
-    & > .top {
-      margin-bottom: $size / 3.5;
-    }
-    & > .bottom {
-      margin-top: $size / 3.5;
-    }
-
-    .top,
-    .bottom {
-      background: #b2bdcd;
-      background: #dee3ea;
-
-      height: $size;
-      width: $size * $width-ratio;
-    }
-
-    .top {
-      border-radius: 50% / 100% 100% 0 0;
-    }
-    
-    .bottom {
-      border-radius: 50% / 0 0 100% 100%; 
-    }
-
-    .eyes .bottom {
-      height: $size * $eye-ratio;
-      width: $size * $eye-ratio * $width-ratio;
-    }
-  }
-
-  .logo2 {
-    $size: 200px;
+  .ninja {
+    $size: 40px;
     width: $size;
     height: $size;
 
@@ -67,12 +23,23 @@ body{
         height: $size + 5%;
         width: $size;
 
-        border-radius: 50%;
+        // border-radius: 50%;
+        border-radius: 50% / 0 0 100% 100%;
+
+        &:first-child {
+          transform: rotate(15deg);
+        }
+
+        &:last-child {
+          transform: rotate(-15deg);
+
+        }
+
       }
     }
   }
 
   .site-name {
-
+    font-size: 18px;
   }
 }

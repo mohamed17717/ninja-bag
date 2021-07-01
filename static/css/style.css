@@ -126,6 +126,11 @@ body [contenteditable] {
   padding: 15px 7.5%;
 }
 
+#homepage header {
+  padding-top: 8px;
+  padding-bottom: 8px;
+}
+
 #homepage > .content, #api > .content {
   padding: 50px 7.5%;
 }
