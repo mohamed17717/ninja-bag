@@ -60,7 +60,7 @@ class Tool(models.Model):
     verbose_name_plural = 'Tools'
 
   def __str__(self):
-    return self.tool_id
+    return f'{self.pk}- {self.tool_id}'
 
   def save(self, *args, **kwargs):
     if not self.pk:
@@ -88,6 +88,11 @@ class Tool(models.Model):
   def list_for_homepage():
     return Tool.objects.filter(active=True).values('name', 'description', 'logo', 'url_reverser', 'tool_id')
 
+  @staticmethod
+  def increase_uses_count_by_pk(pk):
+    tool = Tool.objects.filter(pk=pk).first()
+    if tool:
+      tool.increase_uses_count()
 
 class UpcomingTool(models.Model):
   name = models.CharField(max_length=128)

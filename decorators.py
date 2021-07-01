@@ -140,8 +140,9 @@ def cache_request(name_format, timeout=60*60*24, identifier=None):
   return decorator
 
 from accounts.models import Account
+from toolsframe.models import Tool
 
-def tool_handler(limitation=[]):
+def tool_handler(limitation=[], pk=None):
   def decorator(func):
     def wrapper(request, *args, **kwargs):
       # need api key or not
@@ -181,6 +182,9 @@ def tool_handler(limitation=[]):
         # after function # update the limits if success
         for limit_name in limitation:
           limits[limit_name]['after'](request, response)
+
+        if pk != None:
+          Tool.increase_uses_count_by_pk(pk)
 
       else:
         response = HttpResponseBadRequest('there is something wrong')
