@@ -4,21 +4,21 @@
 
   <div class="flex justify-end items-center">
 
-    <template x-if="checkLimitExist(endpoint, 'storage')">
+    <template x-if="Endpoint.checkLimitExist(endpoint, 'storage')">
     <div class="text-center">
       <i class="far fa-hdd text-lg mr-1"></i>
       <span class="capitalize">storage</span>
     </div>
     </template>
 
-    <template x-if="checkLimitExist(endpoint, 'bandwidth')">
+    <template x-if="Endpoint.checkLimitExist(endpoint, 'bandwidth')">
     <div class="ml-10 text-center">
       <i class="fas fa-wifi text-lg mr-1"></i>
       <span class="capitalize">bandwidth</span>
     </div>
     </template>
 
-    <template x-if="checkLimitExist(endpoint, 'requests')">
+    <template x-if="Endpoint.checkLimitExist(endpoint, 'requests')">
     <div class="ml-10 text-center">
       <i class="fas fa-paper-plane text-lg mr-1"></i>
       <span class="capitalize">requests</span>

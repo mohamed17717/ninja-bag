@@ -1,17 +1,3 @@
-let paramsDataStore = {}
-
-// function setChangeEventOnForminput (formId) {
-//   const form = document.querySelector(`#${formId}`)
-//   form.querySelectorAll('input').forEach(input => {
-//     console.log('change', input)
-//     input.addEventListener('click', e => {
-//       console.log('changed')
-//       console.log(e.target.value)
-//       console.log(paramsDataStore)
-//     })
-//   })
-// }
-
 function htmlToText(html) {
   const elm = document.createElement('div')
   elm.innerHTML = html
@@ -30,53 +16,12 @@ function isFormValid(form){
   return true
 }
 
-function getHttpSyntaxBodyForm(formSyntax) {
-  const match = formSyntax.match(/id="([\w-]+?)"/)
-  if(match === null) return
-
-  const formId = match[1]
-  const form = document.querySelector(`#${formId}`)
-
-  let serializedForm
-  if(isFormValid(form))
-    serializedForm = new FormData(form)
-  return serializedForm
-
-}
-
-function getHttpSyntaxBodyJson(bodySyntax) {
-  const bodyText = htmlToText(bodySyntax.replace(/\&nbsp\;/g, ''))
-  return bodyText
-}
-
 
 function renderEndpoints() {
-  let endpoints = JSON.parse(djangoEndpoints).map(item => ({
-    ...item, isOpen: false, 
-    popup: false, popupInfo: {
-      isLoading: true,
-      url: '',method: '',body: '',headers: '', 
-      response: {code: 0, html: '', type: '', blobUrl: '', blobHasView: false}
-    },
-    httpSyntaxHeader: '', httpSyntaxBody: ''
-  }))
+  let endpoints = JSON.parse(djangoEndpoints).map(ep => Endpoint.generate(ep))
 
   return {
     endpoints,
-
-    getMethodColor(method){
-      const colors = {
-        get: 'bg-green-700',
-        post: 'bg-yellow-700',
-        delete: 'bg-red-700',
-      }
-      return colors[method.toLowerCase()]
-    },
-
-    checkLimitExist(endpoint, limit){
-      const limits = endpoint.limits
-      return limits && limits.includes(limit)
-    },
 
     // http syntax -- header
     getHttpHeaderContentType(endpoint) {
@@ -99,15 +44,9 @@ function renderEndpoints() {
       return `${method} ${path} ${httpVersion}\n${httpContentType}`.trim()
     },
 
-    // http syntax -- body
-    isHttpHasBody(endpoint) {
-      return endpoint.method === 'POST' && endpoint.params && endpoint.params.POST.length
-    },
-
     // http syntax -- body -- form
     getParamInputAtributes (param) {
-      const paramName = param.name
-      const value = paramsDataStore[paramName] || param.default || ''
+      const value = param.default || ''
       const acceptImage = 'accept="image/png, image/jpeg"'
       const required = param.required ? 'required' : ''
 
@@ -120,17 +59,7 @@ function renderEndpoints() {
       }
 
       const klass = type === 'file' ? 'mb-2' : 'mb-2 text-primary-700'
-      const ref = Math.random().toString(36).slice(-5)
-      const eventName = type === 'file' ? 'change' : 'keyup'
-      const alpineCode = `x-ref="${ref}" @${eventName}="inputChange('${param.name}', $refs['${ref}'])"`
-      return `class="${klass}" name="${param.name}" type="${type}" value="${value}" ${accept} ${required} ${alpineCode}`
-    },
-
-    inputChange(paramName, elm) {
-      // handle file later
-      const name = elm.name
-      const value = elm.value
-      paramsDataStore[name] = value
+      return `class="${klass}" name="${param.name}" type="${type}" value="${value}" ${accept} ${required}`
     },
 
     generateHttpBodySyntax (endpoint) {
@@ -169,82 +98,38 @@ function renderEndpoints() {
       if (endpoint.httpSyntaxHeader.length && !forceUpdate) return
 
       endpoint.httpSyntaxHeader = this.getHttpSyntaxHeader(endpoint)
-      if(this.isHttpHasBody)
+      if(Endpoint.isHttpHasBody(endpoint))
         endpoint.httpSyntaxBody = this.getHttpSyntaxBody(endpoint)
     },
 
-
     // action buttons
     resetHttpSyntax (endpoint) {
-      getHttpSyntax(endpoint, true)
+      this.getHttpSyntax(endpoint, true)
     },
 
     runRequest(endpoint) {
-      const httpSyntaxHeader = endpoint.httpSyntaxHeader
-                                .replace(/&amp;/g, '&')
-                                .replace(/<br>/g, '\n')
-                                .replace(/&nbsp;/g, ' ')
-
-      let invalidRequest = false
+      const httpParser = new HTTPSyntaxParser(endpoint)
 
       // -_* step 1 - get path and set values in the url
-      let httpSyntaxHeaderPath = httpSyntaxHeader
-                                  .split('\n').shift() // first line
-                                  .split(' ').slice(1, -1).join(' ')
-
-      let [pathPart, getPart] = httpSyntaxHeaderPath.split('?')
-      let pathParams = pathPart.match(/\{[\w ]+\}/g) || []
-      let getParams = getPart && getPart.match(/\{[\w ]+\}/g) || []
-
-      pathParams.forEach(param => {
-        const endpointUrlParam = endpoint.params.URL.filter(p => `{${p.name}}` === param).pop()
-        const paramDefault = endpointUrlParam && endpointUrlParam.default
-
-        if(paramDefault !== undefined)
-          pathPart = pathPart.replace(param, paramDefault)
-        else // param is not exist or param is file or param has no default value 
-          invalidRequest = true
-      })
-
-      getParams.forEach(param => {
-        const endpointGetParam = endpoint.params.GET && endpoint.params.GET.filter(p => `{${p.name}}` === param).pop()
-        const paramDefault = endpointGetParam && endpointGetParam.default
-
-        if(paramDefault !== undefined)
-          getPart = getPart.replace(param, paramDefault)
-        // else // param is not exist or param is file or param has no default value 
-        //   invalidRequest = true
-      })
-
-      getPart = (getPart || '').split('&').filter(i => i)
-      getPart.push(`token=${userToken}`) // if token required else handle empty get part
-      getPart = `?${getPart.join('&')}`
-
-      let url = `${window.location.protocol}//${window.location.host}${pathPart}${getPart}` // set token
-      if(invalidRequest) return
+      let url = httpParser.getUrl()
+      if(!url) {
+        notify('invalid url', 'error')
+        return
+      }
       // -_* step 2 - get method
-      let method = httpSyntaxHeader.split(' ').shift()
-      invalidRequest = endpoint.method !== method 
-      if(invalidRequest) return
+      let method = httpParser.getMethod()
+      if(!method) {
+        notify(`Method not matched`, 'error')
+        return
+      }
       // -_* step 3 - get http headers 
-      let httpHeadersLines = httpSyntaxHeader
-                          .replace(/<\/*?\w+?.+?>/gm, '\n')
-                          .split('\n').slice(1)
-                          .filter(i => i)
-      let headers = {}
-      httpHeadersLines.forEach(line => {
-        let [name, value] = line.split(':')
-        headers[name.trim()] = value.trim()
-      })
-
-      delete headers['Content-Type']
+      let headers = httpParser.getHeaders()
       // -_* step 4 - get the body if exist and set the defualt if value is null
-
-      const body = endpoint.dataType === 'json' ? 
-        getHttpSyntaxBodyJson(endpoint.httpSyntaxBody): getHttpSyntaxBodyForm(endpoint.httpSyntaxBody)
-      if(this.isHttpHasBody(endpoint) && body === undefined) return
-
-
+      const body = httpParser.getBody()
+      if(Endpoint.isHttpHasBody(endpoint) && body === undefined) {
+        notify(`invalid syntax body`, 'error')
+        return
+      }
       // -_* step 5 - open popup -- send request -- show response
       endpoint.popupInfo.url = url
       endpoint.popupInfo.method = method
@@ -257,7 +142,6 @@ function renderEndpoints() {
       endpoint.popupInfo.response.code = 0
       endpoint.popupInfo.isLoading = true
       endpoint.popup = true
-
       // -_* step 6 - send request
       fetch(url, { method, body, headers })
         .then(res => {
@@ -279,9 +163,9 @@ function renderEndpoints() {
 
     showEndpointInfo(endpoint) {
       if(endpoint.isOpen){
-        endpoint.isOpen=false
+        endpoint.isOpen = false
       } else {
-        this.endpoints.forEach(e => e.isOpen=false)
+        this.endpoints.forEach(e => e.isOpen = false)
         endpoint.isOpen = true
       }
     }

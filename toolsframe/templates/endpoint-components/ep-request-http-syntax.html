@@ -9,7 +9,7 @@
     <!-- :x-ref="`httpSyntaxHeader${index}`"
     x-html="getHttpSyntaxHeader(endpoint)" -->
 
-  <template x-if="isHttpHasBody(endpoint)">
+  <template x-if="Endpoint.isHttpHasBody(endpoint)">
   <div 
     x-bind:contenteditable="endpoint.dataType === 'json'"
     class="request-body"

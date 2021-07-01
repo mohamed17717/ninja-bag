@@ -17,7 +17,7 @@
       <div class="flex items-center overflow-x-hidden">
         <span 
           class="method-name mr-2 flex-shrink-0 w-16 text-center uppercase font-bold text-xs py-1 inline-block"
-          x-bind:class="getMethodColor(endpoint.popupInfo.method)"
+          x-bind:class="Endpoint.getMethodColor(endpoint)"
           x-text="endpoint.popupInfo.method"
         ></span>
         <span class="url break-all" x-text="endpoint.popupInfo.url"></span>
