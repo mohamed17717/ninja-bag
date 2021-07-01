@@ -12,4 +12,4 @@ class Redirector:
 
   @staticmethod
   def go_login():
-    redirect(Redirector.LOGIN_URL_REVERSER)
+    return redirect(Redirector.LOGIN_URL_REVERSER)
