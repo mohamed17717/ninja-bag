@@ -107,6 +107,22 @@ function renderEndpoints() {
       this.getHttpSyntax(endpoint, true)
     },
 
+    setupPopupAndOpen(endpoint, popupInfo) {
+      const {url, method, body, headers} = popupInfo
+
+      endpoint.popupInfo.url = url
+      endpoint.popupInfo.method = method
+      endpoint.popupInfo.body = body
+      endpoint.popupInfo.headers = headers
+      endpoint.popupInfo.response.html = ''
+      endpoint.popupInfo.response.type = ''
+      endpoint.popupInfo.response.blobUrl = ''
+      endpoint.popupInfo.response.blobHasView = false
+      endpoint.popupInfo.response.code = 0
+      endpoint.popupInfo.isLoading = true
+      endpoint.popup = true
+    },
+
     runRequest(endpoint) {
       const httpParser = new HTTPSyntaxParser(endpoint)
 
@@ -131,17 +147,8 @@ function renderEndpoints() {
         return
       }
       // -_* step 5 - open popup -- send request -- show response
-      endpoint.popupInfo.url = url
-      endpoint.popupInfo.method = method
-      endpoint.popupInfo.body = body
-      endpoint.popupInfo.headers = headers
-      endpoint.popupInfo.response.html = ''
-      endpoint.popupInfo.response.type = ''
-      endpoint.popupInfo.response.blobUrl = ''
-      endpoint.popupInfo.response.blobHasView = false
-      endpoint.popupInfo.response.code = 0
-      endpoint.popupInfo.isLoading = true
-      endpoint.popup = true
+      const popupInfo = { url, method, headers, body }
+      this.setupPopupAndOpen(endpoint, popupInfo)
       // -_* step 6 - send request
       fetch(url, { method, body, headers })
         .then(res => {
