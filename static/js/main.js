@@ -14,7 +14,7 @@ function notify(msg, type){
   const colors = {success: 'bg-green-700', failed: 'bg-red-700', error: 'bg-red-700'}
   const color = colors[type]
   const elm = document.createElement('div')
-  const classes = `notification fixed ${color} py-3 px-5 text-center right-0 bottom-10 w-32 capitalize text-white font-bold opacity-70 transition transform translate-x-full`
+  const classes = `notification fixed ${color} py-3 px-5 text-center right-0 bottom-10 capitalize text-white font-bold opacity-70 transition transform translate-x-full`
   elm.setAttribute('class', classes)
   elm.innerText = msg
 
