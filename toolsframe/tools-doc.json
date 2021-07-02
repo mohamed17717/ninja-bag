@@ -96,7 +96,7 @@
   },
 
   "qr-code generator": {
-    "description": "convert any text into a qrcode",
+    "description": "convert any text into a qrcode"
   },
 
   "cors proxy": {
