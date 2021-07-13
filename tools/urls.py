@@ -14,12 +14,13 @@ from .views import (
   convert_image_to_b64,
   convert_b64_to_image,
   unshorten_url,
-  get_user_agent_details,
+  analyze_user_agent,
+  analyze_my_machine_user_agent,
   generate_qrcode,
 
   TextSaver,
-  # cors_proxy,
-  CorsProxy
+  cors_proxy,
+  # CorsProxy
 )
 
 app_name = 'tools'
@@ -56,7 +57,8 @@ urlpatterns = [
   path('unshorten-url/', unshorten_url(full_track=False), name='unshorten-url'),
   path('unshorten-url/full-track/', unshorten_url(full_track=True), name='unshorten-url'),
 
-  path('user-agent-details/', get_user_agent_details, name='get-user-agent-detail'),
+  path('analyze-user-agent/', analyze_user_agent, name='analyze-user-agent'),
+  path('analyze-my-machine/', analyze_my_machine_user_agent, name='analyze-my-machine'),
 
   path('gen-qrcode/', generate_qrcode, name='gen-qrcode'),
 
@@ -66,6 +68,6 @@ urlpatterns = [
   path('save-text/<str:file_name>/', TextSaver.action_handler, name='textsaver-read'),
   path('save-text/<str:file_name>/delete/', TextSaver.delete, name='textsaver-delete'),
 
-  path('cors-proxy/', CorsProxy.proxy, name='cors-proxy'),
+  path('cors-proxy/', cors_proxy, name='cors-proxy'),
 
 ]

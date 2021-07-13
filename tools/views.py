@@ -15,79 +15,75 @@ import base64
 
 import qrcode
 
-from .classes.MyImageHandler import MyImageHandler
-from .classes.Social import Facebook
-from .classes.helpers import ua_details
 from .classes.FileManager import FileManager
 
 from decorators import require_http_methods, tool_handler
 
 from accounts.models import Account
 
+from .controller import RequestAnalyzerTools, ImageTools, ScrapingTools
+from .controller.ImageTools import MyImageHandler
+
 def index(request):
   return render(request, 'test.html')
 
 
+#--------------------- start RequestAnalyzer tools ---------------------#
+
 @require_http_methods(['GET'])
 @tool_handler(limitation=[])
 def get_my_ip(request):
-  x_forwarded_for = request.META.get('HTTP_X_FORWARDED_FOR')
-  if x_forwarded_for:
-    ip = x_forwarded_for.split(',')[0]
-  else:
-    ip = request.META.get('REMOTE_ADDR')
+  ip = RequestAnalyzerTools.get_ip(request)
   return HttpResponse(ip)
 
 
 @require_http_methods(['GET'])
 @tool_handler(limitation=[])
 def get_my_proxy_anonimity(request):
-  rename_header = lambda h: f'http-{h}'.upper().replace('-', '_')
-  proxy_headers = map(rename_header, [
-    # elite
-    # Anonymous
-    'Authorization', 
-    'From', 
-    'Proxy-Authorization',
-    'Proxy-Connection',
-    'Via',
-    # transparent
-    'X-Forwarded-For'
-  ])
-
-  headers = request.META
-  found_headers = [h for h in proxy_headers if headers.get(h)]
-
-  anonimity = 'anonymous'
-  if len(found_headers) == 0:
-    anonimity = 'elite'
-  elif rename_header('X-Forwarded-For') in found_headers:
-    anonimity = 'transparent'
-
+  anonimity = RequestAnalyzerTools.get_proxy_anonimity(request)
   return HttpResponse(anonimity)
 
 
 @require_http_methods(['GET'])
 @tool_handler(limitation=[])
 def get_my_request_headers(request):
-  headers = {}
-
-  for key, value in request.META.items():
-    if key.startswith('HTTP_'):
-      key = key.replace('HTTP_', '')
-      headers[key] = value
-
+  headers = RequestAnalyzerTools.get_request_headers(request)
   return JsonResponse(headers)
 
+
+@require_http_methods(['POST'])
+@tool_handler(limitation=['requests'])
+def analyze_user_agent(request):
+  ua = request.POST.get('user-agent')
+  if not ua:
+    return HttpResponseBadRequest('missed post key "user-agnet"')
+
+  data = RequestAnalyzerTools.get_user_agent_details(ua)
+  return JsonResponse(data, safe=False)
+
+
+@require_http_methods(['GET', 'POST'])
+@tool_handler(limitation=['requests'])
+def analyze_my_machine_user_agent(request):
+  ua = request.META['HTTP_USER_AGENT']
+  data = RequestAnalyzerTools.get_user_agent_details(ua)
+
+  return JsonResponse(data, safe=False)
+
+#--------------------- end RequestAnalyzer tools ---------------------#
+
+
+
+#--------------------- start Images tools ---------------------#
 
 @require_http_methods(['GET'])
 @tool_handler(limitation=['requests', 'bandwidth'])
 def get_image_placeholder(request, width, height=None, color=None):
-  color = MyImageHandler.handle_user_color(color)
+  color = MyImageHandler.handle_color(color)
   height = height or width
 
   try:
-    image = Image.new('RGB', (width, height), color)
+    image = MyImageHandler.generate_placeholder_image(width, height, color)
     response = MyImageHandler.image_response(image)
   except Exception as e:
     response = HttpResponseBadRequest(e)
@@ -98,26 +94,10 @@ def get_image_placeholder(request, width, height=None, color=None):
 @require_http_methods(['GET'])
 @tool_handler(limitation=['requests', 'bandwidth'])
 def convert_username_to_profile_pic(request, size, username, color=None):
-  color = MyImageHandler.handle_user_color(color)
-  text_color = MyImageHandler.get_color_best_contrast_bw(color)
-  width = height = size
-  text = ''.join([name[0] for name in username.split(' ')[:2]]).upper()
+  color = MyImageHandler.handle_color(color)
 
   try:
-    image = Image.new('RGB', (width, height), color)
-
-    # setup text
-    draw = ImageDraw.Draw(image)
-    # font
-    fontsize = int(size * 2/4)
-    font = ImageFont.truetype('./static/fonts/Nonserif.ttf', fontsize)
-    # position text
-    textwidth, textheight = draw.textsize(text, font=font)
-    x = (width - textwidth) / 2
-    y = (height - textheight) / 2 - (size*20/400)
-    # draw text
-    draw.text((x, y), text, fill=text_color, font=font)
-
+    image = MyImageHandler.generate_avatar_image(size, username, color)
     response = MyImageHandler.image_response(image)
   except Exception as e:
     response = HttpResponseBadRequest(e)
@@ -134,24 +114,10 @@ def convert_image_to_thumbnail(request):
   if not image_file:
     response = HttpResponse('make sure you name input "image"')
   else:
-    image = Image.open(image_file)
-    width, height = image.size
-    new_height = new_width * height / width
-    image.thumbnail((new_width, new_height), Image.ANTIALIAS)
-
+    image = MyImageHandler.generate_thumbnail(image_file, new_width)
     response = MyImageHandler.image_response(image)
 
   return response
-
-
-@require_http_methods(['POST'])
-@tool_handler(limitation=['requests'])
-def get_fb_user_id(request):
-  acc_url = request.POST.get('url')
-  acc = Facebook(acc_url)
-  user_id = acc.get_fb_user_id()
-
-  return HttpResponse(user_id or 'Not Found')
 
 
 @require_http_methods(['POST'])
@@ -162,13 +128,8 @@ def remove_image_meta_data(request):
   if not image_file:
     response = HttpResponse('make sure you name input "image"')
   else:
-    image = Image.open(image_file)
-
-    data = list(image.getdata())
-    image_without_exif = Image.new(image.mode, image.size)
-    image_without_exif.putdata(data)
-
-    response = MyImageHandler.image_response(image_without_exif)
+    image = MyImageHandler.generate_cleaned_image_form_exif(image_file)
+    response = MyImageHandler.image_response(image)
 
   return response
 
@@ -177,17 +138,9 @@ def remove_image_meta_data(request):
 @tool_handler(limitation=['requests', 'bandwidth'])
 def convert_image_to_b64(request):
   image_file = request.FILES.get('image')
-  image_name = image_file.name
+  b64 = MyImageHandler.generate_b64_from_image(image_file)
 
-  image_ext = 'jpeg'
-  if '.' in image_name:
-    image_ext = image_name.split('.')[-1]
-
-  image_b64 = base64.b64encode(image_file.read())
-  image_b64 = str(image_b64)[2:-1]
-
-  prefix = f'data:image/{image_ext};base64,'
-  return HttpResponse(prefix + image_b64)
+  return HttpResponse(b64)
 
 @require_http_methods(['POST'])
 @tool_handler(limitation=['requests', 'bandwidth'])
@@ -196,53 +149,12 @@ def convert_b64_to_image(request):
   if not image_b64:
     return HttpResponseBadRequest('missing field "image"')
 
-  image_b64 = re.sub(r'^data:image/\w+?;base64,', '', image_b64)
   try: 
-    image = Image.open(BytesIO(base64.b64decode(image_b64)))
+    image = MyImageHandler.generate_image_form_b64(image_b64)
     response = MyImageHandler.image_response(image)
   except:
     response = HttpResponseBadRequest('Not valid image')
   
-  return response
-
-
-def unshorten_url(full_track=False):
-
-  @require_http_methods(['POST'])
-  @tool_handler(limitation=['requests', 'bandwidth'])
-  def wrapper(request):
-    shortened_url = request.POST.get('url')
-
-    if shortened_url:
-      try:
-        res = requests.head(shortened_url, allow_redirects=True)
-        if full_track:
-          response = JsonResponse([r.url for r in res.history] + [res.url], safe=False)
-        else:
-          response = HttpResponse(res.url)
-
-      except requests.exceptions.MissingSchema:
-        response = HttpResponseBadRequest('you must provide protocol for the url')
-    else:
-      response = HttpResponseBadRequest('missing url in post body')
-
-    return response
-  return wrapper
-
-
-@tool_handler(limitation=['requests'])
-def get_user_agent_details(request):
-  if request.method == 'GET':
-    ua = request.META['HTTP_USER_AGENT']
-  elif request.method == 'POST':
-    ua = request.POST.get('user-agent')
-
-  if ua:
-    data = ua_details(ua)
-    response = JsonResponse(data, safe=False)
-  else:
-    response = HttpResponseBadRequest('missed post key "user-agnet"')
-
   return response
 
 
@@ -253,10 +165,62 @@ def generate_qrcode(request):
   if not string:
     return HttpResponseBadRequest('missing field "text"')
 
-  image = qrcode.make(string)
+  image = MyImageHandler.generate_qr_code(string)
   response = MyImageHandler.image_response(image)
 
   return response
+
+#--------------------- end Images tools ---------------------#
+
+
+
+#--------------------- start scraping tools ---------------------#
+
+def unshorten_url(full_track=False):
+
+  @require_http_methods(['POST'])
+  @tool_handler(limitation=['requests', 'bandwidth'])
+  def wrapper(request):
+    shortened_url = request.POST.get('url')
+    if not shortened_url:
+      return HttpResponseBadRequest('missing url in post body')
+
+    response_states = [
+      lambda track: JsonResponse(track, safe=False),
+      lambda track: HttpResponse(track[-1])
+    ]
+
+    try:
+      track = ScrapingTools.get_url_redirect_track(shortened_url)
+      response = response_states[int(full_track)](track)
+
+    except requests.exceptions.MissingSchema:
+      response = HttpResponseBadRequest('you must provide protocol for the url')
+    
+
+    return response
+  return wrapper
+
+
+@require_http_methods(['POST'])
+@tool_handler(limitation=['requests'])
+def get_fb_user_id(request):
+  acc_url = request.POST.get('url')
+  user_id = ScrapingTools.get_fb_user_id(acc_url)  or 'Not Found'
+
+  return HttpResponse(user_id)
+
+
+@tool_handler(limitation=['requests', 'bandwidth'])
+def cors_proxy(request):
+  cors = ScrapingTools.CorsProxy(request)
+
+  res = cors.simulate_request()
+  response = cors.simulate_response(res)
+
+  return response
+
+#--------------------- end scraping tools ---------------------#
 
 
 class TextSaver:
@@ -355,76 +319,6 @@ class TextSaver:
     return response
 
 
-class CorsProxy:
-  def __init__(self, request):
-    self.request = request
 
-  def __get_body(self):
-    body = self.request.body.decode('utf8')
-  
-    try: body = json.loads(body)
-    except: pass
 
-    return body
-
-  def __get_headers(self):
-    headers = self.request.headers
-    not_allowed_headers = [
-      'Host','Origin','Sec-Fetch-Sit',
-      'Sec-Fetch-Mode','Sec-Fetch-Dest','Referer',
-      'Sec-Fetch-Site','Content-Length', # 'Content-Type'
-    ]
-
-    new_headers = {}
-    for h, v in headers.items():
-      if h in not_allowed_headers: continue
-      new_headers[h] = v
-
-    return new_headers
-
-  def __get_request_params(self, url, method, headers, cookies, body):
-    request_params = { 'url': url, 'headers': headers }
-    if body:
-      key = 'data'
-      if headers['Content-Type'].lower() == 'application/json':
-        key = 'json'
-      
-      request_params.update({ key: body })
-
-    return request_params
-
-  def __get_method_function(self, method):
-    return eval(f'requests.{method.lower()}')
-
-  def simulate_request(self):
-    url = self.request.GET.get('url')
-    method = self.request.method
-    headers = self.__get_headers()
-    cookies = self.request.COOKIES
-    body = self.__get_body()
-
-    request_params = self.__get_request_params(url, method, headers, cookies, body)
-
-    method_func = self.__get_method_function(method)
-    response = method_func(**request_params)
-
-    return response
-
-  def simulate_response(self, res):
-    response = HttpResponse(
-      content=res.text, 
-      status=res.status_code, 
-      content_type=res.headers['Content-Type']
-    )
-    return response
-
-  @staticmethod
-  @tool_handler(limitation=['requests', 'bandwidth'])
-  def proxy(request):
-    cors = CorsProxy(request)
-
-    res = cors.simulate_request()
-    reponse = cors.simulate_response(res)
-
-    return reponse
 
