@@ -193,3 +193,18 @@ def tool_handler(limitation=[], pk=None):
     return wrapper
   return decorator
 
+def required_post_fields(required_fields=[]):
+  def decorator(func):
+
+    def wrapper(request, data, *args, **kwargs):
+      posted_fields = request.POST.dict().keys()
+
+      error_response = lambda field: HttpResponseBadRequest(f'field "{field}" is required.')
+      for required_field in required_fields:
+        if required_field not in posted_fields:
+          return error_response(require_fields)
+
+      return func(request, *args, **kwargs)
+
+    return wrapper
+  return decorator

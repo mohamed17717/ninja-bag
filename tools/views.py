@@ -17,7 +17,7 @@ import qrcode
 
 from .classes.FileManager import FileManager
 
-from decorators import require_http_methods, tool_handler
+from decorators import require_http_methods, tool_handler, required_post_fields
 
 from accounts.models import Account
 
@@ -52,17 +52,16 @@ def get_my_request_headers(request):
 
 
 @require_http_methods(['POST'])
+@required_post_fields(['user-agent'])
 @tool_handler(limitation=['requests'])
 def analyze_user_agent(request):
   ua = request.POST.get('user-agent')
-  if not ua:
-    return HttpResponseBadRequest('missed post key "user-agnet"')
-
   data = RequestAnalyzerTools.get_user_agent_details(ua)
+
   return JsonResponse(data, safe=False)
 
 
-@require_http_methods(['GET', 'POST'])
+@require_http_methods(['GET'])
 @tool_handler(limitation=['requests'])
 def analyze_my_machine_user_agent(request):
   ua = request.META['HTTP_USER_AGENT']
@@ -106,48 +105,43 @@ def convert_username_to_profile_pic(request, size, username, color=None):
 
 
 @require_http_methods(['POST'])
+@required_post_fields(['image'])
 @tool_handler(limitation=['requests', 'bandwidth'])
 def convert_image_to_thumbnail(request):
   image_file = request.FILES.get('image')
   new_width = int(request.POST.get('width') or 128)
 
-  if not image_file:
-    response = HttpResponse('make sure you name input "image"')
-  else:
-    image = MyImageHandler.generate_thumbnail(image_file, new_width)
-    response = MyImageHandler.image_response(image)
+  image = MyImageHandler.generate_thumbnail(image_file, new_width)
 
-  return response
+  return MyImageHandler.image_response(image)
 
 
 @require_http_methods(['POST'])
+@required_post_fields(['image'])
 @tool_handler(limitation=['requests', 'bandwidth'])
 def remove_image_meta_data(request):
   image_file = request.FILES.get('image')
 
-  if not image_file:
-    response = HttpResponse('make sure you name input "image"')
-  else:
-    image = MyImageHandler.generate_cleaned_image_form_exif(image_file)
-    response = MyImageHandler.image_response(image)
+  image = MyImageHandler.generate_cleaned_image_form_exif(image_file)
 
-  return response
+  return MyImageHandler.image_response(image)
 
 
 @require_http_methods(['POST'])
+@required_post_fields(['image'])
 @tool_handler(limitation=['requests', 'bandwidth'])
 def convert_image_to_b64(request):
   image_file = request.FILES.get('image')
+
   b64 = MyImageHandler.generate_b64_from_image(image_file)
 
   return HttpResponse(b64)
 
 @require_http_methods(['POST'])
+@required_post_fields(['image'])
 @tool_handler(limitation=['requests', 'bandwidth'])
 def convert_b64_to_image(request):
   image_b64 = request.POST.get('image')
-  if not image_b64:
-    return HttpResponseBadRequest('missing field "image"')
 
   try: 
     image = MyImageHandler.generate_image_form_b64(image_b64)
@@ -159,16 +153,14 @@ def convert_b64_to_image(request):
 
 
 @require_http_methods(['POST'])
+@required_post_fields(['text'])
 @tool_handler(limitation=['requests', 'bandwidth'])
 def generate_qrcode(request):
   string = request.POST.get('text')
-  if not string:
-    return HttpResponseBadRequest('missing field "text"')
 
   image = MyImageHandler.generate_qr_code(string)
-  response = MyImageHandler.image_response(image)
 
-  return response
+  return MyImageHandler.image_response(image)
 
 #--------------------- end Images tools ---------------------#
 
@@ -177,35 +169,31 @@ def generate_qrcode(request):
 #--------------------- start scraping tools ---------------------#
 
 def unshorten_url(full_track=False):
+  get_response = lambda track: JsonResponse(track, safe=False) \
+                  if full_track else HttpResponse(track[-1])
 
   @require_http_methods(['POST'])
+  @required_post_fields(['url'])
   @tool_handler(limitation=['requests', 'bandwidth'])
   def wrapper(request):
     shortened_url = request.POST.get('url')
-    if not shortened_url:
-      return HttpResponseBadRequest('missing url in post body')
-
-    response_states = [
-      lambda track: JsonResponse(track, safe=False),
-      lambda track: HttpResponse(track[-1])
-    ]
 
     try:
       track = ScrapingTools.get_url_redirect_track(shortened_url)
-      response = response_states[int(full_track)](track)
-
+      response = get_response(track)
     except requests.exceptions.MissingSchema:
       response = HttpResponseBadRequest('you must provide protocol for the url')
-    
 
     return response
   return wrapper
 
 
 @require_http_methods(['POST'])
+@required_post_fields(['url'])
 @tool_handler(limitation=['requests'])
 def get_fb_user_id(request):
   acc_url = request.POST.get('url')
+
   user_id = ScrapingTools.get_fb_user_id(acc_url)  or 'Not Found'
 
   return HttpResponse(user_id)
