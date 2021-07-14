@@ -115,7 +115,7 @@ class UpcomingTool(models.Model):
 
 
 class SuggestedTool(models.Model):
-  user = models.ForeignKey(User, related_name='user_suggested_tools', on_delete=models.CASCADE)
+  user = models.ForeignKey(User, related_name='user_suggested_tools', on_delete=models.SET_NULL, blank=True, null=True)
   description = models.TextField()
 
   seen = models.BooleanField(default=False)

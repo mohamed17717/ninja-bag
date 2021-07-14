@@ -1,28 +1,16 @@
 from django.shortcuts import render, reverse
-from django.http import HttpResponse, JsonResponse, FileResponse, HttpResponseBadRequest
-from django.views import View
-from django.utils.decorators import method_decorator
-
-import json
-import re
-import requests
-from random import randint
-import secrets
-
-from PIL import Image, ImageDraw, ImageFont
-from io import StringIO, BytesIO
-import base64
-
-import qrcode
-
-from .classes.FileManager import FileManager
-
-from decorators import require_http_methods, tool_handler, required_post_fields
+from django.http import HttpResponse, JsonResponse, HttpResponseBadRequest
 
 from accounts.models import Account
 
+from decorators import require_http_methods, tool_handler, required_post_fields
+
+from .classes.FileManager import FileManager
 from .controller import RequestAnalyzerTools, ImageTools, ScrapingTools
 from .controller.ImageTools import MyImageHandler
+
+import json, secrets
+
 
 def index(request):
   return render(request, 'test.html')
@@ -146,8 +134,8 @@ def convert_b64_to_image(request):
   try: 
     image = MyImageHandler.generate_image_form_b64(image_b64)
     response = MyImageHandler.image_response(image)
-  except:
-    response = HttpResponseBadRequest('Not valid image')
+  except Exception as e:
+    response = HttpResponseBadRequest(e)
   
   return response
 
@@ -181,8 +169,8 @@ def unshorten_url(full_track=False):
     try:
       track = ScrapingTools.get_url_redirect_track(shortened_url)
       response = get_response(track)
-    except requests.exceptions.MissingSchema:
-      response = HttpResponseBadRequest('you must provide protocol for the url')
+    except Exception as e:
+      response = HttpResponseBadRequest(e)
 
     return response
   return wrapper
