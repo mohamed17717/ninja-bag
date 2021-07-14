@@ -22,10 +22,6 @@ class Category(models.Model):
   def __str__(self):
     return self.name
 
-  def get_absolute_url(self):
-    return ('')
-
-  # TODO: Define custom methods here
   def get_tools(self):
     return self.category_tools.all()
 
@@ -51,10 +47,6 @@ class Tool(models.Model):
   created = models.DateField(auto_now_add=True)
   updated = models.DateField(auto_now=True)
 
-  # notes = models.TextField(blank=True, null=True) # its limited or totally free
-  # app_name = models.CharField(max_length=128, blank=True, null=True)
-  # access_lvl = models.IntegerField(default=0) # 0 not-require auth | 1 require auth | 2 premium | 3 partial premium
-
   class Meta:
     verbose_name = 'Tool'
     verbose_name_plural = 'Tools'
@@ -68,7 +60,6 @@ class Tool(models.Model):
     return super(Tool, self).save(*args, **kwargs)
 
   def get_absolute_url(self):
-    # return resolve_url(self.url_reverser, tool_id=self.tool_id)
     try:
       url = reverse(self.url_reverser)
     except:

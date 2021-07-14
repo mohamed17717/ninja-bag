@@ -8,7 +8,6 @@ class Redirector:
   @staticmethod
   def go_home():
     return redirect(Redirector.HOMEPAGE_URL_REVERSER)
-    
 
   @staticmethod
   def go_login():

@@ -20,7 +20,6 @@ from .views import (
 
   TextSaver,
   cors_proxy,
-  # CorsProxy
 )
 
 app_name = 'tools'
@@ -69,5 +68,4 @@ urlpatterns = [
   path('save-text/<str:file_name>/delete/', TextSaver.delete, name='textsaver-delete'),
 
   path('cors-proxy/', cors_proxy, name='cors-proxy'),
-
 ]
