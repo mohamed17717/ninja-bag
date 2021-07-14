@@ -62,13 +62,14 @@ def tool_handler(limitation=[], pk=None):
 
       # before function # validate limits
       if all(access_state):
-        response = func(request, *args, **kwargs)
-        # after function # update the limits if success
-        for limit_name in limitation:
-          limits[limit_name]['after'](request, response)
+        try:
+          response = func(request, *args, **kwargs)
 
-        if pk != None:
-          Tool.increase_uses_count_by_pk(pk)
+          # after function # update the limits if success
+          for limit_name in limitation: limits[limit_name]['after'](request, response)
+          if pk != None: Tool.increase_uses_count_by_pk(pk)
+        except Exception as e:
+          response = HttpResponseBadRequest(e)
 
       else:
         response = HttpResponseBadRequest('there is something wrong')

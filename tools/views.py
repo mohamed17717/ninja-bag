@@ -69,11 +69,8 @@ def get_image_placeholder(request, width, height=None, color=None):
   color = MyImageHandler.handle_color(color)
   height = height or width
 
-  try:
-    image = MyImageHandler.generate_placeholder_image(width, height, color)
-    response = MyImageHandler.image_response(image)
-  except Exception as e:
-    response = HttpResponseBadRequest(e)
+  image = MyImageHandler.generate_placeholder_image(width, height, color)
+  response = MyImageHandler.image_response(image)
 
   return response
 
@@ -83,11 +80,8 @@ def get_image_placeholder(request, width, height=None, color=None):
 def convert_username_to_profile_pic(request, size, username, color=None):
   color = MyImageHandler.handle_color(color)
 
-  try:
-    image = MyImageHandler.generate_avatar_image(size, username, color)
-    response = MyImageHandler.image_response(image)
-  except Exception as e:
-    response = HttpResponseBadRequest(e)
+  image = MyImageHandler.generate_avatar_image(size, username, color)
+  response = MyImageHandler.image_response(image)
 
   return response
 
@@ -131,12 +125,9 @@ def convert_image_to_b64(request):
 def convert_b64_to_image(request):
   image_b64 = request.POST.get('image')
 
-  try: 
-    image = MyImageHandler.generate_image_form_b64(image_b64)
-    response = MyImageHandler.image_response(image)
-  except Exception as e:
-    response = HttpResponseBadRequest(e)
-  
+  image = MyImageHandler.generate_image_form_b64(image_b64)
+  response = MyImageHandler.image_response(image)
+
   return response
 
 
@@ -166,11 +157,8 @@ def unshorten_url(full_track=False):
   def wrapper(request):
     shortened_url = request.POST.get('url')
 
-    try:
-      track = ScrapingTools.get_url_redirect_track(shortened_url)
-      response = get_response(track)
-    except Exception as e:
-      response = HttpResponseBadRequest(e)
+    track = ScrapingTools.get_url_redirect_track(shortened_url)
+    response = get_response(track)
 
     return response
   return wrapper
