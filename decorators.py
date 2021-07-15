@@ -8,6 +8,7 @@ from toolsframe.models import Tool
 
 import json
 
+from tools.views import reverse_view_func_to_tool_id
 
 def cache_request(name_format, timeout=60*60*24, identifier=None):
   def decorator(func):
@@ -26,8 +27,11 @@ def cache_request(name_format, timeout=60*60*24, identifier=None):
   return decorator
 
 
-def tool_handler(limitation=[], pk=None):
+def tool_handler(limitation=[]):
   def decorator(func):
+    tool_id = reverse_view_func_to_tool_id(func)
+    tool = Tool.get_tool_by_tool_id(tool_id)
+
     def wrapper(request, *args, **kwargs):
       # need api key or not
       api_key = request.GET.get('token')
@@ -67,7 +71,10 @@ def tool_handler(limitation=[], pk=None):
 
           # after function # update the limits if success
           for limit_name in limitation: limits[limit_name]['after'](request, response)
-          if pk != None: Tool.increase_uses_count_by_pk(pk)
+
+          # tool may be not exist beacuse of error in data entry
+          if tool:
+            tool.increase_uses_count()
         except Exception as e:
           response = HttpResponseBadRequest(e)
 

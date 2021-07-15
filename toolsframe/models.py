@@ -85,6 +85,10 @@ class Tool(models.Model):
     if tool:
       tool.increase_uses_count()
 
+  @staticmethod
+  def get_tool_by_tool_id(tool_id):
+    return Tool.objects.filter(tool_id=tool_id).first()
+
 class UpcomingTool(models.Model):
   name = models.CharField(max_length=128)
   description = models.TextField()

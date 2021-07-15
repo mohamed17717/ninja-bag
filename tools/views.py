@@ -1,5 +1,6 @@
 from django.shortcuts import render, reverse
 from django.http import HttpResponse, JsonResponse, HttpResponseBadRequest
+from django.core.exceptions import PermissionDenied
 
 from accounts.models import Account
 
@@ -9,7 +10,7 @@ from .classes.FileManager import FileManager
 from .controller import RequestAnalyzerTools, ImageTools, ScrapingTools
 from .controller.ImageTools import MyImageHandler
 
-import json, secrets
+import json, secrets, os
 
 
 def index(request):
@@ -148,8 +149,7 @@ def generate_qrcode(request):
 #--------------------- start scraping tools ---------------------#
 
 def unshorten_url(full_track=False):
-  get_response = lambda track: JsonResponse(track, safe=False) \
-                  if full_track else HttpResponse(track[-1])
+  get_response = lambda track: JsonResponse(track, safe=False) if full_track else HttpResponse(track[-1])
 
   @require_http_methods(['POST'])
   @required_post_fields(['url'])
@@ -158,9 +158,8 @@ def unshorten_url(full_track=False):
     shortened_url = request.POST.get('url')
 
     track = ScrapingTools.get_url_redirect_track(shortened_url)
-    response = get_response(track)
 
-    return response
+    return get_response(track)
   return wrapper
 
 
@@ -192,11 +191,17 @@ class TextSaver:
   def get_account(request):
     token = request.GET.get('token')
     acc = Account.get_user_by_api_key(token)
+
+    if not acc:
+      raise PermissionDenied('Token is not valid.')
+
     return acc
 
   @staticmethod
   def get_folder(acc):
-    return acc.get_user_folder_location() + 'text-saver/'
+    user_folder = acc.get_user_folder_location()
+    location = os.path.join(user_folder, 'text-saver/')
+    return location
 
   @staticmethod
   def get_file_url(request, file_name):
@@ -229,7 +234,7 @@ class TextSaver:
       return HttpResponseBadRequest('cant find any text in the reponse')
 
     file_name = file_name or f'{secrets.token_hex(nbytes=8)}.txt'
-    location = TextSaver.get_folder(acc) + file_name
+    location = os.join.path(TextSaver.get_folder(acc), file_name)
     fm.write(location, text+'\n', mode='a', force_location=True)
 
     file_url = TextSaver.get_file_url(request, file_name)
@@ -240,7 +245,7 @@ class TextSaver:
   @tool_handler(limitation=['requests', 'bandwidth'])
   def read(request, file_name):
     acc = TextSaver.get_account(request)
-    location = TextSaver.get_folder(acc) + file_name
+    location = os.join.path(TextSaver.get_folder(acc), file_name)
 
     response = HttpResponse(open(location), content_type='application/text charset=utf-8')
     response['Content-Disposition'] = f'attachment; filename="{file_name}"'
@@ -286,3 +291,29 @@ class TextSaver:
 
 
 
+
+
+#--------------------- reverse function to toolsframe record ---------------------#
+tools_map = {
+  'whats my ip': [get_my_ip],
+  'proxy meter': [get_my_proxy_anonimity],
+  #
+  #
+  #
+  #
+  #
+}
+
+
+def reverse_view_func_to_tool_id(func):
+  tools_map_reversed = {}
+  for tool_name, tool_endpoints in tools_map.items():
+    func_names = map(lambda f: f.__qualname__, tool_endpoints)
+    tools_map_reversed[tool_name] = tuple(func_names)
+
+  func_name = func.__qualname__
+  for tool_name, tool_endpoints in tools_map_reversed.items():
+    if func_name in tool_endpoints:
+      return tool_name
+
+  raise Exception('function is not exist is not exist')
