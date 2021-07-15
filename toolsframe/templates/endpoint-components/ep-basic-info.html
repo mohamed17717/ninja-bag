@@ -1,22 +1,23 @@
 <div 
-  class="endpoint-basic-info flex justify-start items-center cursor-pointer" 
+  class="endpoint-basic-info flex justify-center items-start flex-col cursor-pointer" 
   @click="showEndpointInfo(endpoint)" 
   x-bind:class="endpoint.isOpen ? 'mb-6':''"
 >
-
-  <span 
-    class="endpoint-method method-name flex-shrink-0 w-16 text-center uppercase font-bold text-xs py-1 inline-block"
-    x-text="endpoint.method"
-    x-bind:class="Endpoint.getMethodColor(endpoint)"
+  <div class="mb-2">
+    <span 
+      class="endpoint-method method-name flex-shrink-0 w-16 text-center uppercase font-bold text-xs py-1 inline-block"
+      x-text="endpoint.method"
+      x-bind:class="Endpoint.getMethodColor(endpoint)"
     ></span>
-
-  <span 
-    class="endpoint-url flex-shrink-0 mx-8 font-normal tracking-widest" 
-    x-text="endpoint.url"
-  ></span>
+  
+    <span 
+      class="endpoint-url flex-shrink-0 mx-2 font-normal tracking-widest" 
+      x-text="endpoint.url"
+    ></span>
+  </div>
   
   <span 
-    class="endpoint-description text-sm"
+    class="endpoint-description"
     x-text="endpoint.description"
   ></span>
 </div>
