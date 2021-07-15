@@ -30,10 +30,14 @@ def index(request):
 
 @require_http_methods(['GET'])
 def get_tool_page(request, tool_id):
+  tool = get_object_or_404(Tool, tool_id=tool_id)
+  tool.increase_views_count()
+
   context = {
     **get_default_context(request),
-    'tool': get_object_or_404(Tool, tool_id=tool_id)
+    'tool': tool
   }
+
   return render(request, 'd_tool-doc.html', context)
 
 
