@@ -40,6 +40,16 @@ class LimitsHandler:
 
 
 class ToolHandler:
+  tools_map = {
+    'whats my ip': ['get_my_ip'],
+    'proxy meter': ['get_my_proxy_anonimity'],
+    #
+    #
+    #
+    #
+    #
+  }
+
   def run_limits_before(self, limits_handler, limits, args):
     access_states = []
     for limit_name in limits:
@@ -70,3 +80,15 @@ class ToolHandler:
     
     return responce
 
+  def reverse_view_func_to_tool_id(self, func):
+    # tools_map_reversed = {}
+    # for tool_name, tool_endpoints in ToolHandler.tools_map.items():
+    #   func_names = map(lambda f: f.__qualname__, tool_endpoints)
+    #   tools_map_reversed[tool_name] = tuple(func_names)
+
+    func_name = func.__qualname__
+    for tool_name, tool_endpoints in ToolHandler.tools_map.items():
+      if func_name in tool_endpoints:
+        return tool_name
+
+    # raise Exception('function is not exist is not exist')

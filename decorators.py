@@ -4,7 +4,6 @@ from django.core.cache import cache
 
 from toolsframe.models import Tool
 
-from tools.views import reverse_view_func_to_tool_id
 from handlers import LimitsHandler, ToolHandler
 
 def cache_request(name_format, timeout=60*60*24, identifier=None):
@@ -26,10 +25,10 @@ def cache_request(name_format, timeout=60*60*24, identifier=None):
 
 def tool_handler(limitation=[]):
   def decorator(func):
-    tool_id = reverse_view_func_to_tool_id(func)
-    tool = Tool.get_tool_by_tool_id(tool_id)
-
     th = ToolHandler()
+
+    tool_id = th.reverse_view_func_to_tool_id(func)
+    tool = Tool.get_tool_by_tool_id(tool_id)
 
     def wrapper(request, *args, **kwargs):
       api_key = request.GET.get('token', None)

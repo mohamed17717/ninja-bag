@@ -287,33 +287,3 @@ class TextSaver:
       response = TextSaver.add(request, file_name)
     return response
 
-
-
-
-
-
-
-#--------------------- reverse function to toolsframe record ---------------------#
-tools_map = {
-  'whats my ip': [get_my_ip],
-  'proxy meter': [get_my_proxy_anonimity],
-  #
-  #
-  #
-  #
-  #
-}
-
-
-def reverse_view_func_to_tool_id(func):
-  tools_map_reversed = {}
-  for tool_name, tool_endpoints in tools_map.items():
-    func_names = map(lambda f: f.__qualname__, tool_endpoints)
-    tools_map_reversed[tool_name] = tuple(func_names)
-
-  func_name = func.__qualname__
-  for tool_name, tool_endpoints in tools_map_reversed.items():
-    if func_name in tool_endpoints:
-      return tool_name
-
-  raise Exception('function is not exist is not exist')
