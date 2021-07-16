@@ -1,8 +1,10 @@
 from django.views.decorators.http import require_http_methods
 from django.http import HttpResponseBadRequest, HttpResponseNotAllowed
+from django.core.exceptions import PermissionDenied
 from django.core.cache import cache
 
 from toolsframe.models import Tool
+from accounts.models import Account
 
 from handlers import LimitsHandler, ToolHandler
 
@@ -32,8 +34,11 @@ def tool_handler(limitation=[]):
 
     def wrapper(request, *args, **kwargs):
       api_key = request.GET.get('token', None)
+      acc = api_key and Account.get_user_by_api_key(api_key)
 
-      acc = th.get_acc(api_key, limitation)
+      if len(limitation) and not acc:
+        raise PermissionDenied('Invalid token !!')
+
       limits_handler = LimitsHandler(acc)
 
       args_of_limit_before_hook = (request,)

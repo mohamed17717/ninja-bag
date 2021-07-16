@@ -1,7 +1,5 @@
-from accounts.models import Account
 from django.http import HttpResponseBadRequest
-from django.core.exceptions import PermissionDenied
-
+import os
 
 class Limit:
   def __init__(self, acc):
@@ -45,9 +43,6 @@ class ToolHandler:
     'proxy meter': ['get_my_proxy_anonimity'],
     #
     #
-    #
-    #
-    #
   }
 
   def run_limits_before(self, limits_handler, limits, args):
@@ -63,14 +58,6 @@ class ToolHandler:
     for limit_name in limits:
       limit_handler = getattr(limits_handler, limit_name)
       limit_handler.after(*args)
-
-  def get_acc(self, api_key, limits):
-    acc = api_key and Account.get_user_by_api_key(api_key)
-
-    if len(limits) and not acc:
-      raise PermissionDenied('Invalid token !!')
-
-    return acc
 
   def run_func(self, func, request, *args, **kwargs):
     try:
@@ -92,3 +79,39 @@ class ToolHandler:
         return tool_name
 
     # raise Exception('function is not exist is not exist')
+
+
+class SizeHandler:
+  def convert_size(self, size, unit):
+    """ Take size in bits convert it in whatever unit """
+    units = {
+      'B' : lambda size: size / 1024**0,
+      'KB': lambda size: size / 1024**1,
+      'MB': lambda size: size / 1024**2,
+      'GB': lambda size: size / 1024**3,
+      'TB': lambda size: size / 1024**4,
+    }
+
+    unit_size = units[unit](size)
+    return unit_size
+
+  def get_folder_size(self, location, unit='MB'):
+    size = 0
+    for path, dirs, files in os.walk(location):
+      for f in files:
+        fp = os.path.join(path, f)
+        size += os.path.getsize(fp)
+
+    return self.convert_size(size, unit)
+
+  def get_request_size(self, request, unit):
+    size = len(request.body)
+    return self.convert_size(size, unit)
+
+  def get_response_size(self, response, unit):
+    if response.status_code > 250:
+      return 0
+
+    size = len(response.content)
+    return self.convert_size(size, unit)
+

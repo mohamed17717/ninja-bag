@@ -1,47 +1,13 @@
 from django.db import models
 from django.contrib.auth import get_user_model
-
 from jsonfield import JSONField
-
 from toolsframe.models import Tool
-
-import secrets 
 from datetime import datetime
+import secrets 
+from handlers import SizeHandler
 
 User = get_user_model()
-
-import os
-def convert_size(size, unit):
-  units = {
-    'B' : lambda size: size / 1024**0,
-    'KB': lambda size: size / 1024**1,
-    'MB': lambda size: size / 1024**2,
-    'GB': lambda size: size / 1024**3,
-    'TB': lambda size: size / 1024**4,
-  }
-
-  unit_size = units[unit](size)
-  return unit_size
-
-def get_folder_size(location, unit='MB'):
-  size = 0
-  for path, dirs, files in os.walk(location):
-    for f in files:
-      fp = os.path.join(path, f)
-      size += os.path.getsize(fp)
-
-  return convert_size(size, unit)
-
-def get_request_size(request, unit):
-  size = len(request.body)
-  return convert_size(size, unit)
-
-def get_response_size(response, unit):
-  if response.status_code > 250:
-    return 0
-
-  size = len(response.content)
-  return convert_size(size, unit)
+size_handler = SizeHandler()
 
 
 class Account(models.Model):
@@ -78,14 +44,11 @@ class Account(models.Model):
     
     return super(Account, self).save(*args, **kwargs)
 
-  def get_absolute_url(self):
-    return ('')
-
 
   def check_storage_limit_hookbefore(self, request):
     unit = 'MB'
     used_storage = self.get_user_folder_size(unit)
-    request_size = get_request_size(request, unit)
+    request_size = size_handler.get_request_size(request, unit)
 
     return self.storage_allowed >= (used_storage + request_size)
 
@@ -101,13 +64,13 @@ class Account(models.Model):
   def check_bandwidth_limit_hookbefore(self, request):
     unit = 'MB'
     used_bandwidth = self.bandwidth_used
-    request_size = get_request_size(request, unit)
+    request_size = size_handler.get_request_size(request, unit)
 
     return self.bandwidth_allowed >= (used_bandwidth + request_size)
   def check_bandwidth_limit_hookafter(self, request, response):
     unit = 'MB'
-    request_size = get_request_size(request, unit)
-    response_size = get_response_size(response, unit)
+    request_size = size_handler.get_request_size(request, unit)
+    response_size = size_handler.get_response_size(response, unit)
 
     self.bandwidth_used += (request_size + response_size)
     self.save()
@@ -126,7 +89,7 @@ class Account(models.Model):
   def get_user_folder_size(self, unit='MB'):
     location = self.get_user_folder_location()
 
-    try: size = get_folder_size(location, unit)
+    try: size = size_handler.get_folder_size(location, unit)
     except: size = 0
 
     return size
@@ -134,7 +97,6 @@ class Account(models.Model):
   def get_days_since_created(self):
     now = datetime.now()
     return (now - self.created).days
-
 
   def get_user_name(self):
     name = f'{self.user.first_name} {self.user.last_name}'.strip() or self.user.username
