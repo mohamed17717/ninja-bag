@@ -88,8 +88,8 @@ class HTTPSyntaxParser {
 
     if(isToken) {
       updatedGetPart = (updatedGetPart || '').split('&').filter(i => i)
-      updatedGetPart.push(`token=${userToken}`)
-      updatedGetPart = `?${updatedGetPart.join('&')}`
+      if(isLimitsActive) updatedGetPart.push(`token=${userToken}`)
+      updatedGetPart = updatedGetPart.length > 0 ? `?${updatedGetPart.join('&')}` : ''
     }
 
     return updatedGetPart

@@ -45,12 +45,12 @@ def tool_handler(limitation=[]):
       access_states = th.run_limits_before(limits_handler, limitation, args_of_limit_before_hook)
 
       response = HttpResponseBadRequest('You have no access to use this tool')
-
       if all(access_states):
         response = th.run_func(func, request, *args, **kwargs)
 
         args_of_limit_after_hook = (request, response)
         th.run_limits_after(limits_handler, limitation, args_of_limit_after_hook)
+
         tool.increase_uses_count()
 
       return response

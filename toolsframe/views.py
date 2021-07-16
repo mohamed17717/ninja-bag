@@ -7,12 +7,14 @@ from decorators import require_http_methods, required_post_fields
 
 import json
 from classes.Redirector import Redirector
+from handlers import ToolHandler
 
 def get_default_context(request):
   return {
     'user': request.user,
     'account': request.user.user_account.get(),
     'upcoming_tools': UpcomingTool.list_all_active(),
+    'is_limits_active': ToolHandler.is_limits_active
   }
 
 @require_http_methods(['GET'])
@@ -35,7 +37,7 @@ def get_tool_page(request, tool_id):
 
   context = {
     **get_default_context(request),
-    'tool': tool
+    'tool': tool,
   }
 
   return render(request, 'd_tool-doc.html', context)

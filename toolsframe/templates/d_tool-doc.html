@@ -11,6 +11,7 @@
   <script>
     const djangoEndpoints = `{{ tool.endpoints|to_json|safe }}`
     const userToken = `{{ account.user_api_key }}`
+    const isLimitsActive = {{ is_limits_active|lower }}
   </script>
   <script src="{% static 'js/endpoint-handler-classes.js' %}"></script>
   <script src="{% static 'js/endpoint-handler.js' %}"></script>
@@ -49,7 +50,11 @@
 
                 <div class="endpoint-full-info props" x-show="endpoint.isOpen">
 
+                  
+                  {% if is_limits_active %}
                   {% include 'endpoint-components/ep-limits.html' %}
+                  {% endif %}
+                    
 
                   <div class="example py-3">
                     <h4 class="text-lg capitalize font-bold mr-3 mb-5">example</h4>

@@ -38,6 +38,7 @@ class LimitsHandler:
 
 
 class ToolHandler:
+  is_limits_active = False
   tools_map = {
     'whats my ip': ['get_my_ip'],
     'proxy meter': ['get_my_proxy_anonimity'],
@@ -46,6 +47,9 @@ class ToolHandler:
   }
 
   def run_limits_before(self, limits_handler, limits, args):
+    if not self.is_limits_active:
+      return [True]
+
     access_states = []
     for limit_name in limits:
       limit_handler = getattr(limits_handler, limit_name)
@@ -55,6 +59,9 @@ class ToolHandler:
     return access_states
 
   def run_limits_after(self, limits_handler, limits, args):
+    if not self.is_limits_active:
+      return
+
     for limit_name in limits:
       limit_handler = getattr(limits_handler, limit_name)
       limit_handler.after(*args)
