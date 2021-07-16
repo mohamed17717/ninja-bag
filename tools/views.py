@@ -226,6 +226,9 @@ class TextSaver:
   @require_http_methods(['POST'])
   @tool_handler(limitation=['requests', 'bandwidth', 'storage'])
   def add(request, file_name=None):
+    if '/' in file_name:
+      return HttpResponseBadRequest(f'filename "{file_name}" is not valid.')
+
     acc = TextSaver.get_account(request)
     fm = FileManager()
 
@@ -244,17 +247,28 @@ class TextSaver:
   @require_http_methods(['GET'])
   @tool_handler(limitation=['requests', 'bandwidth'])
   def read(request, file_name):
+    if '/' in file_name:
+      return HttpResponseBadRequest(f'filename "{file_name}" is not valid.')
+
     acc = TextSaver.get_account(request)
+    fm = FileManager()
     location = os.join.path(TextSaver.get_folder(acc), file_name)
 
-    response = HttpResponse(open(location), content_type='application/text charset=utf-8')
-    response['Content-Disposition'] = f'attachment; filename="{file_name}"'
+    if fm.is_file_exist(location):
+      response = HttpResponse(open(location), content_type='application/text charset=utf-8')
+      response['Content-Disposition'] = f'attachment; filename="{file_name}"'
+    else:
+      response = HttpResponseBadRequest('file is not exist.')
+
     return response
 
   @staticmethod
   @require_http_methods(['GET'])
   @tool_handler(limitation=['requests'])
   def delete(request, file_name):
+    if '/' in file_name:
+      return HttpResponseBadRequest(f'filename "{file_name}" is not valid.')
+
     acc = TextSaver.get_account(request)
     location = TextSaver.get_folder(acc) + file_name
 
