@@ -15,7 +15,13 @@
   <div>
     <ul class="flex items-center">
       <li><a class="px-3 py-1 capitalize font-bold hover:underline mr-2" href="{% url 'toolsframe:homepage' %}">home</a></li>
+      
+      {% if is_authenticated %}
       <li><a class="px-3 py-1 capitalize font-bold hover:underline" href="{% url 'accounts:logout' %}">logout</a></li>
+      {% else %}
+      <li><a class="px-3 py-1 capitalize font-bold hover:underline" href="{% url 'accounts:auth' %}">login</a></li>
+      {% endif %}
+        
     </ul>
   </div>
 </header>

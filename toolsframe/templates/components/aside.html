@@ -2,6 +2,8 @@
 
 <aside class="flex-shrink-0">
   <div class="acc-info rounded-lg">
+
+    {% if is_authenticated %}
     <div class="user px-5 py-3 flex flex-col items-center">
       <div 
         class="w-24 h-24 mb-3 rounded-full overflow-hidden bg-center bg-cover bg-no-repeat"
@@ -13,7 +15,6 @@
       </h2>
     </div>
 
-    
     {% if is_limits_active  %}
     <div class="limitation-progress px-5 py-3 text-sm font-bold">
       <div class="limit mb-6">
@@ -48,7 +49,6 @@
 
     </div>
     {% endif %}
-      
 
     <div class="mx-5" x-data="{}">
       <h4 class="capitalize font-bold mb text-sm mb-1">Token</h4>
@@ -58,21 +58,22 @@
       </div>
     </div>
 
-    <div class="note px-5 pb-3 mb-2">
+    <div class="note px-5 pb-3">
       <span class="font-bold text-xs px-2 py-1 inline-block text-button-text uppercase">note</span>
       You can add token to your request just by pass it throw url "token=&lt;value&gt;"
     </div>
+    {% endif %}
 
-    
+
     {% if is_limits_active %}
-    <div class="note px-5 pb-3">
+    <div class="note px-5 py-3">
       <span class="font-bold text-xs px-2 py-1 inline-block text-button-text uppercase">note</span>
       unfortunately, i needed to create this limitation because the server resourses are limited
       and i wanna to serve as many people as i can so i found the limitation is fair enough 
       to satisfy all of us
     </div>
     {% else %}
-    <div class="note px-5 pb-3">
+    <div class="note px-5 py-3">
       <span class="font-bold text-xs px-2 py-1 inline-block text-button-text uppercase">note</span>
       This tools are totally free and has unlimited times use, and i hope it remain so.
       <br>
@@ -84,10 +85,6 @@
       hope you good time ❤️
     </div>
     {% endif %}
-      
-
-    
-
 
   </div>
 
