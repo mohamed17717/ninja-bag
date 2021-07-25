@@ -1,0 +1,551 @@
+{
+  "what is my ip ?": {
+    "description": "get your current machine ip",
+    "category": [
+      "how server see you", 
+      "network"
+    ],
+
+    "endpoints": [
+      {"url": "/get-my-ip/", "method": "GET"}
+    ],
+    "type": "api"
+  },
+
+  "proxy anony meter": {
+    "description": "tell you how anonymous your proxy is (transparent, anonymous or elite)",
+    "category": [
+      "how server see you", 
+      "network"
+    ],
+    
+    "endpoints": [
+      {"url": "/get-my-proxy-anonimity/", "method": "GET"}
+    ],
+    "type": "api"
+  },
+
+  "request headers": {
+    "description": "tell you how the server see your request headers",
+    "category": [
+      "how server see you",
+      "network"
+    ],
+
+    "endpoints": [
+      {"url": "/get-my-request-headers/", "method": "GET"}
+    ],
+    "type": "api"
+  },
+
+  "my machine analyzer": {
+    "description": "tell you how the server see your machine throw your useragent",
+    "category": [
+      "how server see you",
+      "network"
+    ],
+
+    "endpoints": [
+      {"url": "/analyze-my-machine/", "method": "GET"}
+    ],
+    "type": "api"
+  },
+
+  "user-agent analyzer": {
+    "description": "get all possible data about the machine using its user-agent",
+    "category": [
+      "how server see you",
+      "network"
+    ],
+
+    "endpoints": [
+      {
+        "url": "/analyze-user-agent/", 
+        "method": "POST",
+        "dateType": "json",
+        "params": {
+          "POST": [
+            {
+              "name": "user-agent",
+              "required": true,
+              "type": "text",
+              "description": "The user-agent you want to analyze"
+            }
+          ]
+        }
+
+      }
+    ],
+    "type": "api"
+  },
+
+  "image placeholder": {
+    "description": "get a placeholder image with your wanted dimensions and color to set it in your page faster",
+    "category": [
+      "developer helper",
+      "image",
+      "frontend helper"
+    ],
+
+    "endpoints": [
+      {
+        "url": "/get-image-placeholder/{size}/",
+        "description": "return a square image with a specific size and a random color",
+        "method": "GET",
+        "params": {
+          "URL": [
+            {
+              "name": "size",
+              "default": 300,
+              "required": true,
+              "type": "number",
+              "description": "the size of the image's dimensions in px"
+            }
+          ]
+        }
+      },
+      {
+        "url": "/get-image-placeholder/{size}/{color}/",
+        "description": "return a square image with a specific width and color",
+        "method": "GET",
+        "params": {
+          "URL": [
+            {
+              "name": "size",
+              "default": 300,
+              "required": true,
+              "type": "number",
+              "description": "the size of the image's dimensions in px"
+            },
+            {
+              "name": "color",
+              "default": "rgb(34,139,34)",
+              "required": true,
+              "type": "text",
+              "description": "the color of the image -- can be rgb, hex (without hashtag #) or known html colors"
+            }
+          ]
+        }
+      },
+      {
+        "url": "/get-image-placeholder/{width}x{height}/",
+        "description": "return an image with specific width and heaight and random color",
+        "method": "GET",
+        "params": {
+          "URL": [
+            {
+              "name": "width",
+              "default": 300,
+              "required": true,
+              "type": "number",
+              "description": "the width of the image in px"
+            },
+            {
+              "name": "height",
+              "default": 200,
+              "required": true,
+              "type": "number",
+              "description": "the height of the image in px"
+            }
+          ]
+        }
+      },
+      {
+        "url": "/get-image-placeholder/{width}/{height}/",
+        "description": "return an image with specific width and heaight and random color",
+        "method": "GET",
+        "params": {
+          "URL": [
+            {
+              "name": "width",
+              "default": 300,
+              "required": true,
+              "type": "number",
+              "description": "the width of the image in px"
+            },
+            {
+              "name": "height",
+              "default": 200,
+              "required": true,
+              "type": "number",
+              "description": "the height of the image in px"
+            }
+          ]
+        }
+      },
+      {
+        "url": "/get-image-placeholder/{width}x{height}/{color}/",
+        "description": "return an image with specific width, heaight and color",
+        "method": "GET",
+        "params": {
+          "URL": [
+            {
+              "name": "width",
+              "default": 300,
+              "required": true,
+              "type": "number",
+              "description": "the width of the image in px"
+            },
+            {
+              "name": "height",
+              "default": 200,
+              "required": true,
+              "type": "number",
+              "description": "the height of the image in px"
+            },
+            {
+              "name": "color",
+              "default": "rgb(34,139,34)",
+              "required": true,
+              "type": "text",
+              "description": "the color of the image -- can be rgb, hex (without hashtag #) or known html colors"
+            }
+          ]
+        }
+      },
+      {
+        "url": "/get-image-placeholder/{width}/{height}/{color}/",
+        "description": "return an image with specific width, heaight and color",
+        "method": "GET",
+        "params": {
+          "URL": [
+            {
+              "name": "width",
+              "default": 300,
+              "required": true,
+              "type": "number",
+              "description": "the width of the image in px"
+            },
+            {
+              "name": "height",
+              "default": 200,
+              "required": true,
+              "type": "number",
+              "description": "the height of the image in px"
+            },
+            {
+              "name": "color",
+              "default": "rgb(34,139,34)",
+              "required": true,
+              "type": "text",
+              "description": "the color of the image -- can be rgb, hex (without hashtag #) or known html colors"
+            }
+          ]
+        }
+      }
+    ],
+    "type": "api"
+  },
+
+  "dynamic user avatar": {
+    "description": "generate specific profile picture for every user using first letters of its name",
+    "category": [
+      "developer helper",
+      "image",
+      "frontend helper"
+    ],
+
+    "endpoints": [
+      {
+        "url": "/username-to-profile-pic/{size}/{username}/",
+        "method": "GET",
+        "description": "generate profile picture with specific size and radnom color using user's first letters",
+        "params": {
+          "URL": [
+            {
+              "name": "size",
+              "default": 300,
+              "required": true,
+              "type": "number",
+              "description": "the size of the image's dimensions in px"
+            },
+            {
+              "name": "username",
+              "default": "John Doe",
+              "required": true,
+              "type": "text",
+              "description": "The name of the user -- just 2 names"
+            }
+          ]
+        }
+      },
+
+      {
+        "url": "/username-to-profile-pic/{size}/{username}/{color}/",
+        "method": "GET",
+        "description": "generate profile picture with specific size and color using user's first letters",
+        "params": {
+          "URL": [
+            {
+              "name": "size",
+              "default": 300,
+              "required": true,
+              "type": "number",
+              "description": "the size of the image's dimensions in px"
+            },
+            {
+              "name": "username",
+              "default": "John Doe",
+              "required": true,
+              "type": "text",
+              "description": "The name of the user -- just 2 names"
+            },
+            {
+              "name": "color",
+              "default": "rgb(34,139,34)",
+              "required": true,
+              "type": "text",
+              "description": "the color of the image -- can be rgb, hex (without hashtag #) or known html colors"
+            }
+          ]
+        }
+      }
+    ],
+    "type": "api"
+  },
+
+  "thumbnail generator": {
+    "description": "convert image to thumbnail with custom width",
+    "category": [
+      "developer helper",
+      "image",
+      "frontend helper"
+    ],
+
+    "endpoints": [
+      {
+        "url": "/image-to-thumbnail/",
+        "method": "POST",
+        "dataType": "form",
+        "params": {
+          "POST": [
+            {
+              "name": "image", 
+              "required": true, 
+              "type": "file", 
+              "accept": "accept=\"image/png, image/jpeg\"", 
+              "description": "The image you want to convert to thumbnail"
+            },
+
+            {
+              "name": "width",
+              "default": 128,
+              "required": false,
+              "type": "number",
+              "description": "The width needed for the image -- (height is computed dynamically to maintain the scale)"
+            }
+
+          ]
+        }
+
+      }
+    ],
+    "type": "api"
+  },
+
+  "image meta cleaner": {
+    "description": "clean image from meta data to reduce its size and make it untraceable",
+    "category": [
+      "developer helper", 
+      "image"
+    ],
+
+    "endpoints": [
+      {
+        "url": "/remove-image-meta-data/",
+        "method": "POST",
+        "dataType": "form",
+        "params": {
+          "POST": [
+            {
+              "name": "image", 
+              "required": true, 
+              "type": "file", 
+              "accept": "accept=\"image/png, image/jpeg\"", 
+              "description": "The image you want to convert to clean from meta data"
+            }
+          ]
+        }
+      }
+    ],
+    "type": "api"
+  },
+
+  "image base64": {
+    "description": "encode image to base64 string or decode",
+    "category": [
+      "developer helper", 
+      "image",
+      "encode"
+    ],
+
+    "endpoints": [
+      {
+        "url": "/image-to-b64/",
+        "method": "POST",
+        "description": "Convert any image to base64 encode",
+        "dataType": "form",
+        "params": {
+          "POST": [
+            {
+              "name": "image", 
+              "required": true, 
+              "type": "file", 
+              "accept": "accept=\"image/png, image/jpeg\"", 
+              "description": "The image you want to convert to encode to base64"
+            }
+          ]
+        }
+      },
+      {
+        "url": "/b64-to-image/",
+        "method": "POST",
+        "description": "Deocde any base64 image to the jpg version of it",
+        "dataType": "json",
+        "params": {
+          "POST": [
+            {
+              "name": "image",
+              "required": true,
+              "type": "text",
+              "description": "Base64 string you wanna to conver to the jpg image"
+            }
+          ]
+        }
+      }
+    ],
+    "type": "api"
+  },
+
+  "qr-code generator": {
+    "description": "convert any text into a qrcode",
+    "category": [
+      "image",
+      "encode"
+    ],
+
+    "endpoints": [
+      {
+        "url": "/gen-qrcode/",
+        "method": "POST",
+        "dataType": "json",
+        "params": {
+          "POST": [
+            {
+              "name": "text",
+              "default": "lorem ipsum text example",
+              "required": true, 
+              "type": "text",
+              "description": "The text you want to encode into qr-code"
+            }
+          ]
+        }
+      }
+    ],
+    "type": "api"
+  },
+
+  "facebook user-id": {
+    "description": "get the id of any facebook user",
+    "category": [
+      "developer helper", 
+      "social",
+      "scraping"
+    ],
+
+    "endpoints": [
+      {
+        "url": "/fb-user-id/",
+        "method": "POST",
+        "dataType": "json",
+        "params": {
+          "POST": [
+            {
+              "name": "url", 
+              "default": "https://fb.com/mohamed17717/", 
+              "required": true, 
+              "type": "text", 
+              "description": "profile url"
+            }
+          ]
+        }
+      }
+    ],
+    "type": "api"
+  },
+
+  "cors proxy": {
+    "description": "simple proxy give your js in the browser the ability to navigate the web, and avoid cors policy",
+    "category": [
+      "developer helper", 
+      "network",
+      "scraping"
+    ],
+
+    "endpoints": [
+      {
+        "url": "/cors-proxy/",
+        "method": "ANY",
+        "description": "like a proxy it will simulate the request you sent (header/body) on the url you set, then simulate the response back to you",
+        "params": {
+          "GET": [
+            {
+              "name": "url", 
+              "default": "https://google.com", 
+              "required": true, 
+              "type": "text", 
+              "description": "url you wanna navigate"
+            }
+          ]
+        }
+      }
+    ],
+    "type": "api"
+  },
+
+  "unshorten url": {
+    "description": "convert shorten url to the original one",
+    "category": [
+      "network"
+    ],
+
+    "endpoints": [
+      {
+        "url": "/unshorten-url/",
+        "method": "POST",
+        "description": "unpack the url and return the last distenation",
+        "dataType": "json",
+        "params": {
+          "POST": [
+            {
+              "name": "url", 
+              "default": "https://bit.ly/3i4L5Uk", 
+              "required": true, 
+              "type": "text", 
+              "description": "shorten url you wanna to unshorten it"
+            }
+          ]
+        }
+      },
+
+      {
+        "url": "/unshorten-url/full-track/",
+        "method": "POST",
+        "description": "unpack the url and return the all redirects till the destination",
+        "dataType": "json",
+        "params": {
+          "POST": [
+            {
+              "name": "url", 
+              "default": "https://bit.ly/3i4L5Uk", 
+              "required": true, 
+              "type": "text", 
+              "description": "shorten url you wanna to unshorten it"
+            }
+          ]
+        }
+      }
+    ],
+    "type": "api"
+  }
+}

@@ -34,8 +34,11 @@ urlpatterns = [
 
   path('get-my-request-headers/', get_my_request_headers, name='get-my-request-headers'),
 
+  path('analyze-my-machine/', analyze_my_machine_user_agent, name='analyze-my-machine'),
+  path('analyze-user-agent/', analyze_user_agent, name='analyze-user-agent'),
+
   path('get-image-placeholder/<int:width>/', get_image_placeholder, name='get-image-placeholder5'),
-  path('get-image-placeholder/<int:width>/<str:color>', get_image_placeholder, name='get-image-placeholder5'),
+  path('get-image-placeholder/<int:width>/<str:color>/', get_image_placeholder, name='get-image-placeholder5'),
   path('get-image-placeholder/<int:width>x<int:height>/', get_image_placeholder, name='get-image-placeholder1'),
   path('get-image-placeholder/<int:width>/<int:height>/', get_image_placeholder, name='get-image-placeholder2'),
   path('get-image-placeholder/<int:width>x<int:height>/<str:color>/', get_image_placeholder, name='get-image-placeholder3'),
@@ -46,20 +49,19 @@ urlpatterns = [
   
   path('image-to-thumbnail/', convert_image_to_thumbnail, name='image-to-thumbnail'),
 
-  path('fb-user-id/', get_fb_user_id, name='fb-user-id'),
-
   path('remove-image-meta-data/', remove_image_meta_data, name='remove-image-meta-data'),
 
   path('image-to-b64/', convert_image_to_b64, name='image-to-b64'),
   path('b64-to-image/', convert_b64_to_image, name='b64-to-image'),
 
+  path('gen-qrcode/', generate_qrcode, name='gen-qrcode'),
+
+  path('fb-user-id/', get_fb_user_id, name='fb-user-id'),
+
+  path('cors-proxy/', cors_proxy, name='cors-proxy'),
+
   path('unshorten-url/', unshorten_url(full_track=False), name='unshorten-url'),
   path('unshorten-url/full-track/', unshorten_url(full_track=True), name='unshorten-url'),
-
-  path('analyze-user-agent/', analyze_user_agent, name='analyze-user-agent'),
-  path('analyze-my-machine/', analyze_my_machine_user_agent, name='analyze-my-machine'),
-
-  path('gen-qrcode/', generate_qrcode, name='gen-qrcode'),
 
   path('save-text/', TextSaver.add, name='textsaver-create'),
   path('save-text/list/', TextSaver.list_all, name='textsaver-list'),
@@ -67,5 +69,4 @@ urlpatterns = [
   path('save-text/<str:file_name>/', TextSaver.action_handler, name='textsaver-read'),
   path('save-text/<str:file_name>/delete/', TextSaver.delete, name='textsaver-delete'),
 
-  path('cors-proxy/', cors_proxy, name='cors-proxy'),
 ]

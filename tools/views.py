@@ -40,20 +40,20 @@ def get_my_request_headers(request):
   return JsonResponse(headers)
 
 
-@require_http_methods(['POST'])
-@required_post_fields(['user-agent'])
+@require_http_methods(['GET'])
 @tool_handler(limitation=['requests'])
-def analyze_user_agent(request):
-  ua = request.POST.get('user-agent')
+def analyze_my_machine_user_agent(request):
+  ua = request.META['HTTP_USER_AGENT']
   data = RequestAnalyzerTools.get_user_agent_details(ua)
 
   return JsonResponse(data, safe=False)
 
 
-@require_http_methods(['GET'])
+@require_http_methods(['POST'])
+@required_post_fields(['user-agent'])
 @tool_handler(limitation=['requests'])
-def analyze_my_machine_user_agent(request):
-  ua = request.META['HTTP_USER_AGENT']
+def analyze_user_agent(request):
+  ua = request.POST.get('user-agent')
   data = RequestAnalyzerTools.get_user_agent_details(ua)
 
   return JsonResponse(data, safe=False)
@@ -148,6 +148,25 @@ def generate_qrcode(request):
 
 #--------------------- start scraping tools ---------------------#
 
+@require_http_methods(['POST'])
+@required_post_fields(['url'])
+@tool_handler(limitation=['requests'])
+def get_fb_user_id(request):
+  acc_url = request.POST.get('url')
+
+  user_id = ScrapingTools.get_fb_user_id(acc_url)  or 'Not Found'
+
+  return HttpResponse(user_id)
+
+@tool_handler(limitation=['requests', 'bandwidth'])
+def cors_proxy(request):
+  cors = ScrapingTools.CorsProxy(request)
+
+  res = cors.simulate_request()
+  response = cors.simulate_response(res)
+
+  return response
+
 def unshorten_url(full_track=False):
   get_response = lambda track: JsonResponse(track, safe=False) if full_track else HttpResponse(track[-1])
 
@@ -161,27 +180,6 @@ def unshorten_url(full_track=False):
 
     return get_response(track)
   return wrapper
-
-
-@require_http_methods(['POST'])
-@required_post_fields(['url'])
-@tool_handler(limitation=['requests'])
-def get_fb_user_id(request):
-  acc_url = request.POST.get('url')
-
-  user_id = ScrapingTools.get_fb_user_id(acc_url)  or 'Not Found'
-
-  return HttpResponse(user_id)
-
-
-@tool_handler(limitation=['requests', 'bandwidth'])
-def cors_proxy(request):
-  cors = ScrapingTools.CorsProxy(request)
-
-  res = cors.simulate_request()
-  response = cors.simulate_response(res)
-
-  return response
 
 #--------------------- end scraping tools ---------------------#
 

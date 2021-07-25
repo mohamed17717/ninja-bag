@@ -1,7 +1,7 @@
 from toolsframe.models import Tool
 import json
 
-with open('toolsframe/endpoints-docs.json', 'r') as f:
+with open('../toolsframe/endpoints-docs.json', 'r') as f:
   tools = json.loads(f.read())
 
 for tool_id, tool_info in tools.items():
