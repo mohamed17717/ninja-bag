@@ -25,7 +25,8 @@ class Endpoint {
       delete: 'bg-red-700',
     }
 
-    const color = colors[method]
+    const defaultColor = 'bg-blue-700'
+    const color = colors[method] || defaultColor
     return color
   }
 
