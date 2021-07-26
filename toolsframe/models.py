@@ -37,7 +37,9 @@ class Tool(models.Model):
   # fill with script
   endpoints = JSONField(blank=True, null=True)
   # extra
-  category = models.ForeignKey(Category, on_delete=models.SET_NULL, related_name='category_tools', blank=True, null=True)
+  # category = models.ForeignKey(Category, on_delete=models.SET_NULL, related_name='category_tools', blank=True, null=True)
+  category = models.ManyToManyField(Category, related_name='category_tools')
+  
   active = models.BooleanField(default=True)
   status = models.CharField(max_length=32, blank=True, null=True) # alpha || beta
   # counters
