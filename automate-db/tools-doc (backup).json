@@ -2,76 +2,65 @@
   "what is my ip ?": {
     "description": "get your current machine ip",
     "category": [
-      "how server see you",
+      "how server see you", 
       "network"
     ],
+
     "endpoints": [
-      {
-        "url": "/get-my-ip/",
-        "method": "GET"
-      }
+      {"url": "/get-my-ip/", "method": "GET"}
     ],
-    "type": "api",
-    "tool_id": "what-is-my-ip-5d1307d8",
-    "is_changed": false
+    "type": "api"
   },
+
   "proxy anony meter": {
     "description": "tell you how anonymous your proxy is (transparent, anonymous or elite)",
     "category": [
-      "how server see you",
+      "how server see you", 
       "network"
     ],
+    
     "endpoints": [
-      {
-        "url": "/get-my-proxy-anonimity/",
-        "method": "GET"
-      }
+      {"url": "/get-my-proxy-anonimity/", "method": "GET"}
     ],
-    "type": "api",
-    "tool_id": "proxy-anony-meter-b975f552",
-    "is_changed": false
+    "type": "api"
   },
+
   "request headers": {
     "description": "tell you how the server see your request headers",
     "category": [
       "how server see you",
       "network"
     ],
+
     "endpoints": [
-      {
-        "url": "/get-my-request-headers/",
-        "method": "GET"
-      }
+      {"url": "/get-my-request-headers/", "method": "GET"}
     ],
-    "type": "api",
-    "tool_id": "request-headers-6587d2a2",
-    "is_changed": false
+    "type": "api"
   },
+
   "my machine analyzer": {
     "description": "tell you how the server see your machine throw your useragent",
     "category": [
       "how server see you",
       "network"
     ],
+
     "endpoints": [
-      {
-        "url": "/analyze-my-machine/",
-        "method": "GET"
-      }
+      {"url": "/analyze-my-machine/", "method": "GET"}
     ],
-    "type": "api",
-    "tool_id": "my-machine-analyzer-41043a40",
-    "is_changed": false
+    "type": "api"
   },
+
   "user-agent analyzer": {
     "description": "get all possible data about the machine using its user-agent",
     "category": [
       "how server see you",
       "network"
     ],
+
     "endpoints": [
       {
-        "url": "/analyze-user-agent/",
+        "url": "/analyze-user-agent/", 
         "method": "POST",
         "dateType": "json",
         "params": {
@@ -84,12 +73,12 @@
             }
           ]
         }
+
       }
     ],
-    "type": "api",
-    "tool_id": "user-agent-analyzer-7a422e10",
-    "is_changed": false
+    "type": "api"
   },
+
   "image placeholder": {
     "description": "get a placeholder image with your wanted dimensions and color to set it in your page faster",
     "category": [
@@ -97,6 +86,7 @@
       "image",
       "frontend helper"
     ],
+
     "endpoints": [
       {
         "url": "/get-image-placeholder/{size}/",
@@ -244,10 +234,9 @@
         }
       }
     ],
-    "type": "api",
-    "tool_id": "image-placeholder-ea4f35de",
-    "is_changed": false
+    "type": "api"
   },
+
   "dynamic user avatar": {
     "description": "generate specific profile picture for every user using first letters of its name",
     "category": [
@@ -255,6 +244,7 @@
       "image",
       "frontend helper"
     ],
+
     "endpoints": [
       {
         "url": "/username-to-profile-pic/{size}/{username}/",
@@ -279,6 +269,7 @@
           ]
         }
       },
+
       {
         "url": "/username-to-profile-pic/{size}/{username}/{color}/",
         "method": "GET",
@@ -310,10 +301,9 @@
         }
       }
     ],
-    "type": "api",
-    "tool_id": "dynamic-user-avatar-a7df8796",
-    "is_changed": false
+    "type": "api"
   },
+
   "thumbnail generator": {
     "description": "convert image to thumbnail with custom width",
     "category": [
@@ -321,6 +311,7 @@
       "image",
       "frontend helper"
     ],
+
     "endpoints": [
       {
         "url": "/image-to-thumbnail/",
@@ -329,12 +320,13 @@
         "params": {
           "POST": [
             {
-              "name": "image",
-              "required": true,
-              "type": "file",
-              "accept": "accept=\"image/png, image/jpeg\"",
+              "name": "image", 
+              "required": true, 
+              "type": "file", 
+              "accept": "accept=\"image/png, image/jpeg\"", 
               "description": "The image you want to convert to thumbnail"
             },
+
             {
               "name": "width",
               "default": 128,
@@ -342,20 +334,22 @@
               "type": "number",
               "description": "The width needed for the image -- (height is computed dynamically to maintain the scale)"
             }
+
           ]
         }
+
       }
     ],
-    "type": "api",
-    "tool_id": "thumbnail-generator-429d8b59",
-    "is_changed": false
+    "type": "api"
   },
+
   "image meta cleaner": {
     "description": "clean image from meta data to reduce its size and make it untraceable",
     "category": [
-      "developer helper",
+      "developer helper", 
       "image"
     ],
+
     "endpoints": [
       {
         "url": "/remove-image-meta-data/",
@@ -364,27 +358,27 @@
         "params": {
           "POST": [
             {
-              "name": "image",
-              "required": true,
-              "type": "file",
-              "accept": "accept=\"image/png, image/jpeg\"",
+              "name": "image", 
+              "required": true, 
+              "type": "file", 
+              "accept": "accept=\"image/png, image/jpeg\"", 
               "description": "The image you want to convert to clean from meta data"
             }
           ]
         }
       }
     ],
-    "type": "api",
-    "tool_id": "image-meta-cleaner-ccea1431",
-    "is_changed": false
+    "type": "api"
   },
+
   "image base64": {
     "description": "encode image to base64 string or decode",
     "category": [
-      "developer helper",
+      "developer helper", 
       "image",
       "encode"
     ],
+
     "endpoints": [
       {
         "url": "/image-to-b64/",
@@ -394,10 +388,10 @@
         "params": {
           "POST": [
             {
-              "name": "image",
-              "required": true,
-              "type": "file",
-              "accept": "accept=\"image/png, image/jpeg\"",
+              "name": "image", 
+              "required": true, 
+              "type": "file", 
+              "accept": "accept=\"image/png, image/jpeg\"", 
               "description": "The image you want to convert to encode to base64"
             }
           ]
@@ -420,16 +414,16 @@
         }
       }
     ],
-    "type": "api",
-    "tool_id": "image-base64-e794d0b3",
-    "is_changed": false
+    "type": "api"
   },
+
   "qr-code generator": {
     "description": "convert any text into a qrcode",
     "category": [
       "image",
       "encode"
     ],
+
     "endpoints": [
       {
         "url": "/gen-qrcode/",
@@ -440,7 +434,7 @@
             {
               "name": "text",
               "default": "lorem ipsum text example",
-              "required": true,
+              "required": true, 
               "type": "text",
               "description": "The text you want to encode into qr-code"
             }
@@ -448,17 +442,17 @@
         }
       }
     ],
-    "type": "api",
-    "tool_id": "qr-code-generator-309b9e5f",
-    "is_changed": false
+    "type": "api"
   },
+
   "facebook user-id": {
     "description": "get the id of any facebook user",
     "category": [
-      "developer helper",
+      "developer helper", 
       "social",
       "scraping"
     ],
+
     "endpoints": [
       {
         "url": "/fb-user-id/",
@@ -467,27 +461,27 @@
         "params": {
           "POST": [
             {
-              "name": "url",
-              "default": "https://fb.com/mohamed17717/",
-              "required": true,
-              "type": "text",
+              "name": "url", 
+              "default": "https://fb.com/mohamed17717/", 
+              "required": true, 
+              "type": "text", 
               "description": "profile url"
             }
           ]
         }
       }
     ],
-    "type": "api",
-    "tool_id": "facebook-user-id-85b7aa8f",
-    "is_changed": false
+    "type": "api"
   },
+
   "cors proxy": {
     "description": "simple proxy give your js in the browser the ability to navigate the web, and avoid cors policy",
     "category": [
-      "developer helper",
+      "developer helper", 
       "network",
       "scraping"
     ],
+
     "endpoints": [
       {
         "url": "/cors-proxy/",
@@ -496,25 +490,25 @@
         "params": {
           "GET": [
             {
-              "name": "url",
-              "default": "https://google.com",
-              "required": true,
-              "type": "text",
+              "name": "url", 
+              "default": "https://google.com", 
+              "required": true, 
+              "type": "text", 
               "description": "url you wanna navigate"
             }
           ]
         }
       }
     ],
-    "type": "api",
-    "tool_id": "cors-proxy-57824238",
-    "is_changed": false
+    "type": "api"
   },
+
   "unshorten url": {
     "description": "convert shorten url to the original one",
     "category": [
       "network"
     ],
+
     "endpoints": [
       {
         "url": "/unshorten-url/",
@@ -524,15 +518,16 @@
         "params": {
           "POST": [
             {
-              "name": "url",
-              "default": "https://bit.ly/3i4L5Uk",
-              "required": true,
-              "type": "text",
+              "name": "url", 
+              "default": "https://bit.ly/3i4L5Uk", 
+              "required": true, 
+              "type": "text", 
               "description": "shorten url you wanna to unshorten it"
             }
           ]
         }
       },
+
       {
         "url": "/unshorten-url/full-track/",
         "method": "POST",
@@ -541,18 +536,16 @@
         "params": {
           "POST": [
             {
-              "name": "url",
-              "default": "https://bit.ly/3i4L5Uk",
-              "required": true,
-              "type": "text",
+              "name": "url", 
+              "default": "https://bit.ly/3i4L5Uk", 
+              "required": true, 
+              "type": "text", 
               "description": "shorten url you wanna to unshorten it"
             }
           ]
         }
       }
     ],
-    "type": "api",
-    "tool_id": "unshorten-url-86dedb67",
-    "is_changed": false
+    "type": "api"
   }
 }
