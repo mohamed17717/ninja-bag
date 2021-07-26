@@ -34,10 +34,14 @@
         {% for tool in tools %}
         <div class="card rounded-lg overflow-hidden relative pb-6">
           <header class="flex items-center justify-start px-5 py-3">
+            
+            {% if tool.logo %}
             <div 
               class="w-14 h-14 rounded-full overflow-hidden bg-center bg-cover bg-no-repeat mr-5"
               style="background-image: url(/media/{{ tool.logo }});"
             ></div>
+            {% endif %}
+              
             <div>
               <h3 class="text-xl font-bold capitalize" 
                 x-text="getShrinkedText(`{{ tool.name }}`, 25)"
