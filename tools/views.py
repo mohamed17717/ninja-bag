@@ -253,7 +253,7 @@ class TextSaver:
     if '/' in file_name:
       return HttpResponseBadRequest(f'filename "{file_name}" is not valid.')
 
-    acc = TextSaver.get_account(request)
+    acc = TextSaver.get_account(request) # request.user (required)
     fm = FileManager()
     location = os.join.path(TextSaver.get_folder(acc), file_name)
 
