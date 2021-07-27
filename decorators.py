@@ -1,5 +1,5 @@
 from django.views.decorators.http import require_http_methods
-from django.http import HttpResponseBadRequest, HttpResponseNotAllowed
+from django.http import HttpResponseBadRequest
 from django.core.exceptions import PermissionDenied
 from django.core.cache import cache
 
@@ -7,6 +7,7 @@ from toolsframe.models import Tool
 from accounts.models import Account
 
 from handlers import LimitsHandler, ToolHandler
+import json
 
 def cache_request(name_format, timeout=60*60*24, identifier=None):
   def decorator(func):
@@ -36,7 +37,7 @@ def tool_handler(limitation=[]):
       api_key = request.GET.get('token', None)
       acc = api_key and Account.get_user_by_api_key(api_key)
 
-      if len(limitation) and not acc:
+      if th.is_limits_active and len(limitation) and not acc:
         raise PermissionDenied('Invalid token !!')
 
       limits_handler = LimitsHandler(acc)
@@ -62,8 +63,17 @@ def tool_handler(limitation=[]):
 def required_post_fields(required_fields=[]):
   def decorator(func):
 
-    def wrapper(request, data, *args, **kwargs):
-      posted_fields = request.POST.dict().keys()
+    def wrapper(request, *args, **kwargs):
+      fields = {}
+      fields.update(request.POST.dict())
+      fields.update(request.FILES.dict())
+
+      try: 
+        request_body = json.loads(request.body.decode('utf8'))
+        fields.update(request_body)
+      except: pass
+
+      posted_fields = fields.keys()
 
       error_response = lambda field: HttpResponseBadRequest(f'field "{field}" is required.')
       for required_field in required_fields:
