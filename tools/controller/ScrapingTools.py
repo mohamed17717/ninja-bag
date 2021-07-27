@@ -1,5 +1,8 @@
 import re, requests, json
 from django.http import HttpResponse
+from django.core.cache import cache
+from django.core.exceptions import ValidationError
+
 
 def get_url_redirect_track(url):
   res = requests.head(url, allow_redirects=True)
@@ -8,12 +11,23 @@ def get_url_redirect_track(url):
   return track
 
 
-def get_fb_user_id(url):
-  res = requests.get(url)
-  src = res.text
+def is_valid_fb_url(url):
+  pattern = r'^https\:\/\/(m\.|www\.)*(facebook|fb)\.com\/.+'
+  if not re.match(pattern, url):
+    raise ValidationError('Not valid facebook url')
 
-  match = re.findall(r'userID":"(.+?)"', src)
-  user_id = match[0] if match else None
+def get_fb_user_id(url):
+  is_valid_fb_url(url)
+
+  user_id = cache.get(url)
+  if not user_id:
+    res = requests.get(url)
+    src = res.text
+
+    match = re.findall(r'userID":"(.+?)"', src)
+    user_id = match[0] if match else None
+
+    cache.set(url, user_id, 60*60*72)
 
   return user_id
 
