@@ -131,7 +131,7 @@ class MyImageHandler:
 
   @staticmethod
   def generate_image_from_b64(b64):
-    image_b64 = re.sub(r'^data:image/\w+?;base64,', '', image_b64)
+    image_b64 = re.sub(r'^data:image/\w+?;base64,', '', b64)
     image = Image.open(BytesIO(base64.b64decode(image_b64)))
 
     return image

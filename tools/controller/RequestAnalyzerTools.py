@@ -35,7 +35,7 @@ def get_proxy_anonimity(request) -> str:
 
   return anonimity
 
-def get_request_header(request) -> dict:
+def get_request_headers(request) -> dict:
   headers = {}
 
   for key, value in request.META.items():

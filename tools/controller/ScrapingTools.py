@@ -31,27 +31,29 @@ class CorsProxy:
     return body
 
   def __get_headers(self):
-    headers = self.request.headers
-    not_allowed_headers = [
-      'Host','Origin','Sec-Fetch-Sit',
-      'Sec-Fetch-Mode','Sec-Fetch-Dest','Referer',
-      'Sec-Fetch-Site','Content-Length', # 'Content-Type'
-    ]
+    # headers = self.request.headers
+    # not_allowed_headers = [
+    #   'Host','Origin','Sec-Fetch-Sit',
+    #   'Sec-Fetch-Mode','Sec-Fetch-Dest','Referer',
+    #   'Sec-Fetch-Site','Content-Length', # 'Content-Type'
+    # ]
 
-    new_headers = {}
-    for h, v in headers.items():
-      if h in not_allowed_headers: continue
-      new_headers[h] = v
+    # new_headers = {}
+    # for h, v in headers.items():
+    #   if h in not_allowed_headers: continue
+    #   new_headers[h] = v
+    headers = {'Accept-Encoding': 'gzip, deflate', 'Accept': '*/*', 'Connection': 'keep-alive', 'Cookie': 'cit=025b8b0b53ae993bOJfKnwTbPX2e55u2ZWdbrw%3D%3D'}
+    headers['User-Agent'] = self.request.headers.get('User-Agent', 'python-requests/2.25.1')
 
-    return new_headers
+    return headers
 
-  def __get_request_params(self, url, method, headers, cookies, body):
+  def __get_lib_requests_params(self, url, method, headers, cookies, body):
     request_params = { 'url': url, 'headers': headers }
-    if body:
+    if method.lower() == 'post' and body:
       key = 'data'
       if headers['Content-Type'].lower() == 'application/json':
         key = 'json'
-      
+
       request_params.update({ key: body })
 
     return request_params
@@ -66,7 +68,7 @@ class CorsProxy:
     cookies = self.request.COOKIES
     body = self.__get_body()
 
-    request_params = self.__get_request_params(url, method, headers, cookies, body)
+    request_params = self.__get_lib_requests_params(url, method, headers, cookies, body)
 
     method_func = self.__get_method_function(method)
     response = method_func(**request_params)
@@ -75,7 +77,7 @@ class CorsProxy:
 
   def simulate_response(self, res):
     response = HttpResponse(
-      content=res.text, 
+      content=res.content, 
       status=res.status_code, 
       content_type=res.headers['Content-Type']
     )
