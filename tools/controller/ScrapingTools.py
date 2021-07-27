@@ -75,12 +75,26 @@ class CorsProxy:
   def __get_method_function(self, method):
     return eval(f'requests.{method.lower()}')
 
+  def __build_url(self, get_params):
+    url = get_params.pop('url')
+
+    params_list = [f'{k}={v}' for k,v in get_params.items()]
+    params = '&'.join(params_list)
+    if params:
+      concat_symbol = '&' if '?' in url else '?'
+      params = f'{concat_symbol}{params}'
+
+    full_url = f'{url}{params}'
+    return full_url
+
   def simulate_request(self):
-    url = self.request.GET.get('url')
+    url = self.__build_url(self.request.GET.dict())
     method = self.request.method
     headers = self.__get_headers()
     cookies = self.request.COOKIES
     body = self.__get_body()
+
+    print('\n\n url: ', url)
 
     request_params = self.__get_lib_requests_params(url, method, headers, cookies, body)
 
