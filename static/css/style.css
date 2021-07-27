@@ -235,12 +235,14 @@ body [contenteditable] {
 }
 
 button.bg-accent:hover,
-.login-form a.btn.bg-accent:hover {
+.login-form a.btn.bg-accent:hover,
+a.button-style:hover {
   background-color: var(--color-accent-hover);
 }
 
 button.bg-accent:disabled,
-.login-form a.btn.bg-accent:disabled {
+.login-form a.btn.bg-accent:disabled,
+a.button-style:disabled {
   /* background-color: var(--color-accent-disabled); */
   opacity: .5;
 }
