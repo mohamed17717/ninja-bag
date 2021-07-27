@@ -127,3 +127,20 @@ class SuggestedTool(models.Model):
 
     return f'{user_info} ({description}) {status}'
 
+
+class ToolIssueReport(models.Model):
+  tool =  models.ForeignKey(Tool, related_name='tool_issue_reports', on_delete=models.CASCADE)
+  user = models.ForeignKey(User, related_name='user_issue_reports', on_delete=models.SET_NULL, blank=True, null=True)
+  description = models.TextField()
+
+  seen = models.BooleanField(default=False)
+
+  created = models.DateField(auto_now_add=True)
+  updated = models.DateField(auto_now=True)
+
+  def __str__(self):
+    user_info = f'{self.pk} - {self.user.username}'
+    description = self.description[:30]
+    status = "👀" if self.seen else "🔒"
+
+    return f'{user_info} ({description[:17]}...) {status}'
