@@ -11,7 +11,7 @@ urlpatterns = [
   path('logout/', LogoutView.as_view(template_name=settings.LOGOUT_REDIRECT_URL), name='logout'),
 
   path('', include('toolsframe.urls', namespace='toolsframe')),
-  path('t/', include('tools.urls', namespace='tools')),
+  path('', include('tools.urls', namespace='tools')),
   path('account/', include('accounts.urls', namespace='accounts')),
 
   path('admin/', admin.site.urls),
