@@ -103,8 +103,13 @@ class HTTPSyntaxParser {
 
     let [pathPart, getPart] = headerPath.split('?')
 
-    pathPart = this.#replacePathVariables(pathPart, this.endpoint.params.URL)
-    getPart = this.#replaceGETVariables(getPart, this.endpoint.params.GET, true)
+    if(this.endpoint.params && this.endpoint.params.URL)
+      pathPart = this.#replacePathVariables(pathPart, this.endpoint.params.URL)
+
+    if(this.endpoint.params && this.endpoint.params.GET)
+      getPart = this.#replaceGETVariables(getPart, this.endpoint.params.GET, false)
+
+    getPart = getPart || ''
 
     if(pathPart === undefined)
       return
