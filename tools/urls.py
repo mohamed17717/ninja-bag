@@ -13,7 +13,7 @@ from .views import (
   remove_image_meta_data,
   convert_image_to_b64,
   convert_b64_to_image,
-  unshorten_url,
+  unshorten_url_wrapper,
   analyze_user_agent,
   analyze_my_machine_user_agent,
   generate_qrcode,
@@ -40,9 +40,7 @@ urlpatterns = [
   path('get-image-placeholder/<int:width>/', get_image_placeholder, name='get-image-placeholder5'),
   path('get-image-placeholder/<int:width>/<str:color>/', get_image_placeholder, name='get-image-placeholder5'),
   path('get-image-placeholder/<int:width>x<int:height>/', get_image_placeholder, name='get-image-placeholder1'),
-  path('get-image-placeholder/<int:width>/<int:height>/', get_image_placeholder, name='get-image-placeholder2'),
   path('get-image-placeholder/<int:width>x<int:height>/<str:color>/', get_image_placeholder, name='get-image-placeholder3'),
-  path('get-image-placeholder/<int:width>/<int:height>/<str:color>/', get_image_placeholder, name='get-image-placeholder4'),
 
   path('username-to-profile-pic/<int:size>/<str:username>/', convert_username_to_profile_pic, name='username-to-profile-pic1'),
   path('username-to-profile-pic/<int:size>/<str:username>/<str:color>/', convert_username_to_profile_pic, name='username-to-profile-pic2'),
@@ -60,8 +58,8 @@ urlpatterns = [
 
   path('cors-proxy/', cors_proxy, name='cors-proxy'),
 
-  path('unshorten-url/', unshorten_url(full_track=False), name='unshorten-url'),
-  path('unshorten-url/full-track/', unshorten_url(full_track=True), name='unshorten-url'),
+  path('unshorten-url/', unshorten_url_wrapper(full_track=False), name='unshorten-url'),
+  path('unshorten-url/full-track/', unshorten_url_wrapper(full_track=True), name='unshorten-url'),
 
   path('save-text/', TextSaver.add, name='textsaver-create'),
   path('save-text/list/', TextSaver.list_all, name='textsaver-list'),
