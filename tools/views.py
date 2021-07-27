@@ -37,26 +37,27 @@ def get_my_proxy_anonimity(request):
 @tool_handler(limitation=[])
 def get_my_request_headers(request):
   headers = RequestAnalyzerTools.get_request_headers(request)
-  return JsonResponse(headers)
+  return JsonResponse(headers, safe=False, json_dumps_params={'indent': 2})
 
 
 @require_http_methods(['GET'])
 @tool_handler(limitation=['requests'])
 def analyze_my_machine_user_agent(request):
   ua = request.META['HTTP_USER_AGENT']
-  data = RequestAnalyzerTools.get_user_agent_details(ua)
+  ua_details = RequestAnalyzerTools.get_user_agent_details(ua)
 
-  return JsonResponse(data, safe=False)
+  return JsonResponse(ua_details, safe=False, json_dumps_params={'indent': 2})
 
 
 @require_http_methods(['POST'])
 @required_post_fields(['user-agent'])
 @tool_handler(limitation=['requests'])
 def analyze_user_agent(request):
-  ua = request.POST.get('user-agent')
-  data = RequestAnalyzerTools.get_user_agent_details(ua)
+  request_data = json.loads(request.body.decode('utf8')) or request.POST
+  ua = request_data.get('user-agent')
+  ua_details = RequestAnalyzerTools.get_user_agent_details(ua)
 
-  return JsonResponse(data, safe=False)
+  return JsonResponse(ua_details, safe=False, json_dumps_params={'indent': 2})
 
 #--------------------- end RequestAnalyzer tools ---------------------#
 
@@ -124,9 +125,10 @@ def convert_image_to_b64(request):
 @required_post_fields(['image'])
 @tool_handler(limitation=['requests', 'bandwidth'])
 def convert_b64_to_image(request):
-  image_b64 = request.POST.get('image')
+  request_data = json.loads(request.body.decode('utf8')) or request.POST
+  image_b64 = request_data.get('image')
 
-  image = MyImageHandler.generate_image_form_b64(image_b64)
+  image = MyImageHandler.generate_image_from_b64(image_b64)
   response = MyImageHandler.image_response(image)
 
   return response
@@ -136,7 +138,8 @@ def convert_b64_to_image(request):
 @required_post_fields(['text'])
 @tool_handler(limitation=['requests', 'bandwidth'])
 def generate_qrcode(request):
-  string = request.POST.get('text')
+  request_data = json.loads(request.body.decode('utf8')) or request.POST
+  string = request_data.get('text')
 
   image = MyImageHandler.generate_qr_code(string)
 
@@ -152,7 +155,8 @@ def generate_qrcode(request):
 @required_post_fields(['url'])
 @tool_handler(limitation=['requests'])
 def get_fb_user_id(request):
-  acc_url = request.POST.get('url')
+  request_data = json.loads(request.body.decode('utf8')) or request.POST
+  acc_url = request_data.get('url')
 
   user_id = ScrapingTools.get_fb_user_id(acc_url)  or 'Not Found'
 
@@ -167,19 +171,20 @@ def cors_proxy(request):
 
   return response
 
-def unshorten_url(full_track=False):
-  get_response = lambda track: JsonResponse(track, safe=False) if full_track else HttpResponse(track[-1])
+def unshorten_url_wrapper(full_track=False):
+  get_response = lambda track: JsonResponse(track, safe=False, json_dumps_params={'indent': 2}) if full_track else HttpResponse(track[-1])
 
   @require_http_methods(['POST'])
   @required_post_fields(['url'])
   @tool_handler(limitation=['requests', 'bandwidth'])
-  def wrapper(request):
-    shortened_url = request.POST.get('url')
+  def unshorten_url(request):
+    request_data = json.loads(request.body.decode('utf8')) or request.POST
+    shortened_url = request_data.get('url')
 
     track = ScrapingTools.get_url_redirect_track(shortened_url)
 
     return get_response(track)
-  return wrapper
+  return unshorten_url
 
 #--------------------- end scraping tools ---------------------#
 
@@ -289,7 +294,7 @@ class TextSaver:
     files_names = fm.listdir(location)
 
     files_urls = list(map(lambda fn: TextSaver.get_file_url(request, fn), files_names))
-    return JsonResponse(files_urls, safe=False)
+    return JsonResponse(files_urls, safe=False, json_dumps_params={'indent': 2})
 
   @staticmethod
   def action_handler(request, file_name):
