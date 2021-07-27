@@ -62,7 +62,7 @@
       {
         "url": "/analyze-user-agent/", 
         "method": "POST",
-        "dateType": "json",
+        "dataType": "json",
         "params": {
           "POST": [
             {

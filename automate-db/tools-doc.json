@@ -73,11 +73,12 @@
       {
         "url": "/analyze-user-agent/",
         "method": "POST",
-        "dateType": "json",
+        "dataType": "json",
         "params": {
           "POST": [
             {
               "name": "user-agent",
+              "default": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/74.0.3729.169 Safari/537.36",
               "required": true,
               "type": "text",
               "description": "The user-agent you want to analyze"
@@ -161,60 +162,7 @@
         }
       },
       {
-        "url": "/get-image-placeholder/{width}/{height}/",
-        "description": "return an image with specific width and heaight and random color",
-        "method": "GET",
-        "params": {
-          "URL": [
-            {
-              "name": "width",
-              "default": 300,
-              "required": true,
-              "type": "number",
-              "description": "the width of the image in px"
-            },
-            {
-              "name": "height",
-              "default": 200,
-              "required": true,
-              "type": "number",
-              "description": "the height of the image in px"
-            }
-          ]
-        }
-      },
-      {
         "url": "/get-image-placeholder/{width}x{height}/{color}/",
-        "description": "return an image with specific width, heaight and color",
-        "method": "GET",
-        "params": {
-          "URL": [
-            {
-              "name": "width",
-              "default": 300,
-              "required": true,
-              "type": "number",
-              "description": "the width of the image in px"
-            },
-            {
-              "name": "height",
-              "default": 200,
-              "required": true,
-              "type": "number",
-              "description": "the height of the image in px"
-            },
-            {
-              "name": "color",
-              "default": "rgb(34,139,34)",
-              "required": true,
-              "type": "text",
-              "description": "the color of the image -- can be rgb, hex (without hashtag #) or known html colors"
-            }
-          ]
-        }
-      },
-      {
-        "url": "/get-image-placeholder/{width}/{height}/{color}/",
         "description": "return an image with specific width, heaight and color",
         "method": "GET",
         "params": {
@@ -332,7 +280,7 @@
               "name": "image",
               "required": true,
               "type": "file",
-              "accept": "accept=\"image/png, image/jpeg\"",
+              "accept": "accept='image/png, image/jpeg'",
               "description": "The image you want to convert to thumbnail"
             },
             {
@@ -367,7 +315,7 @@
               "name": "image",
               "required": true,
               "type": "file",
-              "accept": "accept=\"image/png, image/jpeg\"",
+              "accept": "accept='image/png, image/jpeg'",
               "description": "The image you want to convert to clean from meta data"
             }
           ]
@@ -397,7 +345,7 @@
               "name": "image",
               "required": true,
               "type": "file",
-              "accept": "accept=\"image/png, image/jpeg\"",
+              "accept": "accept='image/png, image/jpeg'",
               "description": "The image you want to convert to encode to base64"
             }
           ]
@@ -412,6 +360,7 @@
           "POST": [
             {
               "name": "image",
+              "default": "",
               "required": true,
               "type": "text",
               "description": "Base64 string you wanna to conver to the jpg image"
@@ -482,7 +431,7 @@
     "is_changed": false
   },
   "cors proxy": {
-    "description": "simple proxy give your js in the browser the ability to navigate the web, and avoid cors policy",
+    "description": "simple proxy give your js in the browser the ability to navigate the web, and avoid cors policy <br><br> Url Example: <b>/cors-proxy/?url=https://google.com/?q=coffee<b>",
     "category": [
       "developer helper",
       "network",
@@ -493,6 +442,7 @@
         "url": "/cors-proxy/",
         "method": "ANY",
         "description": "like a proxy it will simulate the request you sent (header/body) on the url you set, then simulate the response back to you",
+        "stop_http_testing": true,
         "params": {
           "GET": [
             {

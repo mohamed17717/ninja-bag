@@ -7,6 +7,7 @@
         "description": "Lorem32",
         "limits": ["storage", "bandwidth", "requests"],
         "dataType": "json",
+        "stop_http_testing": true,
         "params": {
           "GET": [
             {"name": "location", "default": "value", "required": false, "type": "text", "description": "lorem12"}

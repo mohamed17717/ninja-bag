@@ -95,4 +95,4 @@ write_file(tools_doc_file, updated_tools)
 
 ## to run ##
 # 1 # python manage.py shell
-# 2 # exec(open('set-endpoints-to-db.py').read())
+# 2 # exec(open('automate-db/main.py').read())
