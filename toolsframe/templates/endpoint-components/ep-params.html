@@ -1,5 +1,5 @@
 <template x-if="endpoint.params">
-<div class="params mt-8">
+<div class="params">
 
   <template x-for="[paramType, params] in Object.entries(endpoint.params)" :key="paramType">
   <div x-bind:class="paramType.toLowerCase()+'-params'">
