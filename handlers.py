@@ -39,22 +39,6 @@ class LimitsHandler:
 
 class ToolHandler:
   is_limits_active = False
-  tools_map = {
-    'what-is-my-ip-5d1307d8': ["get_my_ip"],
-    'proxy-anony-meter-b975f552': ["get_my_proxy_anonimity"],
-    'request-headers-6587d2a2': ["get_my_request_headers"],
-    'my-machine-analyzer-41043a40': ["analyze_my_machine_user_agent"],
-    'user-agent-analyzer-7a422e10': ["analyze_user_agent"],
-    'image-placeholder-ea4f35de': ["get_image_placeholder"],
-    'dynamic-user-avatar-a7df8796': ["convert_username_to_profile_pic"],
-    'thumbnail-generator-429d8b59': ["convert_image_to_thumbnail"],
-    'image-meta-cleaner-ccea1431': ["remove_image_meta_data"],
-    'image-base64-e794d0b3': ["convert_image_to_b64", "convert_b64_to_image"],
-    'qr-code-generator-309b9e5f': ["generate_qrcode"],
-    'facebook-user-id-85b7aa8f': ["get_fb_user_id"],
-    'cors-proxy-57824238': ["cors_proxy"],
-    'unshorten-url-86dedb67': ["unshorten_url"],
-  }
 
   def run_limits_before(self, limits_handler, limits, args):
     if not self.is_limits_active:
@@ -84,19 +68,6 @@ class ToolHandler:
       response = HttpResponseBadRequest('unexpected error happened.')
     
     return response
-
-  def reverse_view_func_to_tool_id(self, func):
-    # tools_map_reversed = {}
-    # for tool_name, tool_endpoints in ToolHandler.tools_map.items():
-    #   func_names = map(lambda f: f.__qualname__, tool_endpoints)
-    #   tools_map_reversed[tool_name] = tuple(func_names)
-
-    func_name = func.__name__
-    for tool_name, tool_endpoints in ToolHandler.tools_map.items():
-      if func_name in tool_endpoints:
-        return tool_name
-
-    # raise Exception('function is not exist is not exist')
 
 
 class SizeHandler:

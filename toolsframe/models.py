@@ -1,6 +1,6 @@
 from django.db import models
 from jsonfield import JSONField
-from django.shortcuts import resolve_url
+from django.shortcuts import resolve_url, get_object_or_404
 from django.urls import reverse
 from django.contrib.auth import get_user_model
 from django.utils.text import slugify
@@ -25,6 +25,22 @@ class Category(models.Model):
   def get_tools(self):
     return self.category_tools.all()
 
+# handle (tool record) in database and (tool views and models)
+class ToolViewsFunctions(models.Model):
+  name = models.CharField(max_length=120, unique=True)
+
+  created = models.DateField(auto_now_add=True)
+  updated = models.DateField(auto_now=True)
+
+  def __str__(self):
+    return self.name
+
+  @staticmethod
+  def reverse_view_func_to_tool(func):
+    func_name = func.__name__
+    tool = Tool.objects.filter(views_functions__name=func_name).first()
+    return tool
+
 
 class Tool(models.Model):
   # required
@@ -37,9 +53,10 @@ class Tool(models.Model):
   # fill with script
   endpoints = JSONField(blank=True, null=True)
   # extra
-  # category = models.ForeignKey(Category, on_delete=models.SET_NULL, related_name='category_tools', blank=True, null=True)
-  category = models.ManyToManyField(Category, related_name='category_tools')
-  
+  category = models.ManyToManyField(Category, related_name='category_tools', blank=True)
+  # tool with ists handlers
+  views_functions = models.ManyToManyField(ToolViewsFunctions, related_name='view_tool', blank=True, symmetrical=False)
+
   active = models.BooleanField(default=True)
   status = models.CharField(max_length=32, blank=True, null=True) # alpha || beta
   # counters
@@ -144,3 +161,4 @@ class ToolIssueReport(models.Model):
     status = "👀" if self.seen else "🔒"
 
     return f'{user_info} ({description[:17]}...) {status}'
+

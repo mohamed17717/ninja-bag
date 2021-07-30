@@ -3,7 +3,7 @@ from django.http import HttpResponseBadRequest
 from django.core.exceptions import PermissionDenied
 from django.core.cache import cache
 
-from toolsframe.models import Tool
+from toolsframe.models import Tool, ToolViewsFunctions
 from accounts.models import Account
 
 from handlers import LimitsHandler, ToolHandler
@@ -29,9 +29,7 @@ def cache_request(name_format, timeout=60*60*24, identifier=None):
 def tool_handler(limitation=[]):
   def decorator(func):
     th = ToolHandler()
-
-    tool_id = th.reverse_view_func_to_tool_id(func)
-    tool = Tool.get_tool_by_tool_id(tool_id)
+    tool = ToolViewsFunctions.reverse_view_func_to_tool(func)
 
     def wrapper(request, *args, **kwargs):
       api_key = request.GET.get('token', None)

@@ -1,4 +1,4 @@
-from toolsframe.models import Tool, Category
+from toolsframe.models import Tool, Category, ToolViewsFunctions
 import json
 
 
@@ -67,11 +67,10 @@ class ToolCreator:
     return tool
 
 
-
-
 tools = read_file(tools_doc_file)
 
 updated_tools = {}
+print('## set tool docs ##')
 for name, info in tools.items():
   print(name)
 
@@ -91,6 +90,30 @@ for name, info in tools.items():
   updated_tools.update({name: info})
 
 write_file(tools_doc_file, updated_tools)
+
+print('\n\n')
+# set tool views
+tools_views_names = [
+  "get_my_ip",
+  "get_my_proxy_anonimity",
+  "get_my_request_headers",
+  "analyze_my_machine_user_agent",
+  "analyze_user_agent",
+  "get_image_placeholder",
+  "convert_username_to_profile_pic",
+  "convert_image_to_thumbnail",
+  "remove_image_meta_data",
+  "convert_image_to_b64", "convert_b64_to_image",
+  "generate_qrcode",
+  "get_fb_user_id",
+  "cors_proxy",
+  "unshorten_url",
+]
+print('## set tool_views_functions ##')
+for name in tools_views_names:
+  print(name)
+  if not ToolViewsFunctions.objects.filter(name=name).first():
+    ToolViewsFunctions.objects.create(name=name)
 
 
 ## to run ##
