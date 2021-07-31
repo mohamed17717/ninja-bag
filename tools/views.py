@@ -1,4 +1,4 @@
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from django.http import HttpResponse, JsonResponse, HttpResponseBadRequest
 
 from accounts.models import Account
@@ -225,7 +225,8 @@ class TextSaverView:
 
     delete_status = TextSaverModel.delete(acc, file_name)
     response = HttpResponse() if delete_status else HttpResponseBadRequest('file is not exist') 
-
+    if request.user:
+      response = redirect(request.META.get('HTTP_REFERER', '/'))
     return response
 
   @staticmethod

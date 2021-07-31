@@ -106,9 +106,17 @@ class Tool(models.Model):
     return self.save()
 
   def get_db_class(self):
-    db_name = self.database_class_name
+    db_name = self.database_class_name.all()[0].name
     db = dynamic_import(f'tools.models.{db_name}')
     return db
+
+  def get_db_records(self, user):
+    db = self.get_db_class()
+    records = []
+    if db:
+      records = db.list_all(user)
+
+    return records 
 
   # def check_user_has_records(self, user):
   #   db = self.get_db_class()
@@ -118,7 +126,22 @@ class Tool(models.Model):
   #   db = self.get_db_class()
   #   return db.check_user_has_new_records(user)
 
-  
+
+  @staticmethod
+  def get_tools_that_has_db():
+    return Tool.objects.filter(database_class_name__isnull=False)
+
+  @staticmethod
+  def get_tools_that_has_db_for_aside_section(user):
+    # tools that user has records in && flag tell if there is new record
+    tools = Tool.get_tools_that_has_db()
+    chosen_ones = []
+    for tool in tools:
+      db = tool.get_db_class()
+      if db.check_user_has_records(user):
+        chosen_ones.append((tool, db.check_user_has_new_records(user)))
+
+    return chosen_ones
 
 
   @staticmethod

@@ -18,7 +18,11 @@ def get_default_context(request):
   }
 
   if is_authenticated:
-    context.update({ 'account': request.user.user_account.get() })
+    user = request.user
+    context.update({ 
+      'account': user.user_account.get(),
+      'db_tools': Tool.get_tools_that_has_db_for_aside_section(user)
+    })
 
   return context
 
@@ -43,6 +47,7 @@ def get_tool_page(request, tool_id):
   context = {
     **get_default_context(request),
     'tool': tool,
+    'db_records':  tool.get_db_records(request.user)
   }
 
   return render(request, 'd_tool-doc.html', context)
