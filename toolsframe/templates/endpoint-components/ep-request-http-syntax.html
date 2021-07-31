@@ -11,11 +11,11 @@
 
   <template x-if="Endpoint.isHttpHasBody(endpoint)">
   <div 
-    x-bind:contenteditable="endpoint.dataType === 'json'"
+    x-bind:contenteditable="endpoint.dataType === 'json' || endpoint.dataType === 'text'"
     class="request-body"
     x-html="endpoint.httpSyntaxBody"
     :x-ref="`y${index}`"
-    x-on:blur="endpoint.dataType === 'json' ? 
+    x-on:blur="endpoint.dataType === 'json' || endpoint.dataType === 'text' ? 
       endpoint.httpSyntaxBody=$refs[`y${index}`].innerHTML : ''
     "
     style="line-break: anywhere;"

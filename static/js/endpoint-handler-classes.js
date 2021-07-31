@@ -36,7 +36,8 @@ class Endpoint {
   }
 
   static isHttpHasBody(endpoint) {
-    return endpoint.method === 'POST' && endpoint.params && endpoint.params.POST.length
+    // return endpoint.method === 'POST' && endpoint.params && endpoint.params.POST && endpoint.params.POST.length
+    return endpoint.method === 'POST' && endpoint.dataType 
   }
 }
 
@@ -161,10 +162,16 @@ class HTTPSyntaxParser {
     return bodyText
   }
 
+  #getHttpSyntaxBodyText (bodySyntax) {
+    return htmlToText(bodySyntax)
+  }
+
   getBody () {
     const httpBody = this.endpoint.httpSyntaxBody
     const body = this.endpoint.dataType === 'json' ? 
         this.#getHttpSyntaxBodyJson(httpBody) :
+        this.endpoint.dataType === 'text' ?
+        this.#getHttpSyntaxBodyText(httpBody):
         this.#getHttpSyntaxBodyForm(httpBody)
     return body
   }

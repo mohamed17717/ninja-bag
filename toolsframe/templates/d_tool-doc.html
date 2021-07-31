@@ -157,19 +157,23 @@
 
                   <div class="example py-3">
                     <template x-if="!endpoint.stop_http_testing">
-                      <h4 class="text-lg capitalize font-bold mr-3 mb-5">example</h4>
-  
-                      <div class="http-request px-5 py-3 rounded-lg bg-primary-800 mb-8">
-  
-                        {% include 'endpoint-components/ep-request-http-syntax.html' %}
-  
-                        <div class="mt-4 flex justify-between items-center">
-                          <span class="font-bold text-accent">Double click to start update request to try it</span>
-  
-                          {% include 'endpoint-components/ep-request-action-buttons.html' %}
-                          {% include 'endpoint-components/ep-request-popup-try.html' %}
+                      <div>
+                        <h4 class="text-lg capitalize font-bold mr-3 mb-5">example</h4>
+    
+                        <div class="http-request px-5 py-3 rounded-lg bg-primary-800 mb-8">
+    
+                          {% include 'endpoint-components/ep-request-http-syntax.html' %}
+    
+                          <div class="mt-4 flex justify-between items-center">
+                            <span class="font-bold text-accent">Double click to start update request to try it</span>
+    
+                            {% include 'endpoint-components/ep-request-action-buttons.html' %}
+                            {% include 'endpoint-components/ep-request-popup-try.html' %}
+                          </div>
                         </div>
+
                       </div>
+                      
                     </template>
 
                     {% include 'endpoint-components/ep-params.html' %}

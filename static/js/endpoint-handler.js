@@ -30,6 +30,7 @@ function renderEndpoints() {
         // application/x-www-form-urlencoded
         form: 'Content-Type: multipart/form-data', 
         json: 'Content-Type: application/json',
+        text: 'Content-Type: text/plain',
       }
 
       return dataTypeMap[dataType] || ''
@@ -63,7 +64,7 @@ function renderEndpoints() {
     },
 
     generateHttpBodySyntax (endpoint) {
-      const dataType = endpoint.dataType // json | form
+      const dataType = endpoint.dataType // json | form | text
       let httpBody = ''
 
       if(dataType === 'json'){
@@ -81,7 +82,12 @@ function renderEndpoints() {
         const formId = `form-id-${Math.random().toString(36).slice(-5)}`
         httpBody = `<form @submit.prevent="console.log('run')" id="${formId}">${ httpBody }</form>`
         // setTimeout(() => setChangeEventOnForminput(formId), 100)
+      } else if (dataType === 'text') {
+        httpBody = endpoint.defaultText
       }
+
+      console.log('dataType:', dataType)
+      console.log('httpBody:', httpBody)
 
       return httpBody
     },
@@ -90,7 +96,8 @@ function renderEndpoints() {
       return toHTML(this.generateHttpHeaderSyntax(endpoint))
     },
     getHttpSyntaxBody(endpoint) {
-      const forceAllSpaces = endpoint.dataType === 'json'
+      console.log('this is body funcion')
+      const forceAllSpaces = endpoint.dataType === 'json' || endpoint.dataType === 'text'
       return toHTML(this.generateHttpBodySyntax(endpoint), forceAllSpaces)
     },
 
