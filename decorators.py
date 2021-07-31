@@ -1,4 +1,6 @@
 from django.views.decorators.http import require_http_methods
+from django.contrib.auth.decorators import login_required
+
 from django.http import HttpResponseBadRequest
 from django.core.exceptions import PermissionDenied
 from django.core.cache import cache
@@ -80,6 +82,14 @@ def required_post_fields(required_fields=[]):
 
       return func(request, *args, **kwargs)
 
+    return wrapper
+  return decorator
+
+def function_nickname(nickname):
+  def decorator(func):
+    def wrapper(*args, **kwargs): 
+      return func(*args, **kwargs)
+    wrapper.__name__ = nickname
     return wrapper
   return decorator
 

@@ -1,4 +1,6 @@
-from toolsframe.models import Tool, Category, ToolViewsFunctions
+from toolsframe.models import (
+  Tool, Category, ToolViewsFunctions, ToolDatabaseClass
+)
 import json
 
 
@@ -108,12 +110,24 @@ tools_views_names = [
   "get_fb_user_id",
   "cors_proxy",
   "unshorten_url",
+  "text_saver_add"
 ]
 print('## set tool_views_functions ##')
 for name in tools_views_names:
   print(name)
   if not ToolViewsFunctions.objects.filter(name=name).first():
     ToolViewsFunctions.objects.create(name=name)
+
+print('\n\n')
+# set db class views
+tools_db_classes_names = [
+  "TextSaverModel",
+]
+print('## set tool_db_classes ##')
+for name in tools_db_classes_names:
+  print(name)
+  if not ToolDatabaseClass.objects.filter(name=name).first():
+    ToolDatabaseClass.objects.create(name=name)
 
 
 ## to run ##

@@ -1,10 +1,15 @@
 from django.db import models
 from django.contrib.auth import get_user_model
+from django.core.exceptions import PermissionDenied
+
 from jsonfield import JSONField
 from toolsframe.models import Tool
-from datetime import datetime
+
 import secrets 
+from datetime import datetime
+
 from handlers import SizeHandler
+
 
 User = get_user_model()
 size_handler = SizeHandler()
@@ -111,8 +116,21 @@ class Account(models.Model):
     return picture
 
   @staticmethod
-  def get_user_by_api_key(api_key):
+  def get_user_by_api_key(api_key, *, force=False):
     acc = Account.objects.filter(user_api_key=api_key).first()
+
+    if force and not acc: 
+      raise PermissionDenied('Token is not valid.')
+
+    return acc
+
+  @staticmethod
+  def get_user_acc_from_api_or_web(request):
+    user = request.user
+    token = request.GET.get('token', 'blablabla')
+    acc = user and Account.objects.get(user=user)
+    acc = acc or Account.get_user_by_api_key(token, force=True)
+
     return acc
 
   @staticmethod

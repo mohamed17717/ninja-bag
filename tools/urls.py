@@ -17,9 +17,9 @@ from .views import (
   analyze_user_agent,
   analyze_my_machine_user_agent,
   generate_qrcode,
-
-  TextSaver,
   cors_proxy,
+
+  TextSaverView,
 )
 
 app_name = 'tools'
@@ -61,10 +61,8 @@ urlpatterns = [
   path('unshorten-url/', unshorten_url_wrapper(full_track=False), name='unshorten-url'),
   path('unshorten-url/full-track/', unshorten_url_wrapper(full_track=True), name='unshorten-url'),
 
-  path('save-text/', TextSaver.add, name='textsaver-create'),
-  path('save-text/list/', TextSaver.list_all, name='textsaver-list'),
-  path('save-text/<str:file_name>/', TextSaver.action_handler, name='textsaver-update'),
-  path('save-text/<str:file_name>/', TextSaver.action_handler, name='textsaver-read'),
-  path('save-text/<str:file_name>/delete/', TextSaver.delete, name='textsaver-delete'),
-
+  path('save-text/<str:file_name>/', TextSaverView.as_view, name='textsaver'),
+  path('save-text/', TextSaverView.add, name='textsaver-create'),
+  path('save-text/delete/<str:file_name>/', TextSaverView.delete, name='textsaver-delete'),
+  path('save-text/read/<str:file_name>/', TextSaverView.read, name='textsaver-read'),
 ]

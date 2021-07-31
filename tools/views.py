@@ -1,16 +1,14 @@
-from django.shortcuts import render, reverse
+from django.shortcuts import render
 from django.http import HttpResponse, JsonResponse, HttpResponseBadRequest
-from django.core.exceptions import PermissionDenied
 
 from accounts.models import Account
-
-from decorators import require_http_methods, tool_handler, required_post_fields
-
-from .classes.FileManager import FileManager
+from .models import TextSaverModel
 from .controller import RequestAnalyzerTools, ImageTools, ScrapingTools
 from .controller.ImageTools import MyImageHandler
 
-import json, secrets, os
+from decorators import require_http_methods, tool_handler, required_post_fields, function_nickname
+
+import json
 
 
 def index(request):
@@ -188,119 +186,54 @@ def unshorten_url_wrapper(full_track=False):
 
 #--------------------- end scraping tools ---------------------#
 
-
-class TextSaver:
-  @staticmethod
-  def get_account(request):
-    token = request.GET.get('token')
-    acc = Account.get_user_by_api_key(token)
-
-    if not acc:
-      raise PermissionDenied('Token is not valid.')
-
-    return acc
-
-  @staticmethod
-  def get_folder(acc):
-    user_folder = acc.get_user_folder_location()
-    location = os.path.join(user_folder, 'text-saver/')
-    return location
-
-  @staticmethod
-  def get_file_url(request, file_name):
-    path = reverse('tools:textsaver-read', kwargs={'file_name': file_name})
-    url = request.build_absolute_uri(path)
-    return url
-
-  @staticmethod
-  def get_text(request):
-    data = request.POST.dict()
-
-    if len(data) == 1 and 'text' in data.keys():
-      text = data.get('text')
-    elif len(data) >= 1:
-      text = json.dumps(data)
-    else:
-      text = request.body.encode('utf8')
-
-    return text
+class TextSaverView:
 
   @staticmethod
   @require_http_methods(['POST'])
-  @tool_handler(limitation=['requests', 'bandwidth', 'storage'])
+  @tool_handler(limitation=['requests', 'storage', 'bandwidth'])
+  @function_nickname('text_saver_add')
   def add(request, file_name=None):
-    if '/' in file_name:
-      return HttpResponseBadRequest(f'filename "{file_name}" is not valid.')
+    # get account
+    acc = Account.get_user_acc_from_api_or_web(request)
+    text = request.body.decode('utf8')
 
-    acc = TextSaver.get_account(request)
-    fm = FileManager()
+    file_path = TextSaverModel.add(acc, text, file_name)
+    file_full_url = request.build_absolute_uri(file_path)
 
-    text = TextSaver.get_text(request)
-    if not text:
-      return HttpResponseBadRequest('cant find any text in the reponse')
-
-    file_name = file_name or f'{secrets.token_hex(nbytes=8)}.txt'
-    location = os.join.path(TextSaver.get_folder(acc), file_name)
-    fm.write(location, text+'\n', mode='a', force_location=True)
-
-    file_url = TextSaver.get_file_url(request, file_name)
-    return HttpResponse(file_url)
+    return HttpResponse(file_full_url)
 
   @staticmethod
   @require_http_methods(['GET'])
   @tool_handler(limitation=['requests', 'bandwidth'])
+  @function_nickname('text_saver_add')
   def read(request, file_name):
-    if '/' in file_name:
-      return HttpResponseBadRequest(f'filename "{file_name}" is not valid.')
+    acc = Account.get_user_acc_from_api_or_web(request)
 
-    acc = TextSaver.get_account(request) # request.user (required)
-    fm = FileManager()
-    location = os.join.path(TextSaver.get_folder(acc), file_name)
+    location = TextSaverModel.read(acc, file_name)
 
-    if fm.is_file_exist(location):
-      response = HttpResponse(open(location), content_type='application/text charset=utf-8')
-      response['Content-Disposition'] = f'attachment; filename="{file_name}"'
-    else:
-      response = HttpResponseBadRequest('file is not exist.')
+    response = HttpResponse(open(location), content_type='application/text charset=utf-8')
+    response['Content-Disposition'] = f'attachment; filename="{file_name}"'
 
     return response
 
   @staticmethod
-  @require_http_methods(['GET'])
+  @require_http_methods(['GET', 'DELETE'])
   @tool_handler(limitation=['requests'])
+  @function_nickname('text_saver_add')
   def delete(request, file_name):
-    if '/' in file_name:
-      return HttpResponseBadRequest(f'filename "{file_name}" is not valid.')
+    acc = Account.get_user_acc_from_api_or_web(request)
 
-    acc = TextSaver.get_account(request)
-    location = TextSaver.get_folder(acc) + file_name
+    delete_status = TextSaverModel.delete(acc, file_name)
+    response = HttpResponse() if delete_status else HttpResponseBadRequest('file is not exist') 
 
-    fm = FileManager()
-    delete_status = fm.delete(location)
-
-    if delete_status: reponse = HttpResponse(status=200)
-    else: reponse = HttpResponseBadRequest('filename is not exist')
-
-    return reponse
-
-  @staticmethod
-  @require_http_methods(['GET'])
-  @tool_handler(limitation=['requests'])
-  def list_all(request):
-    acc = TextSaver.get_account(request)
-    location = TextSaver.get_folder(acc)
-
-    fm = FileManager()
-    files_names = fm.listdir(location)
-
-    files_urls = list(map(lambda fn: TextSaver.get_file_url(request, fn), files_names))
-    return JsonResponse(files_urls, safe=False, json_dumps_params={'indent': 2})
-
-  @staticmethod
-  def action_handler(request, file_name):
-    if request.method == 'GET':
-      response = TextSaver.read(request, file_name)
-    elif request.method == 'POST':
-      response = TextSaver.add(request, file_name)
     return response
 
+  @staticmethod
+  def as_view(request, file_name):
+    views = {
+      'POST': TextSaverView.add,
+      'GET': TextSaverView.read,
+      'DELETE': TextSaverView.delete,
+    }
+
+    return views.get(request.method)(request, file_name)

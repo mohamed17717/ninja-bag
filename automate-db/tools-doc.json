@@ -504,5 +504,123 @@
     "type": "api",
     "tool_id": "unshorten-url-86dedb67",
     "is_changed": false
+  },
+  "text saver -- simple db": {
+    "description": "work as a semi db, that save any text you post to the api. you can read it anytime. it can be used as a cdn also. <b>(token is required) to map saved content to your account</b>",
+    "category": [
+      "db",
+      "frontend helper",
+      "store"
+    ],
+    "endpoints": [
+      {
+        "url": "/save-text/",
+        "method": "POST",
+        "description": "save any text post to this endpoint in your request body.<br>it creates file with random name, and return the full path to that file",
+        "dataType": "text",
+        "defaultText": "Try to post that example text."
+      },
+      {
+        "url": "/save-text/{filename}/",
+        "method": "POST",
+        "description": "save any text post to this endpoint in your request body.<br>it creates/update the file with this name",
+        "dataType": "text",
+        "defaultText": "Try to post that example text.",
+        "params": {
+          "URL": [
+            {
+              "name": "filename",
+              "default": "defailt_file.txt",
+              "required": true,
+              "type": "text",
+              "description": "the name of a file you want to create|update"
+            }
+          ]
+        }
+      },
+      {
+        "url": "/save-text/delete/{filename}/",
+        "method": "GET",
+        "description": "delete the unwanted file, using ite name",
+        "params": {
+          "URL": [
+            {
+              "name": "filename",
+              "default": "defailt_file.txt",
+              "required": true,
+              "type": "text",
+              "description": "the name of a file you want to delete"
+            }
+          ]
+        }
+      },
+      {
+        "url": "/save-text/delete/{filename}/",
+        "method": "DELETE",
+        "description": "delete the unwanted file, using ite name",
+        "params": {
+          "URL": [
+            {
+              "name": "filename",
+              "default": "defailt_file.txt",
+              "required": true,
+              "type": "text",
+              "description": "the name of a file you want to delete"
+            }
+          ]
+        }
+      },
+      {
+        "url": "/save-text/{filename}/",
+        "method": "DELETE",
+        "description": "delete the unwanted file, using ite name",
+        "params": {
+          "URL": [
+            {
+              "name": "filename",
+              "default": "defailt_file.txt",
+              "required": true,
+              "type": "text",
+              "description": "the name of a file you want to delete"
+            }
+          ]
+        }
+      },
+      {
+        "url": "/save-text/read/{filename}/",
+        "method": "GET",
+        "description": "read your file saved content",
+        "params": {
+          "URL": [
+            {
+              "name": "filename",
+              "default": "defailt_file.txt",
+              "required": true,
+              "type": "text",
+              "description": "the name of a file you want to read"
+            }
+          ]
+        }
+      },
+      {
+        "url": "/save-text/{filename}/",
+        "method": "GET",
+        "description": "read your file saved content",
+        "params": {
+          "URL": [
+            {
+              "name": "filename",
+              "default": "defailt_file.txt",
+              "required": true,
+              "type": "text",
+              "description": "the name of a file you want to read"
+            }
+          ]
+        }
+      }
+    ],
+    "type": "api",
+    "tool_id": "text-saver-simple-db-c3ee6dd2",
+    "is_changed": false
   }
 }

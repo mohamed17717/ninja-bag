@@ -5,6 +5,7 @@ from django.urls import reverse
 from django.contrib.auth import get_user_model
 from django.utils.text import slugify
 
+from handlers import dynamic_import
 import secrets
 
 User = get_user_model()
@@ -41,6 +42,15 @@ class ToolViewsFunctions(models.Model):
     tool = Tool.objects.filter(views_functions__name=func_name).first()
     return tool
 
+class ToolDatabaseClass(models.Model):
+  name = models.CharField(max_length=120, unique=True)
+
+  created = models.DateField(auto_now_add=True)
+  updated = models.DateField(auto_now=True)
+
+  def __str__(self):
+    return self.name
+
 
 class Tool(models.Model):
   # required
@@ -56,6 +66,7 @@ class Tool(models.Model):
   category = models.ManyToManyField(Category, related_name='category_tools', blank=True)
   # tool with ists handlers
   views_functions = models.ManyToManyField(ToolViewsFunctions, related_name='view_tool', blank=True, symmetrical=False)
+  database_class_name = models.ManyToManyField(ToolDatabaseClass, related_name='database_class_tool', blank=True, symmetrical=False)
 
   active = models.BooleanField(default=True)
   status = models.CharField(max_length=32, blank=True, null=True) # alpha || beta
@@ -93,6 +104,22 @@ class Tool(models.Model):
   def increase_views_count(self):
     self.views_count += 1
     return self.save()
+
+  def get_db_class(self):
+    db_name = self.database_class_name
+    db = dynamic_import(f'tools.models.{db_name}')
+    return db
+
+  # def check_user_has_records(self, user):
+  #   db = self.get_db_class()
+  #   return db.check_user_has_records(user)
+
+  # def check_user_has_new_records(self, user):
+  #   db = self.get_db_class()
+  #   return db.check_user_has_new_records(user)
+
+  
+
 
   @staticmethod
   def list_for_homepage():
