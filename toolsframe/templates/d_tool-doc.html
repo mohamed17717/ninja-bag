@@ -201,7 +201,7 @@
           <div class="db-records mt-8">
             <h2 class="text-2xl font-bold capitalize mb-6">tool ratabase records</h2>
             
-            <ul>
+            <ul class="no-select">
               {% for record in db_records %}
                 <li class="flex justify-between border-b-2 pb-1 mb-2">
                   <a href="{{ record.get_absolute_url_read }}">{{ record.file_name }}</a>

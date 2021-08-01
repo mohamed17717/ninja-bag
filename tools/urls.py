@@ -65,4 +65,5 @@ urlpatterns = [
   path('save-text/', TextSaverView.add, name='textsaver-create'),
   path('save-text/delete/<str:file_name>/', TextSaverView.delete, name='textsaver-delete'),
   path('save-text/read/<str:file_name>/', TextSaverView.read, name='textsaver-read'),
+  path('save-text/read-text/<str:file_name>/', TextSaverView.read_text, name='textsaver-read-text'),
 ]

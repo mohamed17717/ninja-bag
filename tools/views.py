@@ -217,6 +217,20 @@ class TextSaverView:
     return response
 
   @staticmethod
+  @require_http_methods(['GET'])
+  @tool_handler(limitation=['requests', 'bandwidth'])
+  @function_nickname('text_saver_add')
+  def read_text(request, file_name):
+    acc = Account.get_user_acc_from_api_or_web(request)
+    location = TextSaverModel.read(acc, file_name)
+
+    with open(location) as f:
+      data = f.read()
+
+    return HttpResponse(data)
+
+
+  @staticmethod
   @require_http_methods(['GET', 'DELETE'])
   @tool_handler(limitation=['requests'])
   @function_nickname('text_saver_add')

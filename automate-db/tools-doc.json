@@ -603,6 +603,22 @@
         }
       },
       {
+        "url": "/save-text/read-text/{filename}/",
+        "method": "GET",
+        "description": "read file and return its content as a text",
+        "params": {
+          "URL": [
+            {
+              "name": "filename",
+              "default": "defailt_file.txt",
+              "required": true,
+              "type": "text",
+              "description": "the name of a file you want to read"
+            }
+          ]
+        }
+      },
+      {
         "url": "/save-text/{filename}/",
         "method": "GET",
         "description": "read your file saved content",
