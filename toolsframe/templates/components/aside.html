@@ -150,7 +150,15 @@
       class="flex flex-col items-stretch px-5 py-5"
       @submit.prevent="submitToolSuggestion()"
     >
-      <textarea x-model="toolDescription" class="h-24 px-3 py-2 border-0 bg-primary-600" placeholder="Tool description" name="tool-suggestion"></textarea>
+      <textarea 
+        x-model="toolDescription" 
+        class="h-24 px-3 py-2 border-0 bg-primary-600" 
+        placeholder="Tool description" 
+        name="tool-suggestion" 
+        x-ref="suggestionTextarea" 
+        x-on:input="textareaAutoGrow()"
+        style="max-height: 390px;"
+      ></textarea>
       <button 
         style="height: 35px;"
         class="mt-3 overflow-hidden font-bold uppercase bg-accent text-button-text" 
@@ -169,6 +177,12 @@
           buttonStates: {
             loading: '<div class="lds-ripple"><div></div><div></div></div>',
             normal: 'send'
+          },
+
+          textareaAutoGrow() {
+            elm = this.$refs['suggestionTextarea']
+            elm.style.height = "6rem";
+            elm.style.height = (elm.scrollHeight)+"px";
           },
 
           submitToolSuggestion () {

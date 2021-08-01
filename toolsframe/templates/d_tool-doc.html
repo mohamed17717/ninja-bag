@@ -47,7 +47,7 @@
             >report an issue</button>
             
             <div 
-              class="model-try-request fixed top-0 right-0 left-0 bottom-0 text-left"
+              class="model-try-request fixed inset-0 text-left z-10"
               x-show="isOpen"
             >
               <div
@@ -75,7 +75,13 @@
                     </h3>
 
                     <form x-on:submit.prevent="submitToolReport()" class="flex flex-col item-strech">
-                      <textarea x-model="issueDescription" class="w-full h-32 bg-primary-600 px-3 py-2" placeholder="Explain..." required></textarea>
+                      <textarea 
+                        x-model="issueDescription" class="w-full h-32 bg-primary-600 px-3 py-2" 
+                        placeholder="Explain..." required
+                        x-ref="reportIssueTextarea"
+                        x-on:input="textareaAutoGrow()"
+                        style="max-height: 60vh;"
+                      ></textarea>
   
                       <button 
                         style="height: 35px;"
@@ -101,6 +107,12 @@
                   buttonStates: {
                     loading: '<div class="lds-ripple" style="left:42%;"><div></div><div></div></div>',
                     normal: 'send'
+                  },
+
+                  textareaAutoGrow() {
+                    elm = this.$refs['reportIssueTextarea']
+                    elm.style.height = "8rem";
+                    elm.style.height = (elm.scrollHeight)+"px";
                   },
 
                   submitToolReport () {
