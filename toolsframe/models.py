@@ -26,31 +26,6 @@ class Category(models.Model):
   def get_tools(self):
     return self.category_tools.all()
 
-# handle (tool record) in database and (tool views and models)
-class ToolViewsFunctions(models.Model):
-  name = models.CharField(max_length=120, unique=True)
-
-  created = models.DateField(auto_now_add=True)
-  updated = models.DateField(auto_now=True)
-
-  def __str__(self):
-    return self.name
-
-  @staticmethod
-  def reverse_view_func_to_tool(func):
-    func_name = func.__name__
-    tool = Tool.objects.filter(views_functions__name=func_name).first()
-    return tool
-
-class ToolDatabaseClass(models.Model):
-  name = models.CharField(max_length=120, unique=True)
-
-  created = models.DateField(auto_now_add=True)
-  updated = models.DateField(auto_now=True)
-
-  def __str__(self):
-    return self.name
-
 
 class Tool(models.Model):
   # required
@@ -64,9 +39,6 @@ class Tool(models.Model):
   endpoints = JSONField(blank=True, null=True)
   # extra
   category = models.ManyToManyField(Category, related_name='category_tools', blank=True)
-  # tool with ists handlers
-  views_functions = models.ManyToManyField(ToolViewsFunctions, related_name='view_tool', blank=True, symmetrical=False)
-  database_class_name = models.ManyToManyField(ToolDatabaseClass, related_name='database_class_tool', blank=True, symmetrical=False)
 
   active = models.BooleanField(default=True)
   status = models.CharField(max_length=32, blank=True, null=True) # alpha || beta
@@ -106,12 +78,12 @@ class Tool(models.Model):
     return self.save()
 
   def get_db_class(self):
-    db_name = self.database_class_name.all()
-    db = None
-    if db_name:
-      db_name = db_name[0].name
-      db = dynamic_import(f'tools.models.{db_name}')
-    return db
+    db_obj = self.tool_db.first()
+    db_class = None
+    if db_obj:
+      db_name = db_obj and db_obj.name
+      db_class = dynamic_import(f'tools.models.{db_name}')
+    return db_class
 
   def get_db_records(self, user):
     db = self.get_db_class()
@@ -121,18 +93,10 @@ class Tool(models.Model):
 
     return records 
 
-  # def check_user_has_records(self, user):
-  #   db = self.get_db_class()
-  #   return db.check_user_has_records(user)
-
-  # def check_user_has_new_records(self, user):
-  #   db = self.get_db_class()
-  #   return db.check_user_has_new_records(user)
-
 
   @staticmethod
   def get_tools_that_has_db():
-    return Tool.objects.filter(database_class_name__isnull=False)
+    return Tool.objects.filter(tool_db__isnull=False)
 
   @staticmethod
   def get_tools_that_has_db_for_aside_section(user):
@@ -215,3 +179,31 @@ class ToolIssueReport(models.Model):
 
     return f'{user_info} ({description[:17]}...) {status}'
 
+
+# handle (tool record) in database and (tool views and models)
+class ToolViewsFunctions(models.Model):
+  name = models.CharField(max_length=120, unique=True)
+  tool = models.ForeignKey(Tool, on_delete=models.SET_NULL, related_name='tool_views',blank=True, null=True)
+
+  created = models.DateField(auto_now_add=True)
+  updated = models.DateField(auto_now=True)
+
+  def __str__(self):
+    return self.name
+
+  @staticmethod
+  def reverse_view_func_to_tool(func):
+    func_name = func.__name__
+    view_obj = ToolViewsFunctions.objects.filter(name=func_name).first()
+    tool = view_obj and view_obj.tool
+    return tool
+
+class ToolDatabaseClass(models.Model):
+  name = models.CharField(max_length=120, unique=True)
+  tool = models.ForeignKey(Tool, on_delete=models.SET_NULL, related_name='tool_db', blank=True, null=True)
+
+  created = models.DateField(auto_now_add=True)
+  updated = models.DateField(auto_now=True)
+
+  def __str__(self):
+    return self.name
