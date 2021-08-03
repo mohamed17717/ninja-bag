@@ -38,7 +38,7 @@ class Tool(models.Model):
   # fill with script
   endpoints = JSONField(blank=True, null=True)
   # extra
-  category = models.ManyToManyField(Category, related_name='category_tools', blank=True)
+  category = models.ManyToManyField(Category, related_name='category_tools')
 
   active = models.BooleanField(default=True)
   status = models.CharField(max_length=32, blank=True, null=True) # alpha || beta
@@ -113,7 +113,8 @@ class Tool(models.Model):
 
   @staticmethod
   def list_for_homepage():
-    return Tool.objects.filter(active=True).values('name', 'description', 'logo', 'url_reverser', 'tool_id')
+    # return Tool.objects.filter(active=True).values('name', 'description', 'logo', 'url_reverser', 'tool_id')
+    return Tool.objects.filter(active=True) # .values('name', 'description', 'logo', 'url_reverser', 'tool_id')
 
   @staticmethod
   def increase_uses_count_by_pk(pk):

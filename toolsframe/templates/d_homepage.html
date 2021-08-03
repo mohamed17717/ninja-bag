@@ -30,7 +30,6 @@
           }
         </script>
 
-        
         {% for tool in tools %}
         <div class="card rounded-lg overflow-hidden relative pb-6">
           <header class="flex items-center justify-start px-5 py-3">
@@ -38,7 +37,7 @@
             {% if tool.logo %}
             <div 
               class="w-14 h-14 rounded-full overflow-hidden bg-center bg-cover bg-no-repeat mr-5"
-              style="background-image: url(/media/{{ tool.logo }});"
+              style="background-image: url({{ tool.logo.url }});"
             ></div>
             {% endif %}
               
@@ -49,20 +48,24 @@
             </div>
           </header>
 
-          <div 
-            class="content px-5 py-8 overflow-hidden  leading-7 " 
-            x-html="getShrinkedText(`{{ tool.description }}`, 240)"
-          ></div>
+          <div class="content px-5 py-8">
+            <div 
+              class="overflow-hidden  leading-7 " 
+              x-html="getShrinkedText(`{{ tool.description }}`, 240)"
+            ></div>
 
-          <footer class="px-5 pt-1 pb-4 absolute bottom-0 right-0">
-            <!--
-            <ul class="flex flex-wrap">
-              <li class="text-sm rounded bg-primary-800 text-primary-300 mr-1 hover:bg-gray-700 hover:text-gray-300"><a class="px-2 py-1 inline-block" href="#">social media</a></li>
-              <li class="text-sm rounded bg-primary-800 text-primary-300 mr-1 hover:bg-gray-700 hover:text-gray-300"><a class="px-2 py-1 inline-block" href="#">network</a></li>
-              <li class="text-sm rounded bg-primary-800 text-primary-300 mr-1 hover:bg-gray-700 hover:text-gray-300"><a class="px-2 py-1 inline-block" href="#">science</a></li>
-            </ul>
-            -->
-  
+            <!-- <ul class="flex flex-wrap mt-2">
+              {% for category in tool.category.all %}
+              <li class="text-sm rounded bg-primary-800 text-primary-300 mr-1 hover:bg-gray-700 hover:text-gray-300 capitalize font-bold">
+                <a class="px-2 py-1 inline-block" href="#">{{ category.name }}</a>
+              </li>
+              {% endfor %}
+            </ul> -->
+          </div>
+
+
+          <footer class="px-5 pt-1 pb-4 absolute bottom-0 right-0 left-0">
+
             <div class="text-right pt-2">
               <a 
                 href="{% url tool.url_reverser tool.tool_id %}" 
