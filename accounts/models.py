@@ -18,9 +18,8 @@ size_handler = SizeHandler()
 class Account(models.Model):
   DEFAULT_USER_PICTURE = 'https://variety.com/wp-content/uploads/2015/07/naruto_movie-lionsgate.jpg?w=681&h=383&crop=1'
 
-
   user = models.ForeignKey(User, related_name='user_account', on_delete=models.CASCADE)
-  user_api_key = models.CharField(max_length=128, unique=True, editable=False, blank=True)
+  token = models.CharField(max_length=128, unique=True, editable=False, blank=True)
 
   picture = models.ImageField(upload_to='profile_pic', blank=True, null=True)
 
@@ -41,11 +40,11 @@ class Account(models.Model):
     verbose_name_plural = 'Accounts'
 
   def __str__(self):
-    return self.user.username+f'({self.user_api_key})'
+    return self.user.username+f'({self.token})'
 
   def save(self, *args, **kwargs):
     if not self.pk:
-      self.user_api_key = secrets.token_hex(nbytes=16)
+      self.token = secrets.token_hex(nbytes=16)
     
     return super(Account, self).save(*args, **kwargs)
 
@@ -81,7 +80,6 @@ class Account(models.Model):
     self.save()
 
 
-
   def reset_user_cycle(self):
     self.requests_used = 0
     self.bandwidth_used = 0
@@ -89,7 +87,7 @@ class Account(models.Model):
     return self.save()
 
   def get_user_folder_location(self):
-    return f'./users_storage/{self.user_api_key[:16]}/'
+    return f'./users_storage/{self.token[:16]}/'
 
   def get_user_folder_size(self, unit='MB'):
     location = self.get_user_folder_location()
@@ -115,35 +113,35 @@ class Account(models.Model):
 
     return picture
 
-  @staticmethod
-  def get_user_by_api_key(api_key, *, force=False):
-    acc = Account.objects.filter(user_api_key=api_key).first()
+  @classmethod
+  def get_user_by_api_key(cls, api_key, *, required=False):
+    acc = cls.objects.filter(token=api_key).first()
 
-    if force and not acc: 
-      raise PermissionDenied('Token is not valid.')
+    if required and not acc: 
+      raise PermissionDenied('Not-Permited for this action.')
 
     return acc
 
-  @staticmethod
-  def get_user_acc_from_api_or_web(request):
+  @classmethod
+  def get_user_acc_from_api_or_web(cls, request, *, required=False):
     user = request.user
     token = request.GET.get('token', 'blablabla')
-    acc = user and Account.objects.get(user=user)
-    acc = acc or Account.get_user_by_api_key(token, force=True)
+    acc = user and cls.objects.get(user=user)
+    acc = acc or cls.get_user_by_api_key(token, required=required)
 
     return acc
 
-  @staticmethod
-  def get_users_whom_cycle_ended():
+  @classmethod
+  def get_users_whom_cycle_ended(cls):
     cycle_long = 30
-    users = Account.objects.all()
+    users = cls.objects.all()
     cycle_end_checker = lambda u: u.get_days_since_created() % cycle_long == 0
     users_ended = filter(cycle_end_checker, users)
     return users_ended
 
-  @staticmethod
-  def reset_users_cycle():
-    users = Account.get_users_whom_cycle_ended()
+  @classmethod
+  def reset_users_cycle(cls):
+    users = cls.get_users_whom_cycle_ended()
     for user in users:
       user.reset_user_cycle()
 

@@ -10,6 +10,6 @@ app_name = 'accounts'
 
 
 urlpatterns = [
-  path('', index, name='auth'),
+  path('', index, name='login-page'),
   path('logout/', logout_account, name='logout'),
 ]

@@ -19,7 +19,7 @@
       {% if is_authenticated %}
       <li><a class="px-3 py-1 capitalize font-bold hover:underline" href="{% url 'accounts:logout' %}">logout</a></li>
       {% else %}
-      <li><a class="px-3 py-1 capitalize font-bold hover:underline" href="{% url 'accounts:auth' %}">login</a></li>
+      <li><a class="px-3 py-1 capitalize font-bold hover:underline" href="{% url 'accounts:login-page' %}">login</a></li>
       {% endif %}
         
     </ul>

@@ -2,7 +2,8 @@ import json, os
 import hashlib
 
 class FileManager:
-  def create_location(self, location):
+  @staticmethod
+  def create_location(location):
     status = False
     try:
       os.makedirs(location)
@@ -12,7 +13,8 @@ class FileManager:
 
     return status
 
-  def read(self, location, mode='r', to_json=None, lines=None):
+  @staticmethod
+  def read(location, mode='r', to_json=None, lines=None):
     mode = mode if mode in ['r', 'rb'] else 'r'
 
     with open(location, mode, encoding='utf8') as f:
@@ -28,14 +30,15 @@ class FileManager:
 
     return  data
 
-  def write(self, location, data, mode='w', set_hash_name=False,force_location=False):
+  @classmethod
+  def write(cls, location, data, mode='w', set_hash_name=False,force_location=False):
     mode = mode if mode in ['w', 'a', 'wb', 'ab'] else 'w'
     is_binary = mode.endswith('b')
 
     if force_location:
       file_location = os.path.dirname(location)
       if file_location:
-        self.create_location(file_location)
+        cls.create_location(file_location)
 
     if type(data) != str and not is_binary:
       data = json.dumps(data, ensure_ascii=False, indent=2)
@@ -57,19 +60,21 @@ class FileManager:
     with open(location, mode, encoding=encoding) as f:
       f.write(data)
 
-  def is_file_exist(self, location):
+  @staticmethod
+  def is_file_exist(location):
     return os.path.isfile(location) and os.access(location, os.R_OK)
 
-  def delete(self, location):
-    if self.is_file_exist(location):
+  @classmethod
+  def delete(cls, location):
+    if cls.is_file_exist(location):
       os.remove(location)
       return True
     return False
 
-  def listdir(self, location):
-    try:
-      dirs = os.listdir(location)
-    except:
-      dirs = []
+  @staticmethod
+  def listdir(location):
+    try: dirs = os.listdir(location)
+    except: dirs = []
 
     return dirs
+

@@ -18,7 +18,6 @@ from .views import (
   analyze_my_machine_user_agent,
   generate_qrcode,
   cors_proxy,
-
   TextSaverView,
 )
 

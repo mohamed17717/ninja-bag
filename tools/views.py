@@ -7,6 +7,7 @@ from .controller import RequestAnalyzerTools, ImageTools, ScrapingTools
 from .controller.ImageTools import MyImageHandler
 
 from decorators import require_http_methods, tool_handler, required_post_fields, function_nickname
+from classes.FileManager import FileManager
 
 import json
 
@@ -194,7 +195,7 @@ class TextSaverView:
   @function_nickname('text_saver_add')
   def add(request, file_name=None):
     # get account
-    acc = Account.get_user_acc_from_api_or_web(request)
+    acc = Account.get_user_acc_from_api_or_web(request, required=True)
     text = request.body.decode('utf8')
 
     file_path = TextSaverModel.add(acc, text, file_name)
@@ -207,7 +208,7 @@ class TextSaverView:
   @tool_handler(limitation=['requests', 'bandwidth'])
   @function_nickname('text_saver_add')
   def read(request, file_name):
-    acc = Account.get_user_acc_from_api_or_web(request)
+    acc = Account.get_user_acc_from_api_or_web(request, required=True)
 
     location = TextSaverModel.read(acc, file_name)
 
@@ -221,11 +222,10 @@ class TextSaverView:
   @tool_handler(limitation=['requests', 'bandwidth'])
   @function_nickname('text_saver_add')
   def read_text(request, file_name):
-    acc = Account.get_user_acc_from_api_or_web(request)
+    acc = Account.get_user_acc_from_api_or_web(request, required=True)
     location = TextSaverModel.read(acc, file_name)
 
-    with open(location) as f:
-      data = f.read()
+    data = FileManager.read(location)
 
     return HttpResponse(data)
 
@@ -235,20 +235,21 @@ class TextSaverView:
   @tool_handler(limitation=['requests'])
   @function_nickname('text_saver_add')
   def delete(request, file_name):
-    acc = Account.get_user_acc_from_api_or_web(request)
+    acc = Account.get_user_acc_from_api_or_web(request, required=True)
 
     delete_status = TextSaverModel.delete(acc, file_name)
+
     response = HttpResponse() if delete_status else HttpResponseBadRequest('file is not exist') 
     if request.user:
       response = redirect(request.META.get('HTTP_REFERER', '/'))
     return response
 
-  @staticmethod
-  def as_view(request, file_name):
+  @classmethod
+  def as_view(cls, request, file_name):
     views = {
-      'POST': TextSaverView.add,
-      'GET': TextSaverView.read,
-      'DELETE': TextSaverView.delete,
+      'POST': cls.add,
+      'GET': cls.read,
+      'DELETE': cls.delete,
     }
 
     return views.get(request.method)(request, file_name)

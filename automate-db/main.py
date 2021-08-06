@@ -2,25 +2,9 @@ from toolsframe.models import (
   Tool, Category, ToolViewsFunctions, ToolDatabaseClass
 )
 import json
-
+from classes.FileManager import FileManager
 
 tools_doc_file = 'automate-db/tools-doc.json'
-
-def read_file(location):
-  with open(location, 'r') as f:
-    data = f.read()
-
-  if location.endswith('.json'):
-    data = json.loads(data)
-
-  return data
-
-def write_file(location, data):
-  if type(data) != str:
-    data = json.dumps(data, indent=2)
-
-  with open(location, 'w') as f:
-    f.write(data)
 
 
 class ToolCreator:
@@ -69,7 +53,7 @@ class ToolCreator:
     return tool
 
 
-tools = read_file(tools_doc_file)
+tools = FileManager.read(tools_doc_file)
 
 updated_tools = {}
 print('## set tool docs ##')
@@ -91,7 +75,7 @@ for name, info in tools.items():
   info.update({ 'is_changed': False })
   updated_tools.update({name: info})
 
-write_file(tools_doc_file, updated_tools)
+FileManager.write(tools_doc_file, updated_tools)
 
 print('\n\n')
 # set tool views

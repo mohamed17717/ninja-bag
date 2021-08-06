@@ -4,7 +4,7 @@ from django.contrib.auth import get_user_model
 from django.core.exceptions import ValidationError
 from django.http import HttpResponseBadRequest, HttpResponse
 
-from .classes.FileManager import FileManager
+from classes.FileManager import FileManager
 from accounts.models import Account
 
 import os, secrets
@@ -47,12 +47,10 @@ class TextSaverModel(models.Model):
 
   @staticmethod
   def validate(**kwargs):
-    fm = FileManager()
-
     errors = {
       'text': (lambda text: text == '', 'cant find any text in the request'),
       'file_name': (lambda file_name: '/' in str(file_name), f'filename is not valid.'),
-      'location': (lambda location: not fm.is_file_exist(location), 'file is not exist')
+      'location': (lambda location: not FileManager.is_file_exist(location), 'file is not exist')
     }
 
     for name, value in kwargs.items():
@@ -63,72 +61,54 @@ class TextSaverModel(models.Model):
 
 
   # polumorphism methods
-  @staticmethod
-  def check_user_has_records(user):
-    exist = TextSaverModel.objects.filter(user=user).first()
+  @classmethod
+  def check_user_has_records(cls, user):
+    exist = cls.objects.filter(user=user).first()
     return bool(exist)
 
-  @staticmethod
-  def check_user_has_new_records(user):
-    exist = TextSaverModel.objects.filter(user=user, seen=False).first()
+  @classmethod
+  def check_user_has_new_records(cls, user):
+    exist = cls.objects.filter(user=user, seen=False).first()
     return bool(exist)
 
 
-  @staticmethod
-  def add(acc, text, file_name):
-    TextSaverModel.validate(text=text, file_name=file_name)
-
-    fm = FileManager()
+  @classmethod
+  def add(cls, acc, text, file_name):
+    cls.validate(text=text, file_name=file_name)
 
     file_name = file_name or f'{secrets.token_hex(nbytes=8)}.txt'
-    folder_name = TextSaverModel.get_folder(acc)
+    folder_name = cls.get_folder(acc)
     location = os.path.join(folder_name, file_name)
-    fm.write(location, text+'\n', mode='a', force_location=True)
+    FileManager.write(location, text+'\n', mode='a', force_location=True)
 
-    file_url = TextSaverModel.get_file_path(file_name)
+    file_url = cls.get_file_path(file_name)
 
-    try: TextSaverModel.objects.create(user=acc.user, file_name=file_name)
+    try: cls.objects.create(user=acc.user, file_name=file_name)
     except: pass
 
     return file_url
 
-  @staticmethod
-  def list_all(user):
-    # acc = Account.objects.get(user=user)
+  @classmethod
+  def list_all(cls, user):
+    return cls.objects.filter(user=user)
 
-    # fm = FileManager()
+  @classmethod
+  def delete(cls, acc, file_name):
+    cls.validate(file_name=file_name)
 
-    # folder_name = TextSaverModel.get_folder(acc)
-    # files_names = fm.listdir(folder_name)
-    # files_read_paths = [TextSaverModel.get_file_path(f) for f in files_names]
-    # files_delete_path = [TextSaverModel.get_delete_path(f) for f in files_names]
-
-    # return list(zip(files_read_paths, files_delete_path))
-
-    return TextSaverModel.objects.filter(user=user)
-
-  @staticmethod
-  def delete(acc, file_name):
-    TextSaverModel.validate(file_name=file_name)
-
-    fm = FileManager()
-
-    folder_name = TextSaverModel.get_folder(acc)
+    folder_name = cls.get_folder(acc)
     location = os.path.join(folder_name, file_name)
-    delete_status = fm.delete(location)
+    delete_status = FileManager.delete(location)
 
-    TextSaverModel.objects.filter(user=acc.user, file_name=file_name).delete()
+    cls.objects.filter(user=acc.user, file_name=file_name).delete()
     return delete_status
 
-  @staticmethod
-  @login_required
-  def read(acc, file_name):
-    fm = FileManager()
-
-    folder_name = TextSaverModel.get_folder(acc)
+  @classmethod
+  def read(cls, acc, file_name):
+    folder_name = cls.get_folder(acc)
     location = os.path.join(folder_name, file_name)
 
-    TextSaverModel.validate(file_name=file_name, location=location)
+    cls.validate(file_name=file_name, location=location)
 
     return location
 

@@ -28,9 +28,6 @@ def get_default_context(request):
 
 @require_http_methods(['GET'])
 def index(request):
-  # if not request.user.is_authenticated:
-  #   return Redirector.go_login()
-
   context = {
     **get_default_context(request),
     'tools': Tool.list_for_homepage()

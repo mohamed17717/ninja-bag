@@ -35,9 +35,8 @@ class Tool(models.Model):
   logo = models.ImageField(upload_to='tool_logo', blank=True, null=True)
   description = models.TextField(blank=True, null=True) # SEO && after title
   url_reverser = models.CharField(max_length=64, default='toolsframe:tool') # 'app_name:home'
-  # fill with script
+
   endpoints = JSONField(blank=True, null=True)
-  # extra
   category = models.ManyToManyField(Category, related_name='category_tools')
 
   active = models.BooleanField(default=True)
@@ -94,14 +93,14 @@ class Tool(models.Model):
     return records 
 
 
-  @staticmethod
-  def get_tools_that_has_db():
-    return Tool.objects.filter(tool_db__isnull=False)
+  @classmethod
+  def get_tools_that_has_db(cls):
+    return cls.objects.filter(tool_db__isnull=False)
 
-  @staticmethod
-  def get_tools_that_has_db_for_aside_section(user):
+  @classmethod
+  def get_tools_that_has_db_for_aside_section(cls, user):
     # tools that user has records in && flag tell if there is new record
-    tools = Tool.get_tools_that_has_db()
+    tools = cls.get_tools_that_has_db()
     chosen_ones = []
     for tool in tools:
       db = tool.get_db_class()
@@ -111,20 +110,19 @@ class Tool(models.Model):
     return chosen_ones
 
 
-  @staticmethod
-  def list_for_homepage():
-    # return Tool.objects.filter(active=True).values('name', 'description', 'logo', 'url_reverser', 'tool_id')
-    return Tool.objects.filter(active=True) # .values('name', 'description', 'logo', 'url_reverser', 'tool_id')
+  @classmethod
+  def list_for_homepage(cls):
+    return cls.objects.filter(active=True)
 
-  @staticmethod
-  def increase_uses_count_by_pk(pk):
-    tool = Tool.objects.filter(pk=pk).first()
+  @classmethod
+  def increase_uses_count_by_pk(cls, pk):
+    tool = cls.objects.filter(pk=pk).first()
     if tool:
       tool.increase_uses_count()
 
-  @staticmethod
-  def get_tool_by_tool_id(tool_id):
-    return Tool.objects.filter(tool_id=tool_id).first()
+  @classmethod
+  def get_tool_by_tool_id(cls, tool_id):
+    return cls.objects.filter(tool_id=tool_id).first()
 
 class UpcomingTool(models.Model):
   name = models.CharField(max_length=128)
@@ -141,9 +139,9 @@ class UpcomingTool(models.Model):
   def __str__(self):
     return self.name
 
-  @staticmethod
-  def list_all_active():
-    return UpcomingTool.objects.filter(active=True)
+  @classmethod
+  def list_all_active(cls):
+    return cls.objects.filter(active=True)
 
 
 class SuggestedTool(models.Model):
@@ -192,10 +190,10 @@ class ToolViewsFunctions(models.Model):
   def __str__(self):
     return self.name
 
-  @staticmethod
-  def reverse_view_func_to_tool(func):
+  @classmethod
+  def reverse_view_func_to_tool(cls, func):
     func_name = func.__name__
-    view_obj = ToolViewsFunctions.objects.filter(name=func_name).first()
+    view_obj = cls.objects.filter(name=func_name).first()
     tool = view_obj and view_obj.tool
     return tool
 

@@ -3,12 +3,13 @@ from django.shortcuts import redirect
 
 class Redirector:
   HOMEPAGE_URL_REVERSER = 'toolsframe:homepage'
-  LOGIN_URL_REVERSER = 'accounts:auth'
+  LOGIN_URL_REVERSER = 'accounts:login-page'
 
-  @staticmethod
-  def go_home():
-    return redirect(Redirector.HOMEPAGE_URL_REVERSER)
+  @classmethod
+  def go_home(cls):
+    return redirect(cls.HOMEPAGE_URL_REVERSER)
 
-  @staticmethod
-  def go_login():
-    return redirect(Redirector.LOGIN_URL_REVERSER)
+  @classmethod
+  def go_login(cls):
+    return redirect(cls.LOGIN_URL_REVERSER)
+
