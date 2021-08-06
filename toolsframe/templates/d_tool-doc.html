@@ -43,7 +43,7 @@
           <div class="text-right" x-data="setupIssueButton()">
             <button 
               class="bg-accent text-white font-bold text-sm capitalize px-3 py-1"
-              @click="isOpen = true"
+              @click="isOpen = true; closeDialogOnEscape()"
             >report an issue</button>
             
             <div 
@@ -108,6 +108,22 @@
                     loading: '<div class="lds-ripple" style="left:42%;"><div></div><div></div></div>',
                     normal: 'send'
                   },
+
+                  closeDialogOnEscape () {
+                    const alpineObj = this
+                    const close = (e) => {
+                      console.log(e.code)
+                      if (e.code.toLowerCase() === 'escape')
+                        alpineObj.isOpen = false
+
+                      if (alpineObj.isOpen === false)
+                        document.removeEventListener('keyup', close)
+
+                    }
+
+                    document.addEventListener('keyup', close);
+                  },
+
 
                   textareaAutoGrow() {
                     elm = this.$refs['reportIssueTextarea']

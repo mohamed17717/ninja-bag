@@ -6,8 +6,6 @@
     :x-ref="`x${index}`"
     x-on:blur="endpoint.httpSyntaxHeader=$refs[`x${index}`].innerHTML"
   ></div>
-    <!-- :x-ref="`httpSyntaxHeader${index}`"
-    x-html="getHttpSyntaxHeader(endpoint)" -->
 
   <template x-if="Endpoint.isHttpHasBody(endpoint)">
   <div 
@@ -21,6 +19,4 @@
     style="line-break: anywhere;"
   ></div>
   </template>
-  <!-- :x-ref="`httpSyntaxBody${index}`"
-  x-html="getHttpSyntaxBody(endpoint)" -->
 </div>

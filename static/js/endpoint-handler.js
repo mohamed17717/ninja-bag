@@ -130,7 +130,20 @@ function renderEndpoints() {
       endpoint.popup = true
     },
 
+    closeDialogOnEscape (endpoint) {
+      const close = (e) => {
+        console.log(e.code)
+        if (e.code.toLowerCase() === 'escape') 
+          endpoint.popup = false
+        if (endpoint.popup === false)
+          document.removeEventListener('keyup', close)
+      }
+
+      document.addEventListener('keyup', close);
+    },
+
     runRequest(endpoint) {
+      this.closeDialogOnEscape(endpoint)
       const httpParser = new HTTPSyntaxParser(endpoint)
 
       // -_* step 1 - get path and set values in the url
