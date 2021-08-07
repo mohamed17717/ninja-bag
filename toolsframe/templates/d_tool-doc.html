@@ -22,9 +22,9 @@
   <div id="api">
     {% include 'components/header.html' %}
 
-    <div class="content flex justify-evenly items-start">
+    <div class="content flex justify-evenly items-start flex-col md:flex-row">
 
-      <main class="flex-grow pr-5">
+      <main class="flex-grow pr-5 pb-10 w-full">
         {% include 'tool-components/tool-info.html' %}
 
         <div class="end-points">
@@ -92,7 +92,9 @@
         {% endif %}
       </main>
   
+      <aside class="flex-shrink-0 w-full md:w-80">
       {% include 'components/aside.html' %}
+      </aside>
     </div>
 
     {% include 'components/footer.html' %}
