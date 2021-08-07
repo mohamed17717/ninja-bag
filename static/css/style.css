@@ -263,10 +263,6 @@ button.bg-primary-700:disabled,
   color: var(--color-primary-100);
 }
 
-#api main {
-  /* max-width: 700px; */
-}
-
 #api .tool-info {
   background-color: var(--color-primary-700);
 }
@@ -339,15 +335,11 @@ button.bg-primary-700:disabled,
 }
 
 #login-page .login-form p {
-  max-width: 70%;
+  max-width: 90%;
 }
 
-#login-page .login-form a {
+#login-page .login-form .description b {
   color: var(--color-accent);
-}
-
-#login-page .login-form a:hover {
-  text-decoration: underline;
 }
 
 #login-page .login-form button,
