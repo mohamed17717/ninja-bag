@@ -141,13 +141,13 @@ body [contenteditable] {
 
 #homepage main .card, #api main .card {
   background-color: var(--color-primary-700);
-  min-width: 250px;
+  min-width: 265px;
   width: 40%;
   -webkit-box-flex: 1;
       -ms-flex-positive: 1;
           flex-grow: 1;
-  margin-bottom: 20px;
-  margin-right: 15px;
+  /* margin-bottom: 20px; */
+  /* margin-right: 15px; */
 }
 
 #homepage main .card header, #api main .card header {
@@ -166,9 +166,9 @@ body [contenteditable] {
   margin-right: 0;
 }
 
-#homepage aside, #api aside {
+/* #homepage aside, #api aside {
   width: 300px;
-}
+} */
 
 #homepage aside > *, #api aside > * {
   background-color: var(--color-primary-700);

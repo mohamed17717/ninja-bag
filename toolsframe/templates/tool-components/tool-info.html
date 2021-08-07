@@ -1,0 +1,14 @@
+<div class="tool-info text-center rounded-lg p-5 mb-12">
+  {% if tool.logo %}
+  <div 
+    class="w-48 h-48 mb-3 rounded-full overflow-hidden bg-center bg-cover bg-no-repeat m-auto"
+    style="background-image: url({{ tool.logo.url }});"
+  ></div>
+  {% endif %}
+
+  <h1 class="text-4xl font-bold">{{ tool.name }}</h1>
+
+  <div class="description text-left mt-8">{{ tool.description }}</div>
+
+  {% include './tool-info-report-issue.html' %}
+</div>

@@ -25,148 +25,10 @@
     <div class="content flex justify-evenly items-start">
 
       <main class="flex-grow pr-5">
-        <div class="tool-info text-center rounded-lg p-5 mb-12">
-          
-          {% if tool.logo %}
-          <div 
-            class="w-48 h-48 mb-3 rounded-full overflow-hidden bg-center bg-cover bg-no-repeat m-auto"
-            style="background-image: url({{ tool.logo.url }});"
-          >
-          </div>
-          {% endif %}
-            
-
-          <h1 class="text-4xl font-bold">{{ tool.name }}</h1>
-
-          <div class="description text-left mt-8">{{ tool.description }}</div>
-
-          <div class="text-right" x-data="setupIssueButton()">
-            <button 
-              class="bg-accent text-white font-bold text-sm capitalize px-3 py-1"
-              @click="isOpen = true; closeDialogOnEscape()"
-            >report an issue</button>
-            
-            <div 
-              class="model-try-request fixed inset-0 text-left z-10"
-              x-show="isOpen"
-            >
-              <div
-                class="bg-primary-800 opacity-70 w-full h-full"
-                @click="isOpen = false"
-              ></div>
-                
-              <div 
-                class="dialog px-5 py-3 rounded-md bg-primary-700 z-20 absolute"
-                style="
-                  top: 50%; left: 50%; transform: translate(-50%, -50%); 
-                  max-width: 500px; width: 80%;"
-              >
-                <div class="text-sm flex items-center justify-end">
-                  <span
-                    class="text-2xl text-button-text cursor-pointer mx-3"
-                    @click="isOpen = false" 
-                  >&times;</span>
-                </div>
-
-                <div class="dialog-content mt-5 relative">
-                  <div>
-                    <h3 class=" font-bold mb-5 text-center">
-                      Report any issue you face or any imporvement you see will make the tool better. Thanks ❤️
-                    </h3>
-
-                    <form x-on:submit.prevent="submitToolReport()" class="flex flex-col item-strech">
-                      <textarea 
-                        x-model="issueDescription" class="w-full h-32 bg-primary-600 px-3 py-2" 
-                        placeholder="Explain..." required
-                        x-ref="reportIssueTextarea"
-                        x-on:input="textareaAutoGrow()"
-                        style="max-height: 60vh;"
-                      ></textarea>
-  
-                      <button 
-                        style="height: 35px;"
-                        class="mt-3 overflow-hidden font-bold uppercase bg-accent text-button-text" 
-                        x-bind:disabled="isButtonLoading"
-                        x-bind:class="isButtonLoading ? 'relative' : ''"
-                        x-html="isButtonLoading ? buttonStates.loading : buttonStates.normal"
-                      ></button>
-                    </form>
-                  </div>
-                </div>
-              </div>
-
-            </div>
-
-            <script>
-              function setupIssueButton () {
-                return {
-                  url: "{% url 'toolsframe:report-tool' tool.tool_id %}",
-                  issueDescription: '',
-                  isOpen: false,
-                  isButtonLoading: false,
-                  buttonStates: {
-                    loading: '<div class="lds-ripple" style="left:42%;"><div></div><div></div></div>',
-                    normal: 'send'
-                  },
-
-                  closeDialogOnEscape () {
-                    const alpineObj = this
-                    const close = (e) => {
-                      console.log(e.code)
-                      if (e.code.toLowerCase() === 'escape')
-                        alpineObj.isOpen = false
-
-                      if (alpineObj.isOpen === false)
-                        document.removeEventListener('keyup', close)
-
-                    }
-
-                    document.addEventListener('keyup', close);
-                  },
-
-
-                  textareaAutoGrow() {
-                    elm = this.$refs['reportIssueTextarea']
-                    elm.style.height = "8rem";
-                    elm.style.height = (elm.scrollHeight)+"px";
-                  },
-
-                  submitToolReport () {
-                    this.isButtonLoading = true
-                    const description = this.issueDescription.trim()
-                    if (!description.length){
-                      setTimeout(()=> { this.isButtonLoading = false }, 1000)
-                      notify('Failed', 'failed')
-                      return
-                    }
-
-                    const requestConfig = {
-                      method: 'POST',
-                      headers: { 'Content-Type': 'application/json', },
-                      body: JSON.stringify({ description })
-                    }
-
-                    fetch(this.url, requestConfig)
-                      .then(res => {
-                        this.isButtonLoading = false
-                        this.issueDescription = ''
-                        notify('Sent', 'success')
-                      })
-                      .catch(err => {
-                        this.isButtonLoading = false
-                        console.error(err)
-                        notify('Failed', 'failed')
-                      })
-                  }
-                }
-              }
-            </script>
-          </div>
-        </div>
+        {% include 'tool-components/tool-info.html' %}
 
         <div class="end-points">
           <h2 class="text-2xl font-bold capitalize mb-6">end points</h2>
-
 
           <ul x-data="renderEndpoints()">
 
@@ -214,22 +76,20 @@
         </div>
 
         {% if db_records %}
-          <div class="db-records mt-8">
-            <h2 class="text-2xl font-bold capitalize mb-6">tool ratabase records</h2>
-            
-            <ul class="no-select">
-              {% for record in db_records %}
-                <li class="flex justify-between border-b-2 pb-1 mb-2">
-                  <a href="{{ record.get_absolute_url_read }}">{{ record.file_name }}</a>
-                  <a class="text-sm font-bold text-primary-200 capitalize" href="{{ record.get_absolute_url_delete }}">delete</a>
-                </li>
-              {% endfor %}
-            </ul>
-              
-          </div>
-
-        {% endif %}
+        <div class="db-records mt-8">
+          <h2 class="text-2xl font-bold capitalize mb-6">tool ratabase records</h2>
           
+          <ul class="no-select">
+            {% for record in db_records %}
+              <li class="flex justify-between border-b-2 pb-1 mb-2">
+                <a href="{{ record.get_absolute_url_read }}">{{ record.file_name }}</a>
+                <a class="text-sm font-bold text-primary-200 capitalize" href="{{ record.get_absolute_url_delete }}">delete</a>
+              </li>
+            {% endfor %}
+          </ul>
+            
+        </div>
+        {% endif %}
       </main>
   
       {% include 'components/aside.html' %}
