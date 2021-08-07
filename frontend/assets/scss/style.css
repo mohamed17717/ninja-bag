@@ -364,6 +364,7 @@ button.bg-primary-700:disabled {
 #login-page .login-form div.password-input {
   position: relative;
   height: 48px;
+  cursor: text;
 }
 
 #login-page .login-form div.username-input::after,
@@ -374,7 +375,6 @@ button.bg-primary-700:disabled {
   -webkit-transform: translateY(-50%);
           transform: translateY(-50%);
   margin-left: 16px;
-  cursor: text;
 }
 
 #login-page .login-form div.username-input::after,
