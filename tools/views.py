@@ -195,7 +195,7 @@ class TextSaverView:
   @function_nickname('text_saver_add')
   def add(request, file_name=None):
     # get account
-    acc = Account.get_user_acc_from_api_or_web(request, required=True)
+    acc = Account.objects.get_user_acc_from_api_or_web(request, required=True)
     text = request.body.decode('utf8')
 
     file_path = TextSaverModel.add(acc, text, file_name)
@@ -208,7 +208,7 @@ class TextSaverView:
   @tool_handler(limitation=['requests', 'bandwidth'])
   @function_nickname('text_saver_add')
   def read(request, file_name):
-    acc = Account.get_user_acc_from_api_or_web(request, required=True)
+    acc = Account.objects.get_user_acc_from_api_or_web(request, required=True)
 
     location = TextSaverModel.read(acc, file_name)
 
@@ -222,7 +222,7 @@ class TextSaverView:
   @tool_handler(limitation=['requests', 'bandwidth'])
   @function_nickname('text_saver_add')
   def read_text(request, file_name):
-    acc = Account.get_user_acc_from_api_or_web(request, required=True)
+    acc = Account.objects.get_user_acc_from_api_or_web(request, required=True)
     location = TextSaverModel.read(acc, file_name)
 
     data = FileManager.read(location)
@@ -235,7 +235,7 @@ class TextSaverView:
   @tool_handler(limitation=['requests'])
   @function_nickname('text_saver_add')
   def delete(request, file_name):
-    acc = Account.get_user_acc_from_api_or_web(request, required=True)
+    acc = Account.objects.get_user_acc_from_api_or_web(request, required=True)
 
     delete_status = TextSaverModel.delete(acc, file_name)
 

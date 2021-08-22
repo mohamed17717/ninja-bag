@@ -31,12 +31,12 @@ def cache_request(name_format, timeout=60*60*24, identifier=None):
 def tool_handler(limitation=[]):
   def decorator(func):
     th = ToolHandler()
-    tool = ToolViewsFunctions.reverse_view_func_to_tool(func)
+    tool = ToolViewsFunctions.objects.reverse_view_func_to_tool(func)
 
     def wrapper(request, *args, **kwargs):
       api_key = request.GET.get('token', None)
       is_acc_required = bool(th.is_limits_active and len(limitation))
-      acc = api_key and Account.get_user_by_api_key(api_key, required=is_acc_required)
+      acc = api_key and Account.objects.get_user_by_api_key(api_key, required=is_acc_required)
 
       limits_handler = LimitsHandler(acc)
 

@@ -1,6 +1,5 @@
 from django.shortcuts import render
 from django.http import HttpResponse
-from django.shortcuts import get_object_or_404
 
 from .models import Tool, UpcomingTool, SuggestedTool, ToolIssueReport
 from decorators import require_http_methods, required_post_fields
@@ -12,7 +11,7 @@ from handlers import ToolHandler
 def get_default_context(request):
   is_authenticated = request.user.is_authenticated
   context = {
-    'upcoming_tools': UpcomingTool.list_all_active(),
+    'upcoming_tools': UpcomingTool.objects.get_active(),
     'is_limits_active': ToolHandler.is_limits_active,
     'is_authenticated': request.user.is_authenticated
   }
@@ -21,7 +20,7 @@ def get_default_context(request):
     user = request.user
     context.update({ 
       'account': user.user_account.get(),
-      'db_tools': Tool.get_tools_that_has_db_for_aside_section(user)
+      'db_tools': Tool.objects.get_tools_that_has_db_for_aside_section(user)
     })
 
   return context
@@ -30,7 +29,7 @@ def get_default_context(request):
 def index(request):
   context = {
     **get_default_context(request),
-    'tools': Tool.list_for_homepage()
+    'tools': Tool.objects.list_for_homepage()
   }
 
   return render(request, 'd_homepage.html', context)
@@ -38,13 +37,13 @@ def index(request):
 
 @require_http_methods(['GET'])
 def get_tool_page(request, tool_id):
-  tool = get_object_or_404(Tool, tool_id=tool_id)
+  tool = Tool.objects.force_get(tool_id=tool_id)
   tool.increase_views_count()
 
   context = {
     **get_default_context(request),
     'tool': tool,
-    'db_records':  tool.get_db_records(request.user)
+    'db_records': tool.get_db_records(request.user)
   }
 
   return render(request, 'd_tool-doc.html', context)
@@ -65,7 +64,7 @@ def suggest_tool(request):
 @required_post_fields(['description'])
 def report_tool_issue(request, tool_id):
   user = request.user
-  tool = get_object_or_404(Tool, tool_id=tool_id)
+  tool = Tool.objects.force_get(tool_id=tool_id)
 
   data = request.POST or json.loads(request.body.decode('utf8'))
   description = data.get('description', '').strip()

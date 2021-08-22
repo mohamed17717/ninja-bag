@@ -2,6 +2,8 @@ from django.db import models
 from django.contrib.auth import get_user_model
 from django.core.exceptions import PermissionDenied
 
+from .managers import AccountManager
+
 from jsonfield import JSONField
 from toolsframe.models import Tool
 
@@ -18,7 +20,7 @@ size_handler = SizeHandler()
 class Account(models.Model):
   DEFAULT_USER_PICTURE = 'https://variety.com/wp-content/uploads/2015/07/naruto_movie-lionsgate.jpg?w=681&h=383&crop=1'
 
-  user = models.ForeignKey(User, related_name='user_account', on_delete=models.CASCADE)
+  user = models.OneToOneField(User, related_name='user_account', on_delete=models.CASCADE)
   token = models.CharField(max_length=128, unique=True, editable=False, blank=True)
 
   picture = models.ImageField(upload_to='profile_pic', blank=True, null=True)
@@ -35,6 +37,8 @@ class Account(models.Model):
   bandwidth_used = models.FloatField(default=0) # MB
   requests_used = models.IntegerField(default=0) # request/month
 
+  objects = AccountManager()
+
   class Meta:
     verbose_name = 'Account'
     verbose_name_plural = 'Accounts'
@@ -48,6 +52,32 @@ class Account(models.Model):
     
     return super(Account, self).save(*args, **kwargs)
 
+
+  def get_user_name(self):
+    name = f'{self.user.first_name} {self.user.last_name}'.strip() or self.user.username
+    return name
+
+  def get_user_picture(self):
+    if self.picture:
+      picture = self.picture.url
+    else:
+      picture = self.DEFAULT_USER_PICTURE
+
+    return picture
+
+
+  # ----------------- limitation plan --------------- #
+  def get_user_folder_location(self):
+    return f'./users_storage/{self.token[:16]}/'
+
+
+  def get_user_folder_size(self, unit='MB'):
+    location = self.get_user_folder_location()
+
+    try: size = size_handler.get_folder_size(location, unit)
+    except: size = 0
+
+    return size
 
   def check_storage_limit_hookbefore(self, request):
     unit = 'MB'
@@ -80,56 +110,16 @@ class Account(models.Model):
     self.save()
 
 
+  # -------------- subscription plan ---------------- #
+  def get_days_since_created(self):
+    now = datetime.now()
+    return (now - self.created).days
+
   def reset_user_cycle(self):
     self.requests_used = 0
     self.bandwidth_used = 0
 
     return self.save()
-
-  def get_user_folder_location(self):
-    return f'./users_storage/{self.token[:16]}/'
-
-  def get_user_folder_size(self, unit='MB'):
-    location = self.get_user_folder_location()
-
-    try: size = size_handler.get_folder_size(location, unit)
-    except: size = 0
-
-    return size
-
-  def get_days_since_created(self):
-    now = datetime.now()
-    return (now - self.created).days
-
-  def get_user_name(self):
-    name = f'{self.user.first_name} {self.user.last_name}'.strip() or self.user.username
-    return name
-
-  def get_user_picture(self):
-    if self.picture:
-      picture = self.picture.url
-    else:
-      picture = self.DEFAULT_USER_PICTURE
-
-    return picture
-
-  @classmethod
-  def get_user_by_api_key(cls, api_key, *, required=False):
-    acc = cls.objects.filter(token=api_key).first()
-
-    if required and not acc: 
-      raise PermissionDenied('Not-Permited for this action.')
-
-    return acc
-
-  @classmethod
-  def get_user_acc_from_api_or_web(cls, request, *, required=False):
-    user = request.user
-    token = request.GET.get('token', 'blablabla')
-    acc = user and cls.objects.get(user=user)
-    acc = acc or cls.get_user_by_api_key(token, required=required)
-
-    return acc
 
   @classmethod
   def get_users_whom_cycle_ended(cls):

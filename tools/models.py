@@ -7,6 +7,8 @@ from django.http import HttpResponseBadRequest, HttpResponse
 from classes.FileManager import FileManager
 from accounts.models import Account
 
+from .managers import ToolDatabaseManager
+
 import os, secrets
 
 from decorators import login_required
@@ -21,6 +23,8 @@ class TextSaverModel(models.Model):
 
   created = models.DateField(auto_now_add=True)
   updated = models.DateField(auto_now=True)
+
+  objects = ToolDatabaseManager()
 
   def get_absolute_url_read(self):
     return reverse('tools:textsaver-read', kwargs={'file_name': self.file_name})
@@ -62,17 +66,6 @@ class TextSaverModel(models.Model):
 
   # polumorphism methods
   @classmethod
-  def check_user_has_records(cls, user):
-    exist = cls.objects.filter(user=user).first()
-    return bool(exist)
-
-  @classmethod
-  def check_user_has_new_records(cls, user):
-    exist = cls.objects.filter(user=user, seen=False).first()
-    return bool(exist)
-
-
-  @classmethod
   def add(cls, acc, text, file_name):
     cls.validate(text=text, file_name=file_name)
 
@@ -90,7 +83,10 @@ class TextSaverModel(models.Model):
 
   @classmethod
   def list_all(cls, user):
-    return cls.objects.filter(user=user)
+    result = []
+    if user.is_authenticated: 
+      result = cls.objects.filter(user=user)
+    return result
 
   @classmethod
   def delete(cls, acc, file_name):

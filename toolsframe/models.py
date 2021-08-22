@@ -8,6 +8,12 @@ from django.utils.text import slugify
 from handlers import dynamic_import
 import secrets
 
+from .managers import  (
+  UpcomingToolManager,
+  ToolViewsFunctionsManager,
+  ToolManager
+)
+
 User = get_user_model()
 
 class Category(models.Model):
@@ -47,6 +53,8 @@ class Tool(models.Model):
   # dates
   created = models.DateField(auto_now_add=True)
   updated = models.DateField(auto_now=True)
+
+  objects = ToolManager()
 
   class Meta:
     verbose_name = 'Tool'
@@ -93,37 +101,6 @@ class Tool(models.Model):
     return records 
 
 
-  @classmethod
-  def get_tools_that_has_db(cls):
-    return cls.objects.filter(tool_db__isnull=False)
-
-  @classmethod
-  def get_tools_that_has_db_for_aside_section(cls, user):
-    # tools that user has records in && flag tell if there is new record
-    tools = cls.get_tools_that_has_db()
-    chosen_ones = []
-    for tool in tools:
-      db = tool.get_db_class()
-      if db.check_user_has_records(user):
-        chosen_ones.append((tool, db.check_user_has_new_records(user)))
-
-    return chosen_ones
-
-
-  @classmethod
-  def list_for_homepage(cls):
-    return cls.objects.filter(active=True)
-
-  @classmethod
-  def increase_uses_count_by_pk(cls, pk):
-    tool = cls.objects.filter(pk=pk).first()
-    if tool:
-      tool.increase_uses_count()
-
-  @classmethod
-  def get_tool_by_tool_id(cls, tool_id):
-    return cls.objects.filter(tool_id=tool_id).first()
-
 class UpcomingTool(models.Model):
   name = models.CharField(max_length=128)
   description = models.TextField()
@@ -136,12 +113,10 @@ class UpcomingTool(models.Model):
   created = models.DateField(auto_now_add=True)
   updated = models.DateField(auto_now=True)
 
+  objects = UpcomingToolManager()
+
   def __str__(self):
     return self.name
-
-  @classmethod
-  def list_all_active(cls):
-    return cls.objects.filter(active=True)
 
 
 class SuggestedTool(models.Model):
@@ -187,19 +162,14 @@ class ToolViewsFunctions(models.Model):
   created = models.DateField(auto_now_add=True)
   updated = models.DateField(auto_now=True)
 
+  objects = ToolViewsFunctionsManager()
+
   def __str__(self):
     return self.name
 
-  @classmethod
-  def reverse_view_func_to_tool(cls, func):
-    func_name = func.__name__
-    view_obj = cls.objects.filter(name=func_name).first()
-    tool = view_obj and view_obj.tool
-    return tool
-
 class ToolDatabaseClass(models.Model):
   name = models.CharField(max_length=120, unique=True)
-  tool = models.ForeignKey(Tool, on_delete=models.SET_NULL, related_name='tool_db', blank=True, null=True)
+  tool = models.OneToOneField(Tool, on_delete=models.SET_NULL, related_name='tool_db', blank=True, null=True)
 
   created = models.DateField(auto_now_add=True)
   updated = models.DateField(auto_now=True)
