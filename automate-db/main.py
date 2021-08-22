@@ -1,13 +1,11 @@
-from toolsframe.models import (
-  Tool, Category, ToolViewsFunctions, ToolDatabaseClass
-)
-import json
+from toolsframe.models import Tool, Category, ToolViewsFunctions, ToolDatabaseClass
+from constants import TOOLS_VIEWS_NAMES, TOOLS_DOCUMENTATION_FILE, TOOLS_DB_CLASSES_NAMES
 from classes.FileManager import FileManager
 
-tools_doc_file = 'automate-db/tools-doc.json'
+import json
 
 
-class ToolCreator:
+class ToolDatabaseHandler:
   def __init__(self, tool):
     self.tool = tool
 
@@ -52,66 +50,51 @@ class ToolCreator:
     
     return tool
 
+  def run(self):
+    is_tool_exist = self.tool.get('tool_id')
+    tool_setup_method = self.update if is_tool_exist else self.create
+    tool_obj = tool_setup_method()
 
-tools = FileManager.read(tools_doc_file)
+    return tool_obj
 
-updated_tools = {}
-print('## set tool docs ##')
-for name, info in tools.items():
-  print(name)
 
-  is_changed = info.get('is_changed', True)
-  if not is_changed:
-    updated_tools.update({name: info})
-    continue
+def set_tools_docs_to_table():
+  print('## set tool docs ##')
 
-  tool = ToolCreator({ **info, 'name': name })
-  if info.get('tool_id'): 
-    tool_obj = tool.update()
-  else: 
-    tool_obj = tool.create()
-    info.update({ 'tool_id': tool_obj.tool_id })
+  tools = FileManager.read(TOOLS_DOCUMENTATION_FILE, to_json=True)
+  updated_tools = {}
 
-  info.update({ 'is_changed': False })
-  updated_tools.update({name: info})
+  for name, info in tools.items():
+    print(name)
 
-FileManager.write(tools_doc_file, updated_tools)
+    if info.get('is_changed', True):
+      tool_handler = ToolDatabaseHandler({ **info, 'name': name })
+      tool_obj = tool_handler.run()
+      info.update({ 'tool_id': tool_obj.tool_id, 'is_changed': False  })
 
-print('\n\n')
-# set tool views
-tools_views_names = [
-  "get_my_ip",
-  "get_my_proxy_anonimity",
-  "get_my_request_headers",
-  "analyze_my_machine_user_agent",
-  "analyze_user_agent",
-  "get_image_placeholder",
-  "convert_username_to_profile_pic",
-  "convert_image_to_thumbnail",
-  "remove_image_meta_data",
-  "convert_image_to_b64", "convert_b64_to_image",
-  "generate_qrcode",
-  "get_fb_user_id",
-  "cors_proxy",
-  "unshorten_url",
-  "text_saver_add"
-]
-print('## set tool_views_functions ##')
-for name in tools_views_names:
-  print(name)
-  if not ToolViewsFunctions.objects.filter(name=name).first():
-    ToolViewsFunctions.objects.create(name=name)
+    updated_tools.update({ name: info })
 
-print('\n\n')
-# set db class views
-tools_db_classes_names = [
-  "TextSaverModel",
-]
-print('## set tool_db_classes ##')
-for name in tools_db_classes_names:
-  print(name)
-  if not ToolDatabaseClass.objects.filter(name=name).first():
-    ToolDatabaseClass.objects.create(name=name)
+  FileManager.write(TOOLS_DOCUMENTATION_FILE, updated_tools)
+
+def set_tools_views_to_table():
+  print('## set tool_views_functions ##')
+  for name in TOOLS_VIEWS_NAMES:
+    print(name)
+    if not ToolViewsFunctions.objects.filter(name=name).first():
+      ToolViewsFunctions.objects.create(name=name)
+
+def set_tools_db_classes_to_table():
+  print('## set tool_db_classes ##')
+  for name in TOOLS_DB_CLASSES_NAMES:
+    print(name)
+    if not ToolDatabaseClass.objects.filter(name=name).first():
+      ToolDatabaseClass.objects.create(name=name)
+
+
+if __name__ == '__main__':
+  set_tools_docs_to_table()
+  set_tools_views_to_table()
+  set_tools_db_classes_to_table()
 
 
 ## to run ##

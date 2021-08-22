@@ -2,83 +2,95 @@
   "what is my ip ?": {
     "description": "get your current machine ip",
     "category": [
-      "how server see you", 
+      "how server see you",
       "network"
     ],
-
     "endpoints": [
-      {"url": "/get-my-ip/", "method": "GET"}
+      {
+        "url": "/get-my-ip/",
+        "method": "GET"
+      }
     ],
-    "type": "api"
+    "type": "api",
+    "tool_id": "what-is-my-ip-5d1307d8",
+    "is_changed": false
   },
-
   "proxy anony meter": {
     "description": "tell you how anonymous your proxy is (transparent, anonymous or elite)",
     "category": [
-      "how server see you", 
+      "how server see you",
       "network"
     ],
-    
     "endpoints": [
-      {"url": "/get-my-proxy-anonimity/", "method": "GET"}
+      {
+        "url": "/get-my-proxy-anonimity/",
+        "method": "GET"
+      }
     ],
-    "type": "api"
+    "type": "api",
+    "tool_id": "proxy-anony-meter-b975f552",
+    "is_changed": false
   },
-
   "request headers": {
     "description": "tell you how the server see your request headers",
     "category": [
       "how server see you",
       "network"
     ],
-
     "endpoints": [
-      {"url": "/get-my-request-headers/", "method": "GET"}
+      {
+        "url": "/get-my-request-headers/",
+        "method": "GET"
+      }
     ],
-    "type": "api"
+    "type": "api",
+    "tool_id": "request-headers-6587d2a2",
+    "is_changed": false
   },
-
   "my machine analyzer": {
     "description": "tell you how the server see your machine throw your useragent",
     "category": [
       "how server see you",
       "network"
     ],
-
     "endpoints": [
-      {"url": "/analyze-my-machine/", "method": "GET"}
+      {
+        "url": "/analyze-my-machine/",
+        "method": "GET"
+      }
     ],
-    "type": "api"
+    "type": "api",
+    "tool_id": "my-machine-analyzer-41043a40",
+    "is_changed": false
   },
-
   "user-agent analyzer": {
     "description": "get all possible data about the machine using its user-agent",
     "category": [
       "how server see you",
       "network"
     ],
-
     "endpoints": [
       {
-        "url": "/analyze-user-agent/", 
+        "url": "/analyze-user-agent/",
         "method": "POST",
         "dataType": "json",
         "params": {
           "POST": [
             {
               "name": "user-agent",
+              "default": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/74.0.3729.169 Safari/537.36",
               "required": true,
               "type": "text",
               "description": "The user-agent you want to analyze"
             }
           ]
         }
-
       }
     ],
-    "type": "api"
+    "type": "api",
+    "tool_id": "user-agent-analyzer-7a422e10",
+    "is_changed": false
   },
-
   "image placeholder": {
     "description": "get a placeholder image with your wanted dimensions and color to set it in your page faster",
     "category": [
@@ -86,7 +98,6 @@
       "image",
       "frontend helper"
     ],
-
     "endpoints": [
       {
         "url": "/get-image-placeholder/{size}/",
@@ -151,60 +162,7 @@
         }
       },
       {
-        "url": "/get-image-placeholder/{width}/{height}/",
-        "description": "return an image with specific width and heaight and random color",
-        "method": "GET",
-        "params": {
-          "URL": [
-            {
-              "name": "width",
-              "default": 300,
-              "required": true,
-              "type": "number",
-              "description": "the width of the image in px"
-            },
-            {
-              "name": "height",
-              "default": 200,
-              "required": true,
-              "type": "number",
-              "description": "the height of the image in px"
-            }
-          ]
-        }
-      },
-      {
         "url": "/get-image-placeholder/{width}x{height}/{color}/",
-        "description": "return an image with specific width, heaight and color",
-        "method": "GET",
-        "params": {
-          "URL": [
-            {
-              "name": "width",
-              "default": 300,
-              "required": true,
-              "type": "number",
-              "description": "the width of the image in px"
-            },
-            {
-              "name": "height",
-              "default": 200,
-              "required": true,
-              "type": "number",
-              "description": "the height of the image in px"
-            },
-            {
-              "name": "color",
-              "default": "rgb(34,139,34)",
-              "required": true,
-              "type": "text",
-              "description": "the color of the image -- can be rgb, hex (without hashtag #) or known html colors"
-            }
-          ]
-        }
-      },
-      {
-        "url": "/get-image-placeholder/{width}/{height}/{color}/",
         "description": "return an image with specific width, heaight and color",
         "method": "GET",
         "params": {
@@ -234,9 +192,10 @@
         }
       }
     ],
-    "type": "api"
+    "type": "api",
+    "tool_id": "image-placeholder-ea4f35de",
+    "is_changed": false
   },
-
   "dynamic user avatar": {
     "description": "generate specific profile picture for every user using first letters of its name",
     "category": [
@@ -244,7 +203,6 @@
       "image",
       "frontend helper"
     ],
-
     "endpoints": [
       {
         "url": "/username-to-profile-pic/{size}/{username}/",
@@ -269,7 +227,6 @@
           ]
         }
       },
-
       {
         "url": "/username-to-profile-pic/{size}/{username}/{color}/",
         "method": "GET",
@@ -301,9 +258,10 @@
         }
       }
     ],
-    "type": "api"
+    "type": "api",
+    "tool_id": "dynamic-user-avatar-a7df8796",
+    "is_changed": false
   },
-
   "thumbnail generator": {
     "description": "convert image to thumbnail with custom width",
     "category": [
@@ -311,7 +269,6 @@
       "image",
       "frontend helper"
     ],
-
     "endpoints": [
       {
         "url": "/image-to-thumbnail/",
@@ -320,13 +277,12 @@
         "params": {
           "POST": [
             {
-              "name": "image", 
-              "required": true, 
-              "type": "file", 
-              "accept": "accept=\"image/png, image/jpeg\"", 
+              "name": "image",
+              "required": true,
+              "type": "file",
+              "accept": "accept='image/png, image/jpeg'",
               "description": "The image you want to convert to thumbnail"
             },
-
             {
               "name": "width",
               "default": 128,
@@ -334,22 +290,20 @@
               "type": "number",
               "description": "The width needed for the image -- (height is computed dynamically to maintain the scale)"
             }
-
           ]
         }
-
       }
     ],
-    "type": "api"
+    "type": "api",
+    "tool_id": "thumbnail-generator-429d8b59",
+    "is_changed": false
   },
-
   "image meta cleaner": {
     "description": "clean image from meta data to reduce its size and make it untraceable",
     "category": [
-      "developer helper", 
+      "developer helper",
       "image"
     ],
-
     "endpoints": [
       {
         "url": "/remove-image-meta-data/",
@@ -358,27 +312,27 @@
         "params": {
           "POST": [
             {
-              "name": "image", 
-              "required": true, 
-              "type": "file", 
-              "accept": "accept=\"image/png, image/jpeg\"", 
+              "name": "image",
+              "required": true,
+              "type": "file",
+              "accept": "accept='image/png, image/jpeg'",
               "description": "The image you want to convert to clean from meta data"
             }
           ]
         }
       }
     ],
-    "type": "api"
+    "type": "api",
+    "tool_id": "image-meta-cleaner-ccea1431",
+    "is_changed": false
   },
-
   "image base64": {
     "description": "encode image to base64 string or decode",
     "category": [
-      "developer helper", 
+      "developer helper",
       "image",
       "encode"
     ],
-
     "endpoints": [
       {
         "url": "/image-to-b64/",
@@ -388,10 +342,10 @@
         "params": {
           "POST": [
             {
-              "name": "image", 
-              "required": true, 
-              "type": "file", 
-              "accept": "accept=\"image/png, image/jpeg\"", 
+              "name": "image",
+              "required": true,
+              "type": "file",
+              "accept": "accept='image/png, image/jpeg'",
               "description": "The image you want to convert to encode to base64"
             }
           ]
@@ -406,6 +360,7 @@
           "POST": [
             {
               "name": "image",
+              "default": "",
               "required": true,
               "type": "text",
               "description": "Base64 string you wanna to conver to the jpg image"
@@ -414,16 +369,16 @@
         }
       }
     ],
-    "type": "api"
+    "type": "api",
+    "tool_id": "image-base64-e794d0b3",
+    "is_changed": false
   },
-
   "qr-code generator": {
     "description": "convert any text into a qrcode",
     "category": [
       "image",
       "encode"
     ],
-
     "endpoints": [
       {
         "url": "/gen-qrcode/",
@@ -434,7 +389,7 @@
             {
               "name": "text",
               "default": "lorem ipsum text example",
-              "required": true, 
+              "required": true,
               "type": "text",
               "description": "The text you want to encode into qr-code"
             }
@@ -442,17 +397,17 @@
         }
       }
     ],
-    "type": "api"
+    "type": "api",
+    "tool_id": "qr-code-generator-309b9e5f",
+    "is_changed": false
   },
-
   "facebook user-id": {
     "description": "get the id of any facebook user",
     "category": [
-      "developer helper", 
+      "developer helper",
       "social",
       "scraping"
     ],
-
     "endpoints": [
       {
         "url": "/fb-user-id/",
@@ -461,54 +416,55 @@
         "params": {
           "POST": [
             {
-              "name": "url", 
-              "default": "https://fb.com/mohamed17717/", 
-              "required": true, 
-              "type": "text", 
+              "name": "url",
+              "default": "https://fb.com/mohamed17717/",
+              "required": true,
+              "type": "text",
               "description": "profile url"
             }
           ]
         }
       }
     ],
-    "type": "api"
+    "type": "api",
+    "tool_id": "facebook-user-id-85b7aa8f",
+    "is_changed": false
   },
-
   "cors proxy": {
-    "description": "simple proxy give your js in the browser the ability to navigate the web, and avoid cors policy",
+    "description": "simple proxy give your js in the browser the ability to navigate the web, and avoid cors policy <br><br> Url Example: <b>/cors-proxy/?url=https://google.com/?q=coffee<b>",
     "category": [
-      "developer helper", 
+      "developer helper",
       "network",
       "scraping"
     ],
-
     "endpoints": [
       {
         "url": "/cors-proxy/",
         "method": "ANY",
         "description": "like a proxy it will simulate the request you sent (header/body) on the url you set, then simulate the response back to you",
+        "stop_http_testing": true,
         "params": {
           "GET": [
             {
-              "name": "url", 
-              "default": "https://google.com", 
-              "required": true, 
-              "type": "text", 
+              "name": "url",
+              "default": "https://google.com",
+              "required": true,
+              "type": "text",
               "description": "url you wanna navigate"
             }
           ]
         }
       }
     ],
-    "type": "api"
+    "type": "api",
+    "tool_id": "cors-proxy-57824238",
+    "is_changed": false
   },
-
   "unshorten url": {
     "description": "convert shorten url to the original one",
     "category": [
       "network"
     ],
-
     "endpoints": [
       {
         "url": "/unshorten-url/",
@@ -518,16 +474,15 @@
         "params": {
           "POST": [
             {
-              "name": "url", 
-              "default": "https://bit.ly/3i4L5Uk", 
-              "required": true, 
-              "type": "text", 
+              "name": "url",
+              "default": "https://bit.ly/3i4L5Uk",
+              "required": true,
+              "type": "text",
               "description": "shorten url you wanna to unshorten it"
             }
           ]
         }
       },
-
       {
         "url": "/unshorten-url/full-track/",
         "method": "POST",
@@ -536,16 +491,152 @@
         "params": {
           "POST": [
             {
-              "name": "url", 
-              "default": "https://bit.ly/3i4L5Uk", 
-              "required": true, 
-              "type": "text", 
+              "name": "url",
+              "default": "https://bit.ly/3i4L5Uk",
+              "required": true,
+              "type": "text",
               "description": "shorten url you wanna to unshorten it"
             }
           ]
         }
       }
     ],
-    "type": "api"
+    "type": "api",
+    "tool_id": "unshorten-url-86dedb67",
+    "is_changed": false
+  },
+  "text saver -- simple db": {
+    "description": "work as a semi db, that save any text you post to the api. you can read it anytime. it can be used as a cdn also. <b>(token is required) to map saved content to your account</b>",
+    "category": [
+      "db",
+      "frontend helper",
+      "store"
+    ],
+    "endpoints": [
+      {
+        "url": "/save-text/",
+        "method": "POST",
+        "description": "save any text post to this endpoint in your request body.<br>it creates file with random name, and return the full path to that file",
+        "dataType": "text",
+        "defaultText": "Try to post that example text."
+      },
+      {
+        "url": "/save-text/{filename}/",
+        "method": "POST",
+        "description": "save any text post to this endpoint in your request body.<br>it creates/update the file with this name",
+        "dataType": "text",
+        "defaultText": "Try to post that example text.",
+        "params": {
+          "URL": [
+            {
+              "name": "filename",
+              "default": "defailt_file.txt",
+              "required": true,
+              "type": "text",
+              "description": "the name of a file you want to create|update"
+            }
+          ]
+        }
+      },
+      {
+        "url": "/save-text/delete/{filename}/",
+        "method": "GET",
+        "description": "delete the unwanted file, using ite name",
+        "params": {
+          "URL": [
+            {
+              "name": "filename",
+              "default": "defailt_file.txt",
+              "required": true,
+              "type": "text",
+              "description": "the name of a file you want to delete"
+            }
+          ]
+        }
+      },
+      {
+        "url": "/save-text/delete/{filename}/",
+        "method": "DELETE",
+        "description": "delete the unwanted file, using ite name",
+        "params": {
+          "URL": [
+            {
+              "name": "filename",
+              "default": "defailt_file.txt",
+              "required": true,
+              "type": "text",
+              "description": "the name of a file you want to delete"
+            }
+          ]
+        }
+      },
+      {
+        "url": "/save-text/{filename}/",
+        "method": "DELETE",
+        "description": "delete the unwanted file, using ite name",
+        "params": {
+          "URL": [
+            {
+              "name": "filename",
+              "default": "defailt_file.txt",
+              "required": true,
+              "type": "text",
+              "description": "the name of a file you want to delete"
+            }
+          ]
+        }
+      },
+      {
+        "url": "/save-text/read/{filename}/",
+        "method": "GET",
+        "description": "read your file saved content",
+        "params": {
+          "URL": [
+            {
+              "name": "filename",
+              "default": "defailt_file.txt",
+              "required": true,
+              "type": "text",
+              "description": "the name of a file you want to read"
+            }
+          ]
+        }
+      },
+      {
+        "url": "/save-text/read-text/{filename}/",
+        "method": "GET",
+        "description": "read file and return its content as a text",
+        "params": {
+          "URL": [
+            {
+              "name": "filename",
+              "default": "defailt_file.txt",
+              "required": true,
+              "type": "text",
+              "description": "the name of a file you want to read"
+            }
+          ]
+        }
+      },
+      {
+        "url": "/save-text/{filename}/",
+        "method": "GET",
+        "description": "read your file saved content",
+        "params": {
+          "URL": [
+            {
+              "name": "filename",
+              "default": "defailt_file.txt",
+              "required": true,
+              "type": "text",
+              "description": "the name of a file you want to read"
+            }
+          ]
+        }
+      }
+    ],
+    "type": "api",
+    "tool_id": "text-saver-simple-db-c3ee6dd2",
+    "is_changed": false
   }
 }
