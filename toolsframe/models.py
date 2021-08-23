@@ -85,11 +85,13 @@ class Tool(models.Model):
     return self.save()
 
   def get_db_class(self):
-    db_obj = self.tool_db.first()
+    db_obj = self.tool_db
+    db_name = db_obj and db_obj.name
+
     db_class = None
-    if db_obj:
-      db_name = db_obj and db_obj.name
+    if db_name:
       db_class = dynamic_import(f'tools.models.{db_name}')
+
     return db_class
 
   def get_db_records(self, user):

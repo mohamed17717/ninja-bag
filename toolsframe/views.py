@@ -19,7 +19,7 @@ def get_default_context(request):
   if is_authenticated:
     user = request.user
     context.update({ 
-      'account': user.user_account.get(),
+      'account': user.user_account,
       'db_tools': Tool.objects.get_tools_that_has_db_for_aside_section(user)
     })
 
