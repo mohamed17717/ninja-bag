@@ -1,19 +1,14 @@
-from django.shortcuts import render, redirect
-from django.http import HttpResponse, JsonResponse, HttpResponseBadRequest
+from django.shortcuts import redirect
+from django.http import HttpResponse, HttpResponseBadRequest
 
 from accounts.models import Account
 from .models import TextSaverModel
 from .controller import RequestAnalyzerTools, ImageTools, ScrapingTools
 from .controller.ImageTools import MyImageHandler
+from mixins import JsonResponseOverride, ExtractPostRequestData, ImageResponse
 
 from decorators import require_http_methods, tool_handler, required_post_fields, function_nickname
 from classes.FileManager import FileManager
-
-import json
-
-
-def index(request):
-  return render(request, 'test.html')
 
 
 #--------------------- start RequestAnalyzer tools ---------------------#
@@ -36,7 +31,7 @@ def get_my_proxy_anonimity(request):
 @tool_handler(limitation=[])
 def get_my_request_headers(request):
   headers = RequestAnalyzerTools.get_request_headers(request)
-  return JsonResponse(headers, safe=False, json_dumps_params={'indent': 2})
+  return JsonResponseOverride(headers)
 
 
 @require_http_methods(['GET'])
@@ -45,18 +40,19 @@ def analyze_my_machine_user_agent(request):
   ua = request.META['HTTP_USER_AGENT']
   ua_details = RequestAnalyzerTools.get_user_agent_details(ua)
 
-  return JsonResponse(ua_details, safe=False, json_dumps_params={'indent': 2})
+  return JsonResponseOverride(ua_details)
 
 
 @require_http_methods(['POST'])
 @required_post_fields(['user-agent'])
 @tool_handler(limitation=['requests'])
 def analyze_user_agent(request):
-  request_data = json.loads(request.body.decode('utf8')) or request.POST
-  ua = request_data.get('user-agent')
+  post_data = ExtractPostRequestData(request)
+  ua = post_data.get('user-agent')
+
   ua_details = RequestAnalyzerTools.get_user_agent_details(ua)
 
-  return JsonResponse(ua_details, safe=False, json_dumps_params={'indent': 2})
+  return JsonResponseOverride(ua_details)
 
 #--------------------- end RequestAnalyzer tools ---------------------#
 
@@ -71,9 +67,8 @@ def get_image_placeholder(request, width, height=None, color=None):
   height = height or width
 
   image = MyImageHandler.generate_placeholder_image(width, height, color)
-  response = MyImageHandler.image_response(image)
 
-  return response
+  return ImageResponse(image)
 
 
 @require_http_methods(['GET'])
@@ -82,9 +77,8 @@ def convert_username_to_profile_pic(request, size, username, color=None):
   color = MyImageHandler.handle_color(color)
 
   image = MyImageHandler.generate_avatar_image(size, username, color)
-  response = MyImageHandler.image_response(image)
 
-  return response
+  return ImageResponse(image)
 
 
 @require_http_methods(['POST'])
@@ -96,7 +90,7 @@ def convert_image_to_thumbnail(request):
 
   image = MyImageHandler.generate_thumbnail(image_file, new_width)
 
-  return MyImageHandler.image_response(image)
+  return ImageResponse(image)
 
 
 @require_http_methods(['POST'])
@@ -107,7 +101,7 @@ def remove_image_meta_data(request):
 
   image = MyImageHandler.generate_cleaned_image_form_exif(image_file)
 
-  return MyImageHandler.image_response(image)
+  return ImageResponse(image)
 
 
 @require_http_methods(['POST'])
@@ -124,25 +118,24 @@ def convert_image_to_b64(request):
 @required_post_fields(['image'])
 @tool_handler(limitation=['requests', 'bandwidth'])
 def convert_b64_to_image(request):
-  request_data = json.loads(request.body.decode('utf8')) or request.POST
-  image_b64 = request_data.get('image')
+  post_data = ExtractPostRequestData(request)
+  image_b64 = post_data.get('image')
 
   image = MyImageHandler.generate_image_from_b64(image_b64)
-  response = MyImageHandler.image_response(image)
 
-  return response
+  return ImageResponse(image)
 
 
 @require_http_methods(['POST'])
 @required_post_fields(['text'])
 @tool_handler(limitation=['requests', 'bandwidth'])
 def generate_qrcode(request):
-  request_data = json.loads(request.body.decode('utf8')) or request.POST
-  string = request_data.get('text')
+  post_data = ExtractPostRequestData(request)
+  string = post_data.get('text')
 
   image = MyImageHandler.generate_qr_code(string)
 
-  return MyImageHandler.image_response(image)
+  return ImageResponse(image)
 
 #--------------------- end Images tools ---------------------#
 
@@ -154,8 +147,8 @@ def generate_qrcode(request):
 @required_post_fields(['url'])
 @tool_handler(limitation=['requests'])
 def get_fb_user_id(request):
-  request_data = json.loads(request.body.decode('utf8')) or request.POST
-  acc_url = request_data.get('url')
+  post_data = ExtractPostRequestData(request)
+  acc_url = post_data.get('url')
 
   user_id = ScrapingTools.get_fb_user_id(acc_url)  or 'Not Found'
 
@@ -171,14 +164,14 @@ def cors_proxy(request):
   return response
 
 def unshorten_url_wrapper(full_track=False):
-  get_response = lambda track: JsonResponse(track, safe=False, json_dumps_params={'indent': 2}) if full_track else HttpResponse(track[-1])
+  get_response = lambda track: JsonResponseOverride(track) if full_track else HttpResponse(track[-1])
 
   @require_http_methods(['POST'])
   @required_post_fields(['url'])
   @tool_handler(limitation=['requests', 'bandwidth'])
   def unshorten_url(request):
-    request_data = json.loads(request.body.decode('utf8')) or request.POST
-    shortened_url = request_data.get('url')
+    post_data = ExtractPostRequestData(request)
+    shortened_url = post_data.get('url')
 
     track = ScrapingTools.get_url_redirect_track(shortened_url)
 

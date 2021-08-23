@@ -4,9 +4,9 @@ from django.http import HttpResponse
 from .models import Tool, UpcomingTool, SuggestedTool, ToolIssueReport
 from decorators import require_http_methods, required_post_fields
 
-import json
-from classes.Redirector import Redirector
 from handlers import ToolHandler
+
+from mixins import ExtractPostRequestData
 
 def get_default_context(request):
   is_authenticated = request.user.is_authenticated
@@ -54,8 +54,8 @@ def get_tool_page(request, tool_id):
 def suggest_tool(request):
   user = request.user
 
-  data = request.POST or json.loads(request.body.decode('utf8'))
-  description = data.get('description', '').strip()
+  post_data = ExtractPostRequestData(request)
+  description = post_data.get('description', '').strip()
 
   SuggestedTool.objects.create(user=user, description=description)
   return HttpResponse(status=201)
@@ -66,8 +66,8 @@ def report_tool_issue(request, tool_id):
   user = request.user
   tool = Tool.objects.force_get(tool_id=tool_id)
 
-  data = request.POST or json.loads(request.body.decode('utf8'))
-  description = data.get('description', '').strip()
+  post_data = ExtractPostRequestData(request)
+  description = post_data.get('description', '').strip()
 
   ToolIssueReport.objects.create(user=user, tool=tool, description=description)
   return HttpResponse(status=201)
