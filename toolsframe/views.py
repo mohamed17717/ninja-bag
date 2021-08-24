@@ -1,11 +1,12 @@
 from django.shortcuts import render
 from django.http import HttpResponse
+from django.views import View
 
 from .models import Tool, UpcomingTool, SuggestedTool, ToolIssueReport
 
 from utils.decorators import require_http_methods, required_post_fields
 from utils.handlers import ToolHandler
-from utils.mixins import ExtractPostRequestData, GenerateDefaultContext
+from utils.mixins import ExtractPostRequestData, GenerateDefaultContext, FormSaveMixin
 
 from .forms import ToolIssueReportForm, SuggestToolForm
 
@@ -34,34 +35,18 @@ def get_tool_page(request, tool_id):
   return render(request, 'd_tool-doc.html', context)
 
 
-@require_http_methods(['POST'])
-@required_post_fields(['description'])
-def suggest_tool(request):
-  post_data = ExtractPostRequestData(request)
-  form = SuggestToolForm(post_data)
+class SuggestTool(FormSaveMixin, View):
+  form_class = SuggestToolForm
 
-  if not form.is_valid():
-    return HttpResponse(form.get_error_meesage(), status=400)
+  def after_save_hook(self, obj, request, *args, **kwargs):
+    obj.user = request.user
 
-  obj = form.save(commit=False)
-  obj.user = request.user
-  obj.save()
+class ReportToolIssue(FormSaveMixin, View):
+  form_class = ToolIssueReportForm
 
-  return HttpResponse(status=201)
+  def after_save_hook(self, obj, request, *args, **kwargs):
+    tool_id = kwargs.get('tool_id')
 
+    obj.user = request.user
+    obj.tool = Tool.objects.force_get(tool_id=tool_id)
 
-@require_http_methods(['POST'])
-@required_post_fields(['description'])
-def report_tool_issue(request, tool_id):
-  post_data = ExtractPostRequestData(request)
-  form = ToolIssueReportForm(post_data)
-
-  if not form.is_valid():
-    return HttpResponse(form.get_error_meesage(), status=400)
-
-  obj = form.save(commit=False)
-  obj.user = request.user
-  obj.tool = Tool.objects.force_get(tool_id=tool_id)
-  obj.save()
-
-  return HttpResponse(status=201)

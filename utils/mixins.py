@@ -42,3 +42,22 @@ def GenerateDefaultContext(request):
 
   return context
 
+
+class FormSaveMixin(object):
+  form_class = None
+
+  def post(self, request, *args, **kwargs):
+    post_data = ExtractPostRequestData(request)
+    form = self.form_class(post_data)
+
+    if not form.is_valid():
+      return HttpResponse(form.get_error_meesage(), status=400)
+
+    obj = form.save(commit=False)
+    self.after_save_hook(obj, request, *args, **kwargs)
+    obj.save()
+
+    return HttpResponse(status=201)
+
+  def after_save_hook(self, obj, request, *args, **kwargs):
+    return
