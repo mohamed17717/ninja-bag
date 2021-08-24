@@ -5,7 +5,7 @@ from django.urls import reverse
 from django.contrib.auth import get_user_model
 from django.utils.text import slugify
 
-from handlers import dynamic_import
+from utils.helpers import dynamic_import
 import secrets
 
 from .managers import  (
@@ -85,7 +85,8 @@ class Tool(models.Model):
     return self.save()
 
   def get_db_class(self):
-    db_obj = self.tool_db
+    # db_obj = self.tool_db
+    db_obj = getattr(self, 'tool_db', None)
     db_name = db_obj and db_obj.name
 
     db_class = None

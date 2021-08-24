@@ -1,6 +1,6 @@
 from toolsframe.models import Tool, Category, ToolViewsFunctions, ToolDatabaseClass
-from constants import TOOLS_VIEWS_NAMES, TOOLS_DOCUMENTATION_FILE, TOOLS_DB_CLASSES_NAMES
-from classes.FileManager import FileManager
+from utils.automate_db.constants import TOOLS_VIEWS_NAMES, TOOLS_DOCUMENTATION_FILE, TOOLS_DB_CLASSES_NAMES
+from utils.helpers import FileManager
 
 import json
 
@@ -99,4 +99,4 @@ if __name__ == '__main__':
 
 ## to run ##
 # 1 # python manage.py shell
-# 2 # exec(open('automate-db/main.py').read())
+# 2 # exec(open('utils/automate_db/main.py').read())

@@ -8,8 +8,9 @@ from django.core.cache import cache
 from toolsframe.models import Tool, ToolViewsFunctions
 from accounts.models import Account
 
-from handlers import LimitsHandler, ToolHandler
+from utils.handlers import LimitsHandler, ToolHandler
 import json
+
 
 def cache_request(name_format, timeout=60*60*24, identifier=None):
   def decorator(func):
@@ -27,7 +28,6 @@ def cache_request(name_format, timeout=60*60*24, identifier=None):
     return wrapper
   return decorator
 
-
 def tool_handler(limitation=[]):
   def decorator(func):
     th = ToolHandler()
@@ -40,8 +40,8 @@ def tool_handler(limitation=[]):
 
       limits_handler = LimitsHandler(acc)
 
-      args_of_limit_before_hook = (request,)
-      access_states = th.run_limits_before(limits_handler, limitation, args_of_limit_before_hook)
+      args_for_limit_before_hook = (request,)
+      access_states = th.run_limits_before(limits_handler, limitation, args_for_limit_before_hook)
 
       response = HttpResponseBadRequest('You have no access to use this tool')
       if all(access_states):
@@ -56,7 +56,6 @@ def tool_handler(limitation=[]):
     return wrapper
 
   return decorator
-
 
 def required_post_fields(required_fields=[]):
   def decorator(func):

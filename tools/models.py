@@ -4,14 +4,13 @@ from django.contrib.auth import get_user_model
 from django.core.exceptions import ValidationError
 from django.http import HttpResponseBadRequest, HttpResponse
 
-from classes.FileManager import FileManager
 from accounts.models import Account
-
 from .managers import ToolDatabaseManager
 
-import os, secrets
+from utils.decorators import login_required
+from utils.helpers import FileManager
 
-from decorators import login_required
+import os, secrets
 
 
 User = get_user_model()

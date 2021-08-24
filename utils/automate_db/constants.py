@@ -20,4 +20,4 @@ TOOLS_DB_CLASSES_NAMES = [
   "TextSaverModel",
 ]
 
-TOOLS_DOCUMENTATION_FILE = 'automate-db/tools-doc.json'
+TOOLS_DOCUMENTATION_FILE = 'utils/automate_db/tools-doc.json'

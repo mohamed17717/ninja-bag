@@ -5,10 +5,10 @@ from accounts.models import Account
 from .models import TextSaverModel
 from .controller import RequestAnalyzerTools, ImageTools, ScrapingTools
 from .controller.ImageTools import MyImageHandler
-from mixins import JsonResponseOverride, ExtractPostRequestData, ImageResponse
 
-from decorators import require_http_methods, tool_handler, required_post_fields, function_nickname
-from classes.FileManager import FileManager
+from utils.mixins import JsonResponseOverride, ExtractPostRequestData, ImageResponse
+from utils.decorators import require_http_methods, tool_handler, required_post_fields, function_nickname
+from utils.helpers import FileManager
 
 
 #--------------------- start RequestAnalyzer tools ---------------------#

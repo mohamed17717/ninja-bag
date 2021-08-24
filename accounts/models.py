@@ -10,11 +10,11 @@ from toolsframe.models import Tool
 import secrets 
 from datetime import datetime
 
-from handlers import SizeHandler
+from utils.helpers import SizeCalculator
 
 
 User = get_user_model()
-size_handler = SizeHandler()
+size_handler = SizeCalculator()
 
 
 class Account(models.Model):

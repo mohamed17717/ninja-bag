@@ -2,7 +2,7 @@ from django.shortcuts import render
 from django.contrib.auth import logout
 from django.contrib import messages
 
-from classes.Redirector import Redirector
+from utils.helpers import Redirector
 
 def index(request):
   response = render(request, 'd_login.html', {})
