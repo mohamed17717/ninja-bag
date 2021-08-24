@@ -102,8 +102,9 @@
           {% endif %}
           
           {% if db_tool.logo %}
-          <div class="w-10 h-10 mr-2 rounded-full overflow-hidden flex-shrink-0">
-            <img src="{{ db_tool.logo.url }}" alt="">
+          <div class="w-10 h-10 mr-2 rounded-full overflow-hidden flex-shrink-0 bg-center bg-cover bg-no-repeat"
+            style="background-image: url({{ db_tool.logo.url }});">
+
           </div>
           {% endif %}
             
