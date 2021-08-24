@@ -9,6 +9,12 @@
 <link rel="stylesheet" href="{% static 'css/logo.css' %}">
 <link rel="stylesheet" href="{% static 'css/fa.all.min.css' %}">
 
+
+{% if is_light_mode %}
+<link rel="stylesheet" href="{% static 'css/light-mode.css' %}">
+{% endif %}
+  
+
 <script src="{% static 'js/main.js' %}" async></script>
 <script src="https://cdn.jsdelivr.net/gh/alpinejs/alpine@v2.x.x/dist/alpine.min.js" async></script>
 

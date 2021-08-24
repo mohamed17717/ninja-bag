@@ -1,4 +1,4 @@
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from django.http import HttpResponse
 from django.views import View
 
@@ -7,8 +7,23 @@ from .models import Tool, UpcomingTool, SuggestedTool, ToolIssueReport
 from utils.decorators import require_http_methods, required_post_fields
 from utils.handlers import ToolHandler
 from utils.mixins import ExtractPostRequestData, GenerateDefaultContext, FormSaveMixin
+from utils.helpers import Redirector
 
 from .forms import ToolIssueReportForm, SuggestToolForm
+
+
+@require_http_methods(['GET'])
+def toggle_color_mode(request):
+  response = Redirector.go_home()
+  cookie_name = 'light-mode'
+  if request.COOKIES.get(cookie_name):
+    response.delete_cookie(cookie_name)
+  else:
+    response.set_cookie(cookie_name, 'true')
+
+  return response
+
+
 
 @require_http_methods(['GET'])
 def index(request):

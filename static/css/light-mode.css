@@ -1,0 +1,3 @@
+html, img, .bg-cover {
+  filter: invert(1) !important;
+}

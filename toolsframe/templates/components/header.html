@@ -6,19 +6,13 @@
   <div class="w-0 relative">
     <ul class="flex items-center absolute right-0" style="top: 50%; transform: translateY(-50%);">
       <li><a class="px-3 py-1 capitalize font-bold hover:underline mr-2" href="{% url 'toolsframe:homepage' %}">home</a></li>
+      <li><a class="px-3 py-1 capitalize font-bold hover:underline mr-2 whitespace-nowrap	" href="{% url 'toolsframe:toggle-color' %}">toggle-color</a></li>
       
       {% if is_authenticated %}
       <li><a class="px-3 py-1 capitalize font-bold hover:underline" href="{% url 'accounts:logout' %}">logout</a></li>
       {% else %}
       <li><a class="px-3 py-1 capitalize font-bold hover:underline" href="{% url 'accounts:login-page' %}">login</a></li>
       {% endif %}
-        
     </ul>
   </div>
 </header>
-
-<style>
-  /* header .logo {
-
-  } */
-</style>

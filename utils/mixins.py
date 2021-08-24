@@ -30,7 +30,8 @@ def GenerateDefaultContext(request):
     'upcoming_tools': UpcomingTool.objects.get_active(),
     'is_limits_active': ToolHandler.is_limits_active,
     'is_authenticated': request.user.is_authenticated,
-    'suggest_form': SuggestToolForm
+    'suggest_form': SuggestToolForm,
+    'is_light_mode': request.COOKIES.get('light-mode', False)
   }
 
   if is_authenticated:
