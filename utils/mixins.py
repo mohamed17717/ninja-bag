@@ -3,6 +3,7 @@ import json
 from PIL import Image
 from toolsframe.models import Tool, UpcomingTool
 from utils.handlers import ToolHandler
+from toolsframe.forms import SuggestToolForm
 
 
 def JsonResponseOverride(data):
@@ -28,7 +29,8 @@ def GenerateDefaultContext(request):
   context = {
     'upcoming_tools': UpcomingTool.objects.get_active(),
     'is_limits_active': ToolHandler.is_limits_active,
-    'is_authenticated': request.user.is_authenticated
+    'is_authenticated': request.user.is_authenticated,
+    'suggest_form': SuggestToolForm
   }
 
   if is_authenticated:

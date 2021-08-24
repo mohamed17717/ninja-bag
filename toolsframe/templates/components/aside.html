@@ -149,7 +149,7 @@
       class="flex flex-col items-stretch px-5 py-5"
       @submit.prevent="submitToolSuggestion()"
     >
-      <textarea 
+      <!-- <textarea 
         x-model="toolDescription" 
         class="h-24 px-3 py-2 border-0 bg-primary-600" 
         placeholder="Tool description" 
@@ -157,7 +157,8 @@
         x-ref="suggestionTextarea" 
         x-on:input="textareaAutoGrow()"
         style="max-height: 390px;"
-      ></textarea>
+      ></textarea> -->
+      {{ suggest_form }}
       <button 
         style="height: 35px;"
         class="mt-3 overflow-hidden font-bold uppercase bg-accent text-button-text" 
@@ -201,13 +202,20 @@
             fetch(this.url, requestConfig)
               .then(res => {
                 this.isButtonLoading = false
-                this.toolDescription = ''
-                notify('Sent', 'success')
+
+                if(res.status < 250) {
+                  this.toolDescription = ''
+                  notify('Sent', 'success')
+                } else {
+                  return res.text()
+                }
+              })
+              .then(text => {
+                if(text) 
+                  notify(text, 'failed')
               })
               .catch(err => {
-                this.isButtonLoading = false
                 console.error(err)
-                notify('Failed', 'failed')
               })
           }
         }

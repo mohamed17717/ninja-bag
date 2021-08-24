@@ -31,13 +31,15 @@
           </h3>
 
           <form x-on:submit.prevent="submitToolReport()" class="flex flex-col item-strech">
-            <textarea 
+            <!-- <textarea 
               x-model="issueDescription" class="w-full h-32 bg-primary-600 px-3 py-2" 
               placeholder="Explain..." required
               x-ref="reportIssueTextarea"
               x-on:input="textareaAutoGrow()"
               style="max-height: 60vh;"
-            ></textarea>
+            ></textarea> -->
+
+            {{ issue_form.as_p }}
 
             <button 
               style="height: 35px;"
@@ -105,13 +107,20 @@
           fetch(this.url, requestConfig)
             .then(res => {
               this.isButtonLoading = false
-              this.issueDescription = ''
-              notify('Sent', 'success')
+
+              if(res.status < 250) {
+                this.issueDescription = ''
+                notify('Sent', 'success')
+              } else {
+                return res.text()
+              }
+            })
+            .then(text => {
+              if(text) 
+                notify(text, 'failed')
             })
             .catch(err => {
-              this.isButtonLoading = false
               console.error(err)
-              notify('Failed', 'failed')
             })
         }
       }

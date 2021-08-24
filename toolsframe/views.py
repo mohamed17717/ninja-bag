@@ -7,7 +7,7 @@ from utils.decorators import require_http_methods, required_post_fields
 from utils.handlers import ToolHandler
 from utils.mixins import ExtractPostRequestData, GenerateDefaultContext
 
-
+from .forms import ToolIssueReportForm, SuggestToolForm
 
 @require_http_methods(['GET'])
 def index(request):
@@ -27,7 +27,8 @@ def get_tool_page(request, tool_id):
   context = {
     **GenerateDefaultContext(request),
     'tool': tool,
-    'db_records': tool.get_db_records(request.user)
+    'db_records': tool.get_db_records(request.user),
+    'issue_form': ToolIssueReportForm()
   }
 
   return render(request, 'd_tool-doc.html', context)
@@ -36,22 +37,31 @@ def get_tool_page(request, tool_id):
 @require_http_methods(['POST'])
 @required_post_fields(['description'])
 def suggest_tool(request):
-  user = request.user
-
   post_data = ExtractPostRequestData(request)
-  description = post_data.get('description', '').strip()
+  form = SuggestToolForm(post_data)
 
-  SuggestedTool.objects.create(user=user, description=description)
+  if not form.is_valid():
+    return HttpResponse(form.get_error_meesage(), status=400)
+
+  obj = form.save(commit=False)
+  obj.user = request.user
+  obj.save()
+
   return HttpResponse(status=201)
+
 
 @require_http_methods(['POST'])
 @required_post_fields(['description'])
 def report_tool_issue(request, tool_id):
-  user = request.user
-  tool = Tool.objects.force_get(tool_id=tool_id)
-
   post_data = ExtractPostRequestData(request)
-  description = post_data.get('description', '').strip()
+  form = ToolIssueReportForm(post_data)
 
-  ToolIssueReport.objects.create(user=user, tool=tool, description=description)
+  if not form.is_valid():
+    return HttpResponse(form.get_error_meesage(), status=400)
+
+  obj = form.save(commit=False)
+  obj.user = request.user
+  obj.tool = Tool.objects.force_get(tool_id=tool_id)
+  obj.save()
+
   return HttpResponse(status=201)
