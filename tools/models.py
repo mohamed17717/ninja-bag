@@ -85,6 +85,8 @@ class TextSaverModel(models.Model):
     result = []
     if user.is_authenticated: 
       result = cls.objects.filter(user=user)
+
+    result.update(seen=True)
     return result
 
   @classmethod
