@@ -2,7 +2,21 @@ from django import forms
 from .models import ToolIssueReport, SuggestedTool
 
 
-class ToolIssueReportForm(forms.ModelForm):
+
+class IssueAndSuggestionFormsMethods:
+  def clean_description(self):
+    description = self.cleaned_data.get('description')
+    length_required = 12
+
+    if len(description.strip()) < length_required:
+      raise forms.ValidationError(f'issue description must be more than {length_required} letter!!!')
+    return description
+
+  def get_error_meesage(self):
+    return 'description: ' + self.errors['description']
+
+
+class ToolIssueReportForm(IssueAndSuggestionFormsMethods, forms.ModelForm):
   description = forms.CharField(label='', widget=forms.Textarea(attrs={
     'x-model':'issueDescription',
     'class':'w-full h-32 bg-primary-600 px-3 py-2',
@@ -16,19 +30,9 @@ class ToolIssueReportForm(forms.ModelForm):
     model = ToolIssueReport
     fields = [ 'description' ]
 
-  def clean_description(self):
-    description = self.cleaned_data.get('description')
-    length_required = 12
-
-    if len(description.strip()) < length_required:
-      raise forms.ValidationError(f'issue description must be more than {length_required} letter!!!')
-    return description
-
-  def get_error_meesage(self):
-    return self.errors['description']
 
 
-class SuggestToolForm(forms.ModelForm):
+class SuggestToolForm(IssueAndSuggestionFormsMethods, forms.ModelForm):
   description = forms.CharField(label='', widget=forms.Textarea(attrs={
     'x-model':'toolDescription',
     'class':'h-24 px-3 py-2 border-0 bg-primary-600',
@@ -42,15 +46,4 @@ class SuggestToolForm(forms.ModelForm):
   class Meta:
     model = SuggestedTool
     fields = [ 'description' ]
-
-  def clean_description(self):
-    description = self.cleaned_data.get('description')
-    length_required = 12
-
-    if len(description.strip()) < length_required:
-      raise forms.ValidationError(f'suggested tool description must be more than {length_required} letter!!!')
-    return description
-
-  def get_error_meesage(self):
-    return self.errors['description']
 
