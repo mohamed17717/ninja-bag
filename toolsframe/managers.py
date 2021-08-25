@@ -44,13 +44,15 @@ class ToolQuerySet(models.QuerySet):
   def get_tools_that_has_db_for_aside_section(self, user):
     # tools that user has records in && flag tell if there is new record
     tools = self.get_tools_that_has_db()
-    chosen_ones = []
+
     for tool in tools:
       db = tool.get_db_class()
-      if db.objects.check_user_has_records(user):
-        chosen_ones.append((tool, db.objects.check_user_has_new_records(user)))
+      user_records = db.objects.get_user_records(user)
 
-    return chosen_ones
+      if user_records:
+        is_user_has_new_records = user_records.filter(seen=False).exists()
+        yield (tool, is_user_has_new_records)
+
 
   def list_for_homepage(self):
     return self.filter(active=True)
