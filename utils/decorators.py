@@ -36,7 +36,7 @@ def tool_handler(limitation=[]):
     def wrapper(request, *args, **kwargs):
       api_key = request.GET.get('token', None)
       is_acc_required = bool(th.is_limits_active and len(limitation))
-      acc = api_key and Account.objects.get_user_by_api_key(api_key, required=is_acc_required)
+      acc = api_key and Account.objects.get_user_acc_by_api_key(api_key, required=is_acc_required)
 
       limits_handler = LimitsHandler(acc)
 
