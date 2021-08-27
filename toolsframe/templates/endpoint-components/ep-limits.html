@@ -1,30 +1,28 @@
 <template x-if="endpoint.limits">
-<div class="limits flex justify-between items-center py-3">
-  <h4 class="text-lg capitalize font-bold mr-3">limits</h4>
+  <div class="limits flex justify-between items-center py-3">
+    <h4 class="text-lg capitalize font-bold mr-3">limits</h4>
 
-  <div class="flex justify-end items-center">
+    <div class="flex justify-end items-center">
+      <template x-if="Endpoint.checkLimitExist(endpoint, 'storage')">
+        <div class="text-center">
+          <i class="far fa-hdd text-lg mr-1"></i>
+          <span class="capitalize">storage</span>
+        </div>
+      </template>
 
-    <template x-if="Endpoint.checkLimitExist(endpoint, 'storage')">
-    <div class="text-center">
-      <i class="far fa-hdd text-lg mr-1"></i>
-      <span class="capitalize">storage</span>
+      <template x-if="Endpoint.checkLimitExist(endpoint, 'bandwidth')">
+        <div class="ml-10 text-center">
+          <i class="fas fa-wifi text-lg mr-1"></i>
+          <span class="capitalize">bandwidth</span>
+        </div>
+      </template>
+
+      <template x-if="Endpoint.checkLimitExist(endpoint, 'requests')">
+        <div class="ml-10 text-center">
+          <i class="fas fa-paper-plane text-lg mr-1"></i>
+          <span class="capitalize">requests</span>
+        </div>
+      </template>
     </div>
-    </template>
-
-    <template x-if="Endpoint.checkLimitExist(endpoint, 'bandwidth')">
-    <div class="ml-10 text-center">
-      <i class="fas fa-wifi text-lg mr-1"></i>
-      <span class="capitalize">bandwidth</span>
-    </div>
-    </template>
-
-    <template x-if="Endpoint.checkLimitExist(endpoint, 'requests')">
-    <div class="ml-10 text-center">
-      <i class="fas fa-paper-plane text-lg mr-1"></i>
-      <span class="capitalize">requests</span>
-    </div>
-    </template>
   </div>
-
-</div>
 </template>

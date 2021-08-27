@@ -1,5 +1,8 @@
-<div class="http-syntax text-sm font-mono" x-bind:data-text="getHttpSyntax(endpoint)">
-  <div 
+<div
+  class="http-syntax text-sm font-mono"
+  x-bind:data-text="getHttpSyntax(endpoint)"
+>
+  <div
     contenteditable="true"
     class="request-header mb-8"
     x-html="endpoint.httpSyntaxHeader"
@@ -8,15 +11,15 @@
   ></div>
 
   <template x-if="Endpoint.isHttpHasBody(endpoint)">
-  <div 
-    x-bind:contenteditable="endpoint.dataType === 'json' || endpoint.dataType === 'text'"
-    class="request-body"
-    x-html="endpoint.httpSyntaxBody"
-    :x-ref="`y${index}`"
-    x-on:blur="endpoint.dataType === 'json' || endpoint.dataType === 'text' ? 
+    <div
+      x-bind:contenteditable="endpoint.dataType === 'json' || endpoint.dataType === 'text'"
+      class="request-body"
+      x-html="endpoint.httpSyntaxBody"
+      :x-ref="`y${index}`"
+      x-on:blur="endpoint.dataType === 'json' || endpoint.dataType === 'text' ? 
       endpoint.httpSyntaxBody=$refs[`y${index}`].innerHTML : ''
     "
-    style="line-break: anywhere;"
-  ></div>
+      style="line-break: anywhere"
+    ></div>
   </template>
 </div>

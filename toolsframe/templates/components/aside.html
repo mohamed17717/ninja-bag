@@ -1,156 +1,182 @@
 {% load filters %}
 
-  <div class="acc-info rounded-lg">
-
-    {% if is_authenticated %}
-    <div class="user px-5 py-3 flex flex-col items-center">
-      <div 
-        class="w-24 h-24 mb-3 rounded-full overflow-hidden bg-center bg-cover bg-no-repeat"
-        style="background-image: url({{ account.get_user_picture }});"
-      >
-      </div>
-      <h2 class="text-2xl font-bold capitalize ">
-        {{ account.get_user_name }}
-      </h2>
-    </div>
-
-    {% if is_limits_active  %}
-    <div class="limitation-progress px-5 py-3 text-sm font-bold">
-      <div class="limit mb-6">
-        <div class="mb-1 flex justify-between items-center">
-          <span class="capitalize">storage</span>
-          <span>{{ account.get_user_folder_size|to_int }}/{{ account.storage_allowed }}</span>
-        </div>
-        <div class="progress-bar w-full h-2 rounded-lg overflow-hidden">
-          <div class="h-full" style="width: {{ account.get_user_folder_size|percent_of:account.storage_allowed }}%;"></div>
-        </div>
-      </div>
-
-
-      <div class="limit mb-6">
-        <div class="mb-1 flex justify-between items-center">
-          <span class="capitalize">bandwidth</span>
-          <span>{{ account.bandwidth_used|to_int }}/{{ account.bandwidth_allowed }}</span>
-        </div>
-        <div class="progress-bar w-full h-2 rounded-lg overflow-hidden">
-          <div class="h-full" style="width: {{ account.bandwidth_used|percent_of:account.bandwidth_allowed }}%;"></div>
-        </div>
-      </div>
-      <div class="limit mb-6">
-        <div class="mb-1 flex justify-between items-center">
-          <span class="capitalize">requests</span>
-          <span>{{ account.requests_used|to_int }}/{{ account.requests_allowed }}</span>
-        </div>
-        <div class="progress-bar w-full h-2 rounded-lg overflow-hidden">
-          <div class="h-full" style="width: {{ account.requests_used|percent_of:account.requests_allowed }}%;"></div>
-        </div>
-      </div>
-
-    </div>
-    {% endif %}
-
-    <div class="mx-5" x-data="{}">
-      <h4 class="capitalize font-bold mb text-sm mb-1">Token</h4>
-      <div class="bg-primary-800 flex items-center justify-between  py-3 px-3  mb-5 rounded-lg">
-        <span class="flex-shrink mr-5 overflow-hidden" x-ref="tokenValue">{{ account.token }}</span>
-        <button @click="copyToClipboard($refs.tokenValue.innerText); notify('copied', 'success')" class="bg-accent text-button-text px-3 py-1 font-bold uppercase text-xs">copy</button>
-      </div>
-    </div>
-
-    <div class="note px-5 pb-3">
-      <span class="font-bold text-xs px-2 py-1 inline-block text-button-text uppercase">note</span>
-      You can add token to your request just by pass it throw url "token=&lt;value&gt;"
-    </div>
-    {% endif %}
-
-
-    {% if is_limits_active %}
-    <div class="note px-5 py-3">
-      <span class="font-bold text-xs px-2 py-1 inline-block text-button-text uppercase">note</span>
-      unfortunately, i needed to create this limitation because the server resourses are limited
-      and i wanna to serve as many people as i can so i found the limitation is fair enough 
-      to satisfy all of us
-    </div>
-    {% else %}
-    <div class="note px-5 py-3">
-      <span class="font-bold text-xs px-2 py-1 inline-block text-button-text uppercase">note</span>
-      This tools are totally free and has unlimited times use, and i hope it remain so.
-      <br>
-      <!-- but i don't know i will be able to afford the servers and this stuff for how many -->
-      incase its consume too much server's rescources which i can't afford, 
-      i will activate some limits.
-      <br>
-      but i hope not to write code for those limits 😄
-      hope you good time ❤️
-    </div>
-    {% endif %}
-
+<div class="acc-info rounded-lg">
+  {% if is_authenticated %}
+  <div class="user px-5 py-3 flex flex-col items-center">
+    <div
+      class="w-24 h-24 mb-3 rounded-full overflow-hidden bg-center bg-cover bg-no-repeat"
+      style="background-image: url({{ account.get_user_picture }});"
+    ></div>
+    <h2 class="text-2xl font-bold capitalize">{{ account.get_user_name }}</h2>
   </div>
 
-  {% if db_tools %}
-  <div class="upcoming-tools rounded-lg">
-    <h2 class="text-2xl capitalize font-bold mb-3 px-5 py-3">
-      Your records in the tools
-    </h2>
+  {% if is_limits_active %}
+  <div class="limitation-progress px-5 py-3 text-sm font-bold">
+    <div class="limit mb-6">
+      <div class="mb-1 flex justify-between items-center">
+        <span class="capitalize">storage</span>
+        <span
+          >{{ account.get_user_folder_size|to_int }}/{{ account.storage_allowed
+          }}</span
+        >
+      </div>
+      <div class="progress-bar w-full h-2 rounded-lg overflow-hidden">
+        <div
+          class="h-full"
+          style="width: {{ account.get_user_folder_size|percent_of:account.storage_allowed }}%;"
+        ></div>
+      </div>
+    </div>
 
-    <ul>
-      {% for db_tool, is_tool_has_new_records in db_tools %}
-      <li class="upcoming-tool hover:bg-gray-700 cursor-default">
-        <a class="flex relative px-5 py-3 z-0" href="{{ db_tool.get_absolute_url }}">
-          {% if is_tool_has_new_records %}
-          <div class="notification-dot absolute right-3 top-3 w-3 h-3 bg-accent rounded-full"></div>
-          {% endif %}
-          
-          {% if db_tool.logo %}
-          <div class="w-10 h-10 mr-2 rounded-full overflow-hidden flex-shrink-0 bg-center bg-cover bg-no-repeat"
-            style="background-image: url({{ db_tool.logo.url }});">
-
-          </div>
-          {% endif %}
-            
-          <div>
-            <h3 class="text-xl font-bold mb-2">{{ db_tool.name }}</h3>
-            <p class="">{{ db_tool.description }}</p>
-          </div>
-        </a>
-      </li>
-      {% endfor %}
-    </ul>
+    <div class="limit mb-6">
+      <div class="mb-1 flex justify-between items-center">
+        <span class="capitalize">bandwidth</span>
+        <span
+          >{{ account.bandwidth_used|to_int }}/{{ account.bandwidth_allowed
+          }}</span
+        >
+      </div>
+      <div class="progress-bar w-full h-2 rounded-lg overflow-hidden">
+        <div
+          class="h-full"
+          style="width: {{ account.bandwidth_used|percent_of:account.bandwidth_allowed }}%;"
+        ></div>
+      </div>
+    </div>
+    <div class="limit mb-6">
+      <div class="mb-1 flex justify-between items-center">
+        <span class="capitalize">requests</span>
+        <span
+          >{{ account.requests_used|to_int }}/{{ account.requests_allowed
+          }}</span
+        >
+      </div>
+      <div class="progress-bar w-full h-2 rounded-lg overflow-hidden">
+        <div
+          class="h-full"
+          style="width: {{ account.requests_used|percent_of:account.requests_allowed }}%;"
+        ></div>
+      </div>
+    </div>
   </div>
   {% endif %}
 
-  
-  {% if upcoming_tools %}
-  <div class="upcoming-tools rounded-lg">
-    <h2 class="text-2xl capitalize font-bold mb-3 px-5 py-3">
-      upcoming tools
-    </h2>
-
-    <ul>
-      {% for upcoming_tool in upcoming_tools %}
-      <li class="upcoming-tool px-5 py-3 hover:bg-gray-700 cursor-default">
-        <h3 class="text-xl font-bold mb-2">{{ upcoming_tool.name }}</h3>
-        <p class="">{{ upcoming_tool.description }}</p>
-      </li>
-      {% endfor %}
-    </ul>
-  </div>
-  {% endif %}
-
-  <div class="tool-suggestion rounded-lg" x-data="toolSuggestionData()">
-    <h2 class="text-2xl capitalize font-bold mb-3 px-5 py-3">
-      suggest tool
-    </h2>
-
-    <p class="px-5">
-      Lorem ipsum dolor sit amet consectetur adipisicing elit. Eaque provident hic porro nulla.
-    </p>
-
-    <form 
-      class="flex flex-col items-stretch px-5 py-5"
-      @submit.prevent="submitToolSuggestion()"
+  <div class="mx-5" x-data="{}">
+    <h4 class="capitalize font-bold mb text-sm mb-1">Token</h4>
+    <div
+      class="bg-primary-800 flex items-center justify-between py-3 px-3 mb-5 rounded-lg"
     >
-      <!-- <textarea 
+      <span class="flex-shrink mr-5 overflow-hidden" x-ref="tokenValue"
+        >{{ account.token }}</span
+      >
+      <button
+        @click="copyToClipboard($refs.tokenValue.innerText); notify('copied', 'success')"
+        class="bg-accent text-button-text px-3 py-1 font-bold uppercase text-xs"
+      >
+        copy
+      </button>
+    </div>
+  </div>
+
+  <div class="note px-5 pb-3">
+    <span
+      class="font-bold text-xs px-2 py-1 inline-block text-button-text uppercase"
+      >note</span
+    >
+    You can add token to your request just by pass it throw url
+    "token=&lt;value&gt;"
+  </div>
+  {% endif %} {% if is_limits_active %}
+  <div class="note px-5 py-3">
+    <span
+      class="font-bold text-xs px-2 py-1 inline-block text-button-text uppercase"
+      >note</span
+    >
+    unfortunately, i needed to create this limitation because the server
+    resourses are limited and i wanna to serve as many people as i can so i
+    found the limitation is fair enough to satisfy all of us
+  </div>
+  {% else %}
+
+  <div class="note px-5 py-3">
+    <span
+      class="font-bold text-xs px-2 py-1 inline-block text-button-text uppercase"
+      >note</span
+    >
+    This tools are totally free and has unlimited times use, and i hope it
+    remain so.
+    <br />
+    <!-- but i don't know i will be able to afford the servers and this stuff for how many -->
+    incase its consume too much server's rescources which i can't afford, i will
+    activate some limits.
+    <br />
+    but i hope not to write code for those limits 😄 hope you good time ❤️
+  </div>
+  {% endif %}
+</div>
+
+{% if db_tools %}
+<div class="upcoming-tools rounded-lg">
+  <h2 class="text-2xl capitalize font-bold mb-3 px-5 py-3">
+    Your records in the tools
+  </h2>
+
+  <ul>
+    {% for db_tool, is_tool_has_new_records in db_tools %}
+    <li class="upcoming-tool hover:bg-gray-700 cursor-default">
+      <a
+        class="flex relative px-5 py-3 z-0"
+        href="{{ db_tool.get_absolute_url }}"
+      >
+        {% if is_tool_has_new_records %}
+        <div
+          class="notification-dot absolute right-3 top-3 w-3 h-3 bg-accent rounded-full"
+        ></div>
+        {% endif %} {% if db_tool.logo %}
+        <div
+          class="w-10 h-10 mr-2 rounded-full overflow-hidden flex-shrink-0 bg-center bg-cover bg-no-repeat"
+          style="background-image: url({{ db_tool.logo.url }});"
+        ></div>
+        {% endif %}
+
+        <div>
+          <h3 class="text-xl font-bold mb-2">{{ db_tool.name }}</h3>
+          <p class="">{{ db_tool.description }}</p>
+        </div>
+      </a>
+    </li>
+    {% endfor %}
+  </ul>
+</div>
+{% endif %} {% if upcoming_tools %}
+<div class="upcoming-tools rounded-lg">
+  <h2 class="text-2xl capitalize font-bold mb-3 px-5 py-3">upcoming tools</h2>
+
+  <ul>
+    {% for upcoming_tool in upcoming_tools %}
+    <li class="upcoming-tool px-5 py-3 hover:bg-gray-700 cursor-default">
+      <h3 class="text-xl font-bold mb-2">{{ upcoming_tool.name }}</h3>
+      <p class="">{{ upcoming_tool.description }}</p>
+    </li>
+    {% endfor %}
+  </ul>
+</div>
+{% endif %}
+
+<div class="tool-suggestion rounded-lg">
+  <h2 class="text-2xl capitalize font-bold mb-3 px-5 py-3">suggest tool</h2>
+
+  <p class="px-5">
+    If you have any idea, or tool you hope that it exist. please send me details
+    about, and may be i added it for you. Thanks 😄
+  </p>
+
+  <form
+    x-data="toolSuggestionData()"
+    class="flex flex-col items-stretch px-5 py-5"
+    @submit.prevent="submitToolSuggestion()"
+  >
+    <!-- <textarea 
         x-model="toolDescription" 
         class="h-24 px-3 py-2 border-0 bg-primary-600" 
         placeholder="Tool description" 
@@ -159,67 +185,14 @@
         x-on:input="textareaAutoGrow()"
         style="max-height: 390px;"
       ></textarea> -->
-      {{ suggest_form }}
-      <button 
-        style="height: 35px;"
-        class="mt-3 overflow-hidden font-bold uppercase bg-accent text-button-text" 
-        x-bind:disabled="isButtonLoading"
-        x-bind:class="isButtonLoading ? 'relative' : ''"
-        x-html="isButtonLoading ? buttonStates.loading : buttonStates.normal"
-      ></button>
-    </form>
+    {{ suggest_form }}
 
-    <script>
-      function toolSuggestionData(){
-        return {
-          url: "{% url 'toolsframe:suggest-tool' %}",
-          toolDescription: '',
-          isButtonLoading: false,
-          buttonStates: {
-            loading: '<div class="lds-ripple"><div></div><div></div></div>',
-            normal: 'send'
-          },
-
-          textareaAutoGrow() {
-            elm = this.$refs['suggestionTextarea']
-            elm.style.height = "6rem";
-            elm.style.height = (elm.scrollHeight)+"px";
-          },
-
-          submitToolSuggestion () {
-            this.isButtonLoading = true
-            const description = this.toolDescription.trim()
-            if (!description.length){
-              setTimeout(()=> { this.isButtonLoading = false }, 1000)
-              return
-            }
-
-            const requestConfig = {
-              method: 'POST',
-              headers: { 'Content-Type': 'application/json', },
-              body: JSON.stringify({ description: this.toolDescription })
-            }
-
-            fetch(this.url, requestConfig)
-              .then(res => {
-                this.isButtonLoading = false
-
-                if(res.status < 250) {
-                  this.toolDescription = ''
-                  notify('Sent', 'success')
-                } else {
-                  return res.text()
-                }
-              })
-              .then(text => {
-                if(text) 
-                  notify(text, 'failed')
-              })
-              .catch(err => {
-                console.error(err)
-              })
-          }
-        }
-      }
-    </script>
-  </div>
+    <button
+      style="height: 35px"
+      class="mt-3 overflow-hidden font-bold uppercase bg-accent text-button-text"
+      x-bind:disabled="isButtonLoading"
+      x-bind:class="isButtonLoading ? 'relative' : ''"
+      x-html="isButtonLoading ? buttonStates.loading : buttonStates.normal"
+    ></button>
+  </form>
+</div>

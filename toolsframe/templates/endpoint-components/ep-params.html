@@ -1,29 +1,33 @@
 <template x-if="endpoint.params">
-<div class="params">
+  <div class="params">
+    <template
+      x-for="[paramType, params] in Object.entries(endpoint.params)"
+      :key="paramType"
+    >
+      <div x-bind:class="paramType.toLowerCase()+'-params'">
+        <h4
+          class="text-sm font-bold capitalize mb-4"
+          x-text="paramType+' params'"
+        ></h4>
 
-  <template x-for="[paramType, params] in Object.entries(endpoint.params)" :key="paramType">
-  <div x-bind:class="paramType.toLowerCase()+'-params'">
+        <template x-for="(param, index) in params" :key="index">
+          <div class="param flex justify-start items-center font-mono mb-8">
+            <div class="name flex">
+              <span x-text="param.name"></span>
 
-    <h4 class="text-sm font-bold capitalize mb-4" x-text="paramType+' params'"></h4>
+              <template x-if="param.required">
+                <span class="text-red-500 text-xl">*</span>
+              </template>
+            </div>
 
-    <template x-for="(param, index) in params" :key="index">
-    <div class="param flex justify-start items-center font-mono mb-8">
-
-      <div class="name flex">
-        <span x-text="param.name"></span>
-
-        <template x-if="param.required">
-        <span class="text-red-500 text-xl">*</span>
+            <div
+              class="type font-mono text-sm"
+              x-text="`<type:${param.type}>`"
+            ></div>
+            <div class="description text-sm" x-text="param.description"></div>
+          </div>
         </template>
-
       </div>
-
-      <div class="type font-mono text-sm" x-text="`<type:${param.type}>`"></div>
-      <div class="description text-sm" x-text="param.description"></div>
-    </div>
     </template>
-
   </div>
-  </template>
-</div>
 </template>

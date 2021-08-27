@@ -1,21 +1,24 @@
-<div 
-  class="model-try-request fixed inset-0 z-10"
-  x-show="endpoint.popup"
->
+<div class="model-try-request fixed inset-0 z-10" x-show="endpoint.popup">
   <div
     class="bg-primary-800 opacity-70 w-full h-full"
     @click="endpoint.popup = false"
   ></div>
 
-  <div 
+  <div
     class="dialog px-5 py-3 rounded-md bg-primary-700 z-20 absolute"
     style="
-      top: 50%; left: 50%; transform: translate(-50%, -50%); 
-      max-width: 500px; width: 80%;"
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      max-width: 500px;
+      width: 80%;
+    "
   >
-    <div class="dialog-header px-1 py-1 text-sm rounded-lg flex items-center justify-between bg-primary-800">
+    <div
+      class="dialog-header px-1 py-1 text-sm rounded-lg flex items-center justify-between bg-primary-800"
+    >
       <div class="flex items-center overflow-x-hidden">
-        <span 
+        <span
           class="method-name mr-2 flex-shrink-0 w-16 text-center uppercase font-bold text-xs py-1 inline-block"
           x-bind:class="Endpoint.getMethodColor(endpoint)"
           x-text="endpoint.popupInfo.method"
@@ -24,44 +27,55 @@
       </div>
 
       <span
-        @click="endpoint.popup = false" 
+        @click="endpoint.popup = false"
         class="text-2xl text-button-text cursor-pointer mx-3"
-      >&times;</span>
+        >&times;</span
+      >
     </div>
 
-    <div 
-      class="dialog-content mt-5 relative" 
+    <div
+      class="dialog-content mt-5 relative"
       :style="endpoint.popupInfo.isLoading ? 'min-height: 100px' : 'max-height: 80vh; overflow-y: auto;'"
     >
       <template x-if="endpoint.popupInfo.isLoading === true">
-        <div class="lds-ripple" style="top: 50%;left: 50%;transform: translate(-50%, -50%);"><div></div><div></div></div>
+        <div
+          class="lds-ripple"
+          style="top: 50%; left: 50%; transform: translate(-50%, -50%)"
+        >
+          <div></div>
+          <div></div>
+        </div>
       </template>
 
       <template x-if="endpoint.popupInfo.isLoading === false">
         <div>
           <div class="text-right mb-2">
-            <div class="text-sm justify-end items-center bg-accent inline-block px-3 py-1 rounded text-button-text font-bold">
-              <div class="inline-block mr-3" x-text="endpoint.popupInfo.response.code"></div>
-              <div class="inline-block capitalize" x-text="endpoint.popupInfo.response.type"></div>
+            <div
+              class="text-sm justify-end items-center bg-accent inline-block px-3 py-1 rounded text-button-text font-bold"
+            >
+              <div
+                class="inline-block mr-3"
+                x-text="endpoint.popupInfo.response.code"
+              ></div>
+              <div
+                class="inline-block capitalize"
+                x-text="endpoint.popupInfo.response.type"
+              ></div>
             </div>
           </div>
 
-
-          <div 
+          <div
             class="response-content bg-primary-800 px-5 py-3 overflow-auto"
             x-show="endpoint.popupInfo.response.blobHasView"
           >
-            
-            <iframe 
-              style="width: 100%; height: 60vh; background-color: #fff;"
+            <iframe
+              style="width: 100%; height: 60vh; background-color: #fff"
               frameborder="0"
               x-bind:src="endpoint.popupInfo.response.blobUrl"
             ></iframe>
           </div>
         </div>
       </template>
-
     </div>
   </div>
-
 </div>

@@ -1,103 +1,110 @@
-{% load static %}
-{% load filters %}
+{% load static %} {% load filters %}
 
 <!DOCTYPE html>
 <html lang="en">
-<head>
-  {% include 'components/head.html' %}
+  <head>
+    {% include 'components/head.html' %}
 
-  <title>{{ tool.name|title }} | Ninja-Bag</title>
+    <title>{{ tool.name|title }} | Ninja-Bag</title>
 
-  <script>
-    const djangoEndpoints = `{{ tool.endpoints|to_json|safe }}`
-    const userToken = `{{ account.token }}`
-    const isLimitsActive = {{ is_limits_active|lower }}
-  </script>
-  <script src="{% static 'js/endpoint-handler-classes.js' %}"></script>
-  <script src="{% static 'js/endpoint-handler.js' %}"></script>
-</head>
-<body>
-  {% include 'components/loading-page.html' %}
+    {{ tool.endpoints|json_script:"tool-endpoints" }} 
+    {{ account.token|json_script:"user-token" }} 
+    {{ is_limits_active|json_script:"is-limits-active" }}
 
-  <div id="api">
-    {% include 'components/header.html' %}
+    <script>
+      const toolIssueUrl = "{% url 'toolsframe:report-tool' tool.tool_id %}"
+    </script>
 
-    <div class="content flex justify-evenly items-start flex-col md:flex-row">
+    <script src="{% static 'js/endpoint-handler-classes.js' %}"></script>
+  </head>
+  <body>
+    {% include 'components/loading-page.html' %}
 
-      <main class="flex-grow pr-5 pb-10 w-full">
-        {% include 'tool-components/tool-info.html' %}
+    <div id="api">
+      {% include 'components/header.html' %}
 
-        <div class="end-points">
-          <h2 class="text-2xl font-bold capitalize mb-6">end points</h2>
+      <div class="content flex justify-evenly items-start flex-col md:flex-row">
+        <main class="flex-grow pr-5 pb-10 w-full">
+          {% include 'tool-components/tool-info.html' %}
 
-          <ul x-data="renderEndpoints()">
+          <div class="end-points">
+            <h2 class="text-2xl font-bold capitalize mb-6">end points</h2>
 
-            <template x-for="(endpoint, index) in endpoints" :key="index">
-              <li class="rounded-lg px-5 py-3 method-get mb-4">
+            <ul x-data="renderEndpoints()">
+              <template x-for="(endpoint, index) in endpoints" :key="index">
+                <li class="rounded-lg px-5 py-3 method-get mb-4">
+                  {% include 'endpoint-components/ep-basic-info.html' %}
 
-                {% include 'endpoint-components/ep-basic-info.html' %}
+                  <div
+                    class="endpoint-full-info props"
+                    x-show="endpoint.isOpen"
+                  >
+                    {% if is_limits_active %} 
+                      {% include 'endpoint-components/ep-limits.html' %} 
+                    {% endif %}
 
-                <div class="endpoint-full-info props" x-show="endpoint.isOpen">
+                    <div class="example py-3">
+                      <template x-if="!endpoint.stop_http_testing">
+                        <div>
+                          <h4 class="text-lg capitalize font-bold mr-3 mb-5">
+                            example
+                          </h4>
 
-                  
-                  {% if is_limits_active %}
-                  {% include 'endpoint-components/ep-limits.html' %}
-                  {% endif %}
-                    
+                          <div
+                            class="http-request px-5 py-3 rounded-lg bg-primary-800 mb-8"
+                          >
+                            {% include 'endpoint-components/ep-request-http-syntax.html' %}
 
-                  <div class="example py-3">
-                    <template x-if="!endpoint.stop_http_testing">
-                      <div>
-                        <h4 class="text-lg capitalize font-bold mr-3 mb-5">example</h4>
-    
-                        <div class="http-request px-5 py-3 rounded-lg bg-primary-800 mb-8">
-    
-                          {% include 'endpoint-components/ep-request-http-syntax.html' %}
-    
-                          <div class="mt-4 flex justify-between items-center">
-                            <span class="font-bold text-accent">Double click to start update request to try it</span>
-    
-                            {% include 'endpoint-components/ep-request-action-buttons.html' %}
-                            {% include 'endpoint-components/ep-request-popup-try.html' %}
+                            <div class="mt-4 flex justify-between items-center">
+                              <span class="font-bold text-accent">
+                                Double click to start update request to try it
+                              </span>
+
+                              {% include 'endpoint-components/ep-request-action-buttons.html' %} 
+                              {% include 'endpoint-components/ep-request-popup-try.html' %}
+                            </div>
                           </div>
                         </div>
+                      </template>
 
-                      </div>
-                      
-                    </template>
-
-                    {% include 'endpoint-components/ep-params.html' %}
+                      {% include 'endpoint-components/ep-params.html' %}
+                    </div>
                   </div>
-                </div>
-              </li>
-            </template>
+                </li>
+              </template>
+            </ul>
+          </div>
 
-          </ul>
-        </div>
+          {% if db_records %}
+          <div class="db-records mt-8">
+            <h2 class="text-2xl font-bold capitalize mb-6">
+              tool database records
+            </h2>
 
-        {% if db_records %}
-        <div class="db-records mt-8">
-          <h2 class="text-2xl font-bold capitalize mb-6">tool database records</h2>
-          
-          <ul class="no-select">
-            {% for record in db_records %}
+            <ul class="no-select">
+              {% for record in db_records %}
               <li class="flex justify-between border-b-2 pb-1 mb-2">
-                <a href="{{ record.get_absolute_url_read }}">{{ record.file_name }}</a>
-                <a class="text-sm font-bold text-primary-200 capitalize" href="{{ record.get_absolute_url_delete }}">delete</a>
+                <a href="{{ record.get_absolute_url_read }}"
+                  >{{ record.file_name }}</a
+                >
+                <a
+                  class="text-sm font-bold text-primary-200 capitalize"
+                  href="{{ record.get_absolute_url_delete }}"
+                  >delete</a
+                >
               </li>
-            {% endfor %}
-          </ul>
-            
-        </div>
-        {% endif %}
-      </main>
-  
-      <aside class="flex-shrink-0 w-full md:w-80">
-      {% include 'components/aside.html' %}
-      </aside>
-    </div>
+              {% endfor %}
+            </ul>
+          </div>
+          {% endif %}
+        </main>
 
-    {% include 'components/footer.html' %}
-  </div>
-</body>
+        <aside class="flex-shrink-0 w-full md:w-80">
+          {% include 'components/aside.html' %}
+        </aside>
+      </div>
+
+      {% include 'components/footer.html' %}
+    </div>
+  </body>
 </html>

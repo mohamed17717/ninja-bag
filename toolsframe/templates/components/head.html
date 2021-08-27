@@ -1,4 +1,6 @@
 {% load static %}
+{% load filters %}
+
 
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -13,9 +15,17 @@
 {% if is_light_mode %}
 <link rel="stylesheet" href="{% static 'css/light-mode.css' %}">
 {% endif %}
-  
+
+
+<script>
+  const suggestToolUrl = `{% url 'toolsframe:suggest-tool' %}`
+</script>
+
+
+
 
 <script src="{% static 'js/main.js' %}" async></script>
 <script src="https://cdn.jsdelivr.net/gh/alpinejs/alpine@v2.x.x/dist/alpine.min.js" async></script>
+<script src="{% static 'js/alpine-data-functions.js' %}"></script>
 
 <script src="{% static 'js/executeOnload.js' %}" defer></script>

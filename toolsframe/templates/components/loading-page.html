@@ -1,28 +1,32 @@
-<div 
-    class="
-      loading-page 
-      fixed inset-0 
-      bg-primary-800 
-      transition-opacity opacity-100"
+<div
+  class="loading-page fixed inset-0 bg-primary-800 transition-opacity opacity-100"
+>
+  <div
+    class="lds-ripple"
+    style="top: 50%; left: 50%; transform: translate(-50%, -50%)"
   >
-    <div class="lds-ripple" style="top: 50%;left: 50%;transform: translate(-50%, -50%);"><div></div><div></div></div>
-    <style>
-      .loading-page + [id] { opacity: 0; }
-    </style>
-    <script>
-      document.addEventListener('DOMContentLoaded', () => {
-        const loadingElm = document.querySelector('.loading-page')
-        const pageRoot = document.querySelector('.loading-page + [id]')
+    <div></div>
+    <div></div>
+  </div>
+  <style>
+    .loading-page + [id] {
+      opacity: 0;
+      transition: opacity 0.4s ease-in-out;
+    }
+  </style>
+  <script>
+    document.addEventListener("DOMContentLoaded", () => {
+      const loadingElm = document.querySelector(".loading-page");
+      const pageRoot = document.querySelector(".loading-page + [id]");
+
+      setTimeout(() => {
+        pageRoot.style.opacity = "1";
+        loadingElm.style.opacity = "0";
 
         setTimeout(() => {
-          pageRoot.style.opacity = '1'
-          loadingElm.style.opacity = '0'
-
-          setTimeout(() => {
-            loadingElm.remove()
-          }, 1000)
-        }, 1000)
-
-      })
-    </script>
-  </div>
+          loadingElm.remove();
+        }, 1000);
+      }, 1000);
+    });
+  </script>
+</div>

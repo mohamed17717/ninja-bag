@@ -2,88 +2,72 @@
 
 <!DOCTYPE html>
 <html lang="en">
-<head>
-  {% include 'components/head.html' %}
+  <head>
+    {% include 'components/head.html' %}
 
-  <title>Ninja-Bag | Homepage</title>
-</head>
-<body>
-  {% include 'components/loading-page.html' %}
+    <title>Ninja-Bag | Homepage</title>
+  </head>
+  <body>
+    {% include 'components/loading-page.html' %}
 
-  <div id="homepage">
-    {% include 'components/header.html' %}
+    <div id="homepage">
+      {% include 'components/header.html' %}
 
-    <div class="content flex justify-evenly items-start flex-col sm:flex-row">
-      <main 
-        class="cards flex flex-wrap justify-evenly items-stretch"
-        x-data="homepageData()"
-      >
-        <script>
-          function homepageData() {
-            return {
-              getShrinkedText(text, maxChars) {
-                if (text.length <= maxChars)
-                  return text.replace(/\n/g, '<br>')
-                return text.slice(0, maxChars-3).replace(/\n/g, '<br>') + '...'
-              }
-            }
-          }
-        </script>
+      <div class="content flex justify-evenly items-start flex-col sm:flex-row">
+        <main class="cards flex flex-wrap justify-evenly items-stretch">
+          {% for tool in tools %}
+          <div
+            class="card mb-6 rounded-lg overflow-hidden relative pb-6 mr-0 sm:mr-4"
+          >
+            <header class="flex items-center justify-start px-5 py-3">
+              {% if tool.logo %}
+              <div
+                class="w-14 h-14 rounded-full overflow-hidden bg-center bg-cover bg-no-repeat mr-5"
+                style="background-image: url({{ tool.logo.url }});"
+              ></div>
+              {% endif %}
 
-        {% for tool in tools %}
-        <div class="card mb-6 rounded-lg overflow-hidden relative pb-6 mr-0 sm:mr-4">
-          <header class="flex items-center justify-start px-5 py-3">
-            
-            {% if tool.logo %}
-            <div 
-              class="w-14 h-14 rounded-full overflow-hidden bg-center bg-cover bg-no-repeat mr-5"
-              style="background-image: url({{ tool.logo.url }});"
-            ></div>
-            {% endif %}
-              
-            <div>
-              <h3 class="text-xl font-bold capitalize" 
-                x-text="getShrinkedText(`{{ tool.name }}`, 25)"
-              ></h3>
+              <div>
+                <h3 class="text-xl font-bold capitalize">
+                  {{ tool.name|truncatechars:25 }}
+                </h3>
+              </div>
+            </header>
+
+            <div class="content px-5 py-8">
+              <div class="overflow-hidden leading-7">
+                {{ tool.description|truncatechars:240 }}
+              </div>
+
+              <!-- <ul class="flex flex-wrap mt-2">
+                {% for category in tool.category.all %}
+                <li class="text-sm rounded bg-primary-800 text-primary-300 mr-1 hover:bg-gray-700 hover:text-gray-300 capitalize font-bold">
+                  <a class="px-2 py-1 inline-block" href="#">{{ category.name }}</a>
+                </li>
+                {% endfor %}
+              </ul> -->
             </div>
-          </header>
 
-          <div class="content px-5 py-8">
-            <div 
-              class="overflow-hidden  leading-7 " 
-              x-html="getShrinkedText(`{{ tool.description }}`, 240)"
-            ></div>
-
-            <!-- <ul class="flex flex-wrap mt-2">
-              {% for category in tool.category.all %}
-              <li class="text-sm rounded bg-primary-800 text-primary-300 mr-1 hover:bg-gray-700 hover:text-gray-300 capitalize font-bold">
-                <a class="px-2 py-1 inline-block" href="#">{{ category.name }}</a>
-              </li>
-              {% endfor %}
-            </ul> -->
+            <footer class="px-5 pt-1 pb-4 absolute bottom-0 right-0 left-0">
+              <div class="text-right pt-2">
+                <a
+                  href="{% url tool.url_reverser tool.tool_id %}"
+                  class="button-style text-sm uppercase font-bold px-3 py-2 rounded-lg bg-accent text-button-text"
+                >
+                  view
+                </a>
+              </div>
+            </footer>
           </div>
+          {% endfor %}
+        </main>
 
+        <aside class="flex-shrink-0 w-full sm:w-80">
+          {% include 'components/aside.html' %}
+        </aside>
+      </div>
 
-          <footer class="px-5 pt-1 pb-4 absolute bottom-0 right-0 left-0">
-
-            <div class="text-right pt-2">
-              <a 
-                href="{% url tool.url_reverser tool.tool_id %}" 
-                class="button-style text-sm uppercase font-bold px-3 py-2 rounded-lg bg-accent text-button-text"
-              >view</a>
-            </div>
-          </footer>
-        </div>
-        {% endfor %}
-      </main>
-
-      <aside class="flex-shrink-0 w-full sm:w-80">
-      {% include 'components/aside.html' %}
-      </aside>
+      {% include 'components/footer.html' %}
     </div>
-
-    {% include 'components/footer.html' %}
-  </div>
-
-</body>
+  </body>
 </html>

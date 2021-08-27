@@ -43,6 +43,7 @@ class Endpoint {
 
 class HTTPSyntaxParser {
   constructor(endpoint) {
+    this.isLimitsActive = readBackendJsonById('is-limits-active')
     this.endpoint = endpoint
     this.httpHeader = endpoint.httpSyntaxHeader
         .replace(/&amp;/g, '&').replace(/<br>/g, '\n').replace(/&nbsp;/g, ' ')
@@ -90,7 +91,11 @@ class HTTPSyntaxParser {
 
     if(isToken) {
       updatedGetPart = (updatedGetPart || '').split('&').filter(i => i)
-      if(isLimitsActive) updatedGetPart.push(`token=${userToken}`)
+
+      if(this.isLimitsActive) {
+        const userToken = readBackendJsonById('user-token')
+        updatedGetPart.push(`token=${userToken}`)
+      }
       updatedGetPart = updatedGetPart.length > 0 ? `?${updatedGetPart.join('&')}` : ''
     }
 
@@ -108,7 +113,7 @@ class HTTPSyntaxParser {
       pathPart = this.#replacePathVariables(pathPart, this.endpoint.params.URL)
 
     if(this.endpoint.params && this.endpoint.params.GET)
-      getPart = this.#replaceGETVariables(getPart, this.endpoint.params.GET, false)
+      getPart = this.#replaceGETVariables(getPart, this.endpoint.params.GET, this.isLimitsActive)
 
     getPart = getPart || ''
 
