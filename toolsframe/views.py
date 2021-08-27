@@ -14,7 +14,7 @@ from .forms import ToolIssueReportForm, SuggestToolForm
 
 @require_http_methods(['GET'])
 def toggle_color_mode(request):
-  response = Redirector.go_home()
+  response = Redirector.go_previous_page(request)
   cookie_name = 'light-mode'
   if request.COOKIES.get(cookie_name):
     response.delete_cookie(cookie_name)
