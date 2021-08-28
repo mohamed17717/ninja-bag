@@ -1,4 +1,6 @@
 from django.db import models
+from django.db.models import Q
+
 
 
 class ToolDatabaseQuerySet(models.QuerySet):
@@ -9,7 +11,7 @@ class ToolDatabaseQuerySet(models.QuerySet):
     return self.get_user_records(user).exists()
 
   def check_user_has_new_records(self, user):
-    return self.filter(user=user, seen=False).exists()
+    return self.filter(Q(user=user) & Q(seen=False)).exists()
 
 
 class ToolDatabaseManager(models.Manager):
