@@ -53,10 +53,13 @@ class Account(models.Model):
     return super(Account, self).save(*args, **kwargs)
 
 
+  # computed fields
+  @property
   def get_user_name(self):
     name = f'{self.user.first_name} {self.user.last_name}'.strip() or self.user.username
     return name
 
+  @property
   def get_user_picture(self):
     if self.picture:
       picture = self.picture.url

@@ -46,12 +46,10 @@ class ToolQuerySet(models.QuerySet):
     tools = self.get_tools_that_has_db()
 
     for tool in tools:
-      db = tool.get_db_class()
-      user_records = db.objects.get_user_records(user)
+      db = tool.db_class
 
-      if user_records:
-        is_user_has_new_records = user_records.filter(seen=False).exists()
-        yield (tool, is_user_has_new_records)
+      if db.objects.check_user_has_records(user):
+        yield (tool, db.objects.check_user_has_new_records(user))
 
 
   def list_for_homepage(self):

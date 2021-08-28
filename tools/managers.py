@@ -3,7 +3,7 @@ from django.db import models
 
 class ToolDatabaseQuerySet(models.QuerySet):
   def get_user_records(self, user):
-    return self.filter(user=user)
+    return self.filter(user=user).order_by('-created')
   
   def check_user_has_records(self, user):
     return self.get_user_records(user).exists()

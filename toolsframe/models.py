@@ -29,7 +29,8 @@ class Category(models.Model):
   def __str__(self):
     return self.name
 
-  def get_tools(self):
+  @property
+  def tools(self):
     return self.category_tools.all()
 
 
@@ -84,8 +85,8 @@ class Tool(models.Model):
     self.views_count += 1
     return self.save()
 
-  def get_db_class(self):
-    # db_obj = self.tool_db
+  @property
+  def db_class(self):
     db_obj = getattr(self, 'tool_db', None)
     db_name = db_obj and db_obj.name
 
@@ -96,12 +97,8 @@ class Tool(models.Model):
     return db_class
 
   def get_db_records(self, user):
-    db = self.get_db_class()
-    records = []
-    if db:
-      records = db.list_all(user)
-
-    return records 
+    db = self.db_class
+    return db and db.list_all(user) or []
 
 
 class UpcomingTool(models.Model):

@@ -63,7 +63,7 @@ class TextSaverModel(models.Model):
         raise ValidationError(msg)
 
 
-  # polumorphism methods
+  # polymorphism methods
   @classmethod
   def add(cls, acc, text, file_name):
     cls.validate(text=text, file_name=file_name)
@@ -84,7 +84,7 @@ class TextSaverModel(models.Model):
   def list_all(cls, user):
     result = []
     if user.is_authenticated: 
-      result = cls.objects.filter(user=user)
+      result = cls.objects.get_user_records(user)
 
     result.update(seen=True)
     return result
