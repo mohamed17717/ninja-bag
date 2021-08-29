@@ -5,6 +5,7 @@ from django.contrib.auth.views import LogoutView
 from django.conf import settings
 from django.conf.urls.static import static
 
+import debug_toolbar
 
 urlpatterns = [
   path('', include('social_django.urls', namespace='social')),
@@ -15,6 +16,7 @@ urlpatterns = [
   path('account/', include('accounts.urls', namespace='accounts')),
 
   path('admin/', admin.site.urls),
+  path('__debug__/', include(debug_toolbar.urls)),
 ]
 
 if settings.DEBUG:

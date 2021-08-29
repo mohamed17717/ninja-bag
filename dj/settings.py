@@ -39,6 +39,7 @@ INSTALLED_APPS = [
     'crispy_forms',
     'corsheaders',
     'social_django',
+    'debug_toolbar'
 ]
 
 MIDDLEWARE = [
@@ -57,7 +58,9 @@ MIDDLEWARE = [
 
     'django_user_agents.middleware.UserAgentMiddleware',
     'social_django.middleware.SocialAuthExceptionMiddleware',
-    'app.middleware.WebRequestMiddleware'
+    'app.middleware.WebRequestMiddleware',
+
+    'debug_toolbar.middleware.DebugToolbarMiddleware'
 ]
 
 ROOT_URLCONF = 'dj.urls'
@@ -172,3 +175,12 @@ SOCIAL_AUTH_PIPELINE = (
 
     'accounts.signals.get_avatar',
 )
+
+# django debug toolbar setup
+EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+
+INTERNAL_IPS = [
+    # ...
+    '127.0.0.1',
+    # ...
+]
