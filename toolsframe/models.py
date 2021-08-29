@@ -77,14 +77,6 @@ class Tool(models.Model):
 
     return url
 
-  def increase_uses_count(self):
-    self.uses_count += 1
-    return self.save()
-
-  def increase_views_count(self):
-    self.views_count += 1
-    return self.save()
-
   @property
   def db_class(self):
     db_obj = getattr(self, 'tool_db', None)

@@ -50,7 +50,7 @@ def tool_handler(limitation=[]):
         args_of_limit_after_hook = (request, response)
         th.run_limits_after(limits_handler, limitation, args_of_limit_after_hook)
 
-        tool.increase_uses_count()
+        Tool.objects.increase_uses_count(tool.pk)
 
       return response
     return wrapper

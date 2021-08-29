@@ -85,8 +85,8 @@ class TextSaverModel(models.Model):
     result = []
     if user.is_authenticated: 
       result = cls.objects.get_user_records(user)
+      result.select_for_update().update(seen=True)
 
-    result.update(seen=True)
     return result
 
   @classmethod

@@ -1,4 +1,5 @@
 from django.db import models
+from django.db.models import F
 from django.shortcuts import get_object_or_404
 
 
@@ -39,7 +40,7 @@ class ToolViewsFunctionsManager(models.Manager):
 
 class ToolQuerySet(models.QuerySet):
   def get_tools_that_has_db(self):
-    return self.filter(tool_db__isnull=False)
+    return self.filter(tool_db__isnull=False).select_related('tool_db')
 
   def get_tools_that_has_db_for_aside_section(self, user):
     # tools that user has records in && flag tell if there is new record
@@ -51,13 +52,8 @@ class ToolQuerySet(models.QuerySet):
       if db.objects.check_user_has_records(user):
         yield (tool, db.objects.check_user_has_new_records(user))
 
-
   def list_for_homepage(self):
-    return self.filter(active=True)
-
-  def increase_uses_count_by_pk(self, pk):
-    tool = self.filter(pk=pk).first()
-    tool and tool.increase_uses_count()
+    return self.filter(active=True).prefetch_related('category')
 
   def get_tool_by_tool_id(self, tool_id):
     return self.filter(tool_id=tool_id).first()
@@ -65,8 +61,11 @@ class ToolQuerySet(models.QuerySet):
   def force_get(self, **kwargs):
     return get_object_or_404(self.model, **kwargs)
 
+  def increase_views_count(self, pk):
+    self.select_for_update().filter(pk=pk).update(views_count=F('views_count')+1)
 
-
+  def increase_uses_count(self, pk):
+    self.select_for_update().filter(pk=pk).update(uses_count=F('uses_count')+1)
 
 class ToolManager(models.Manager):
   def get_queryset(self):
@@ -81,14 +80,17 @@ class ToolManager(models.Manager):
   def list_for_homepage(self):
     return self.get_queryset().list_for_homepage()
 
-  def increase_uses_count_by_pk(self, pk):
-    return self.get_queryset().increase_uses_count_by_pk(pk)
+  def increase_uses_count(self, pk):
+    return self.get_queryset().increase_uses_count(pk)
 
   def get_tool_by_tool_id(self, tool_id):
     return self.get_queryset().get_tool_by_tool_id(tool_id)
 
   def force_get(self, **kwargs):
     return self.get_queryset().force_get(**kwargs)
+
+  def increase_views_count(self, pk):
+    return self.get_queryset().increase_views_count(pk)
 
 # ------------------------------------------------------------- #
 

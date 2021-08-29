@@ -38,7 +38,7 @@ def index(request):
 @require_http_methods(['GET'])
 def get_tool_page(request, tool_id):
   tool = Tool.objects.force_get(tool_id=tool_id)
-  tool.increase_views_count()
+  Tool.objects.increase_views_count(pk=tool.pk)
 
   context = {
     **GenerateDefaultContext(request),
