@@ -124,7 +124,7 @@ body [contenteditable] {
   margin: auto;
 }
 
-#homepage header, #api header {
+#homepage header, #api header, #error-page header {
   padding: 15px 7.5%;
 }
 
@@ -133,7 +133,7 @@ body [contenteditable] {
   padding-bottom: 8px;
 }
 
-#homepage > .content, #api > .content {
+#homepage > .content, #api > .content, #error-page > .content {
   padding: 50px 7.5%;
   max-width: calc(1000px + 15%);
   margin: auto;
@@ -233,7 +233,7 @@ body [contenteditable] {
   max-height: 600px;
 }
 
-#homepage footer, #homepage header, #api footer, #api header {
+#homepage footer, #homepage header, #api footer, #api header, #error-page footer, #error-page header {
   color: var(--color-primary-200);
   background-color: var(--color-primary-700);
 }

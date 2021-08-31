@@ -1,0 +1,48 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+  <head>
+    {% include 'components/head.html' %}
+
+    <title>{{ number }} error happened | Ninja-Bag</title>
+
+		<style>
+			#error-page {
+				min-height: 100vh;
+				padding-bottom: 77px;
+				position: relative;
+			}
+
+			#error-page footer {
+				position: absolute;
+				bottom: 0;
+				left: 0;
+				right: 0;
+			}
+		</style>
+  </head>
+  <body>
+    {% include 'components/loading-page.html' %}
+
+    <div id="error-page">
+      {% include 'components/header.html' %}
+
+			<div class="content text-primary-100 font-bold text-center">
+				<h1 class=" text-9xl">{{ number }}</h1>
+				
+				<h2 class="text-5xl mt-8">
+					{% if number == 404 %}
+						The page you are looking for doesn't exist
+					{% else %}
+						Unexpected error in happened
+					{% endif %}
+				</h2>
+
+				<h3 class="text-xl mt-5">Back to the <a class="text-accent" href="{% url 'toolsframe:homepage' %}">homepage</a></h3>
+			</div>
+
+      {% include 'components/footer.html' %}
+    </div>
+  </body>
+</html>
