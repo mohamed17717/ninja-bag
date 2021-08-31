@@ -12,7 +12,9 @@
   --color-secondary: #5575e7;
   --color-accent-glow: rgba(253,77,77,0.3);
   --color-accent: #fd4d4d;
+  /* --color-accent: #c63d3d; */
   --color-accent-hover: #fd6868;
+  /* --color-accent-hover: #c65151; */
   --color-accent-disabled: #f5bfbf;
   --screen-height-reduction: 0px;
 }
@@ -143,7 +145,7 @@ body [contenteditable] {
 
 #homepage main .card, #api main .card {
   background-color: var(--color-primary-700);
-  min-width: 265px;
+  min-width: 272px;
   width: 40%;
   -webkit-box-flex: 1;
       -ms-flex-positive: 1;
@@ -428,9 +430,9 @@ button.bg-primary-700:disabled,
 }
 /*# sourceMappingURL=style.css.map */
 .no-select {
-  user-select: none; /* supported by Chrome and Opera */
- -webkit-user-select: none; /* Safari */
- -khtml-user-select: none; /* Konqueror HTML */
- -moz-user-select: none; /* Firefox */
- -ms-user-select: none; /* Internet Explorer/Edge */
+  user-select: none;
+  -webkit-user-select: none;
+  -khtml-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
 }

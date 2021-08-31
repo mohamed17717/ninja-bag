@@ -1,8 +1,15 @@
 <div class="tool-info text-center rounded-lg p-5 mb-12">
   {% if tool.logo %}
   <div
-    class="w-48 h-48 mb-3 rounded-full overflow-hidden bg-center bg-cover bg-no-repeat m-auto"
-    style="background-image: url({{ tool.logo.url }});"
+    class="mb-3 rounded-full overflow-hidden bg-center bg-cover bg-no-repeat m-auto"
+    style="
+      background-image: url({{ tool.logo.url }}); 
+      max-width: 100%; 
+      width: 25%;
+      padding-bottom: 25%; 
+      min-width: 50px; 
+      min-height: 50px
+    "
   ></div>
   {% endif %}
 
