@@ -157,7 +157,8 @@ AUTHENTICATION_BACKENDS = (
     'django.contrib.auth.backends.ModelBackend',
 )
 
-LOGIN_URL = '/login/'
+LOGIN_URL = '/account/'
+LOGIN_ERROR_URL = LOGIN_URL
 
 LOGIN_REDIRECT_URL = '/'
 LOGOUT_REDIRECT_URL = '/'
@@ -176,6 +177,8 @@ SOCIAL_AUTH_PIPELINE = (
 
     'accounts.signals.get_avatar',
 )
+# SOCIAL_AUTH_RAISE_EXCEPTIONS = False
+# RAISE_EXCEPTIONS = False
 
 # django debug toolbar setup
 EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
