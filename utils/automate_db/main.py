@@ -20,7 +20,8 @@ class ToolDatabaseHandler:
       'name': self.tool.get('name'),
       'description': self.tool.get('description'),
       'app_type': self.tool.get('type'),
-      'endpoints': self.tool.get('endpoints')
+      'endpoints': self.tool.get('endpoints'),
+      'login_required': self.tool.get('login_required', False)
     }
 
     tool = Tool.objects.create(**tool_fields)
@@ -39,6 +40,7 @@ class ToolDatabaseHandler:
     tool.description = self.tool.get('description')
     tool.app_type = self.tool.get('type')
     tool.endpoints = self.tool.get('endpoints')
+    tool.login_required = self.tool.get('login_required', False)
 
     tool.save()
     tool.category.clear()
@@ -91,10 +93,9 @@ def set_tools_db_classes_to_table():
       ToolDatabaseClass.objects.create(name=name)
 
 
-if __name__ == '__main__':
-  set_tools_docs_to_table()
-  set_tools_views_to_table()
-  set_tools_db_classes_to_table()
+set_tools_docs_to_table()
+set_tools_views_to_table()
+set_tools_db_classes_to_table()
 
 
 ## to run ##

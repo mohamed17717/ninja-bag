@@ -637,6 +637,7 @@
     ],
     "type": "api",
     "tool_id": "text-saver-simple-db-c3ee6dd2",
-    "is_changed": false
+    "is_changed": false,
+    "login_required": true
   }
 }

@@ -46,6 +46,8 @@ class Tool(models.Model):
   endpoints = JSONField(blank=True, null=True)
   category = models.ManyToManyField(Category, related_name='category_tools')
 
+  login_required = models.BooleanField(default=False)
+
   active = models.BooleanField(default=True)
   status = models.CharField(max_length=32, blank=True, null=True) # alpha || beta
   # counters
