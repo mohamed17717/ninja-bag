@@ -53,15 +53,19 @@ def get_tool_page(request, tool_id):
 class SuggestTool(FormSaveMixin, View):
   form_class = SuggestToolForm
 
-  def after_save_hook(self, obj, request, *args, **kwargs):
-    obj.user = request.user
-
+  def update_saved_object(self, request, obj, *args, **kwargs):
+    if request.user.is_authenticated:
+      obj.user = request.user
+    return obj
 class ReportToolIssue(FormSaveMixin, View):
   form_class = ToolIssueReportForm
 
-  def after_save_hook(self, obj, request, *args, **kwargs):
+  def update_saved_object(self, request, obj, *args, **kwargs):
     tool_id = kwargs.get('tool_id')
+    tool = Tool.objects.force_get(tool_id=tool_id)
+    obj.tool = tool
 
-    obj.user = request.user
-    obj.tool = Tool.objects.force_get(tool_id=tool_id)
+    if request.user.is_authenticated:
+      obj.user = request.user
+    return obj
 

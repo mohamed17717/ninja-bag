@@ -121,7 +121,12 @@ class SuggestedTool(models.Model):
   updated = models.DateField(auto_now=True)
 
   def __str__(self):
-    user_info = f'{self.pk} - {self.user.username}'
+    user_info = f'{self.pk} - '
+    if self.user:
+      user_info += self.user.username
+    else:
+      user_info += 'Anonymous'
+
     description = self.description[:30]
     status = "👀" if self.seen else "🔒"
 
@@ -139,7 +144,12 @@ class ToolIssueReport(models.Model):
   updated = models.DateField(auto_now=True)
 
   def __str__(self):
-    user_info = f'{self.pk} - {self.user.username}'
+    user_info = f'{self.pk} - '
+    if self.user:
+      user_info += self.user.username
+    else:
+      user_info += 'Anonymous'
+
     description = self.description[:30]
     status = "👀" if self.seen else "🔒"
 

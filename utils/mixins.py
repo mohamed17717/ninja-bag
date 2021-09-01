@@ -4,7 +4,7 @@ from PIL import Image
 from toolsframe.models import Tool, UpcomingTool
 from utils.handlers import ToolHandler
 from toolsframe.forms import SuggestToolForm
-
+from django.core.exceptions import ValidationError
 
 def JsonResponseOverride(data):
   return JsonResponse(data, safe=False, json_dumps_params={'indent': 2})
@@ -47,18 +47,30 @@ def GenerateDefaultContext(request):
 class FormSaveMixin(object):
   form_class = None
 
-  def post(self, request, *args, **kwargs):
-    post_data = ExtractPostRequestData(request)
+  def get_form(self):
+    post_data = ExtractPostRequestData(self.request)
     form = self.form_class(post_data)
+    return form
 
+  def save_form(self, form):
+    try:
+      obj = form.save(commit=False)
+      obj = self.update_saved_object(self.request, obj, *self.args, **self.kwargs)
+      obj.save()
+    except:
+      raise ValidationError('Unexpected error happened')
+
+  def post(self, request, *args, **kwargs):
+    self.args = args
+    self.kwargs = kwargs
+    self.request = request
+
+    form = self.get_form()
     if not form.is_valid():
-      return HttpResponse(form.get_error_meesage(), status=400)
+      return HttpResponse(form.get_error_message(), status=400)
 
-    obj = form.save(commit=False)
-    self.after_save_hook(obj, request, *args, **kwargs)
-    obj.save()
-
+    self.save_form(form)
     return HttpResponse(status=201)
 
-  def after_save_hook(self, obj, request, *args, **kwargs):
-    return
+  def update_saved_object(self, request, obj, *args, **kwargs):
+    return obj

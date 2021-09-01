@@ -12,7 +12,7 @@ class IssueAndSuggestionFormsMethods:
       raise forms.ValidationError(f'issue description must be more than {length_required} letter!!!')
     return description
 
-  def get_error_meesage(self):
+  def get_error_message(self):
     return 'description: ' + self.errors['description']
 
 
