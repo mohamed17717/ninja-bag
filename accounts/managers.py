@@ -12,7 +12,7 @@ class AccountQuerySet(models.QuerySet):
     return acc
 
   def get_user_acc_from_api_or_web(self, request, *, required=False):
-    user = request.user
+    user = request.user.is_authenticated and request.user
     token = request.GET.get('token', 'blablabla')
     acc = user and self.get(user=user)
     acc = acc or self.get_user_acc_by_api_key(token, required=required)
