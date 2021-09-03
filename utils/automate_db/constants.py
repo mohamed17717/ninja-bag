@@ -1,6 +1,6 @@
 TOOLS_VIEWS_NAMES = [
   "get_my_ip",
-  "get_my_proxy_anonimity",
+  "get_my_proxy_anonymity",
   "get_my_request_headers",
   "analyze_my_machine_user_agent",
   "analyze_user_agent",

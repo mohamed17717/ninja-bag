@@ -9,7 +9,7 @@ def get_ip(request) -> str:
     ip = request.META.get('REMOTE_ADDR')
   return ip
 
-def get_proxy_anonimity(request) -> str:
+def get_proxy_anonymity(request) -> str:
   rename_header = lambda h: f'http-{h}'.upper().replace('-', '_')
   proxy_headers = map(rename_header, [
     # elite
@@ -26,14 +26,14 @@ def get_proxy_anonimity(request) -> str:
   headers = request.META
   found_headers = [h for h in proxy_headers if headers.get(h)]
 
-  anonimity = 'anonymous'
+  anonymity = 'anonymous'
   if len(found_headers) == 0:
-    anonimity = 'elite'
+    anonymity = 'elite'
   elif rename_header('X-Forwarded-For') in found_headers:
-    anonimity = 'transparent'
+    anonymity = 'transparent'
 
 
-  return anonimity
+  return anonymity
 
 def get_request_headers(request) -> dict:
   headers = {}

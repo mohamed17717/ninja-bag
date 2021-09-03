@@ -15,7 +15,7 @@
     "tool_id": "what-is-my-ip-5d1307d8",
     "is_changed": false
   },
-  "proxy anony meter": {
+  "proxy anonymeter": {
     "description": "tell you how anonymous your proxy is (transparent, anonymous or elite)",
     "category": [
       "how server see you",
@@ -23,7 +23,7 @@
     ],
     "endpoints": [
       {
-        "url": "/get-my-proxy-anonimity/",
+        "url": "/get-my-proxy-anonymity/",
         "method": "GET"
       }
     ],
@@ -40,7 +40,7 @@
     "endpoints": [
       {
         "url": "/get-my-request-headers/",
-        "method": "GET"
+        "method": "ANY"
       }
     ],
     "type": "api",
@@ -140,7 +140,7 @@
       },
       {
         "url": "/get-image-placeholder/{width}x{height}/",
-        "description": "return an image with specific width and heaight and random color",
+        "description": "return an image with specific width and height and random color",
         "method": "GET",
         "params": {
           "URL": [
@@ -163,7 +163,7 @@
       },
       {
         "url": "/get-image-placeholder/{width}x{height}/{color}/",
-        "description": "return an image with specific width, heaight and color",
+        "description": "return an image with specific width, height and color",
         "method": "GET",
         "params": {
           "URL": [
@@ -207,7 +207,7 @@
       {
         "url": "/username-to-profile-pic/{size}/{username}/",
         "method": "GET",
-        "description": "generate profile picture with specific size and radnom color using user's first letters",
+        "description": "generate profile picture with specific size and random color using user's first letters",
         "params": {
           "URL": [
             {
@@ -354,7 +354,7 @@
       {
         "url": "/b64-to-image/",
         "method": "POST",
-        "description": "Deocde any base64 image to the jpg version of it",
+        "description": "Decode any base64 image to the jpg version of it",
         "dataType": "json",
         "params": {
           "POST": [
@@ -363,7 +363,7 @@
               "default": "",
               "required": true,
               "type": "text",
-              "description": "Base64 string you wanna to conver to the jpg image"
+              "description": "Base64 string you wanna to convert to the jpg image"
             }
           ]
         }
@@ -469,7 +469,7 @@
       {
         "url": "/unshorten-url/",
         "method": "POST",
-        "description": "unpack the url and return the last distenation",
+        "description": "unpack the url and return the last destination",
         "dataType": "json",
         "params": {
           "POST": [
@@ -530,7 +530,7 @@
           "URL": [
             {
               "name": "filename",
-              "default": "defailt_file.txt",
+              "default": "default_file.txt",
               "required": true,
               "type": "text",
               "description": "the name of a file you want to create|update"
@@ -546,7 +546,7 @@
           "URL": [
             {
               "name": "filename",
-              "default": "defailt_file.txt",
+              "default": "default_file.txt",
               "required": true,
               "type": "text",
               "description": "the name of a file you want to delete"
@@ -562,7 +562,7 @@
           "URL": [
             {
               "name": "filename",
-              "default": "defailt_file.txt",
+              "default": "default_file.txt",
               "required": true,
               "type": "text",
               "description": "the name of a file you want to delete"
@@ -578,7 +578,7 @@
           "URL": [
             {
               "name": "filename",
-              "default": "defailt_file.txt",
+              "default": "default_file.txt",
               "required": true,
               "type": "text",
               "description": "the name of a file you want to delete"
@@ -594,7 +594,7 @@
           "URL": [
             {
               "name": "filename",
-              "default": "defailt_file.txt",
+              "default": "default_file.txt",
               "required": true,
               "type": "text",
               "description": "the name of a file you want to read"
@@ -610,7 +610,7 @@
           "URL": [
             {
               "name": "filename",
-              "default": "defailt_file.txt",
+              "default": "default_file.txt",
               "required": true,
               "type": "text",
               "description": "the name of a file you want to read"
@@ -626,7 +626,7 @@
           "URL": [
             {
               "name": "filename",
-              "default": "defailt_file.txt",
+              "default": "default_file.txt",
               "required": true,
               "type": "text",
               "description": "the name of a file you want to read"

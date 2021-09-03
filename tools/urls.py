@@ -3,7 +3,7 @@ from django.urls import path, include
 
 from .views import (
   get_my_ip,
-  get_my_proxy_anonimity,
+  get_my_proxy_anonymity,
   get_my_request_headers,
   get_image_placeholder,
   convert_username_to_profile_pic,
@@ -26,7 +26,7 @@ app_name = 'tools'
 urlpatterns = [
   path('get-my-ip/', get_my_ip, name='get-my-ip'),
 
-  path('get-my-proxy-anonimity/', get_my_proxy_anonimity, name='get-my-proxy-anonimity'),
+  path('get-my-proxy-anonymity/', get_my_proxy_anonymity, name='get-my-proxy-anonymity'),
 
   path('get-my-request-headers/', get_my_request_headers, name='get-my-request-headers'),
 

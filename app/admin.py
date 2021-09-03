@@ -10,7 +10,7 @@ class TwtAdmin(admin.ModelAdmin):
   def has_add_permission(self, request, obj=None):
     return False
 
-  # This will help you to disable delete functionaliyt
+  # This will help you to disable delete functionality
   def has_delete_permission(self, request, obj=None):
     return False
 

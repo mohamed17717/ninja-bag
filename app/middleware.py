@@ -44,7 +44,7 @@ class WebRequestMiddleware(object):
         new = (new_parsed.scheme, new_parsed.netloc, new_parsed.path, new_parsed.query)
 
         if old == new:
-          #dont log - it's just adding a /
+          #don't log - it's just adding a /
           return response
     try:
       self.save(request, response)

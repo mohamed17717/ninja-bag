@@ -27,7 +27,7 @@
     "flush": false
   },
 
-  "this-is-anoher-tool-b451c1a2": {
+  "this-is-another-tool-b451c1a2": {
     "endpoints": [
       {
         "url": "/image-placeholder/{width}x{height}/",

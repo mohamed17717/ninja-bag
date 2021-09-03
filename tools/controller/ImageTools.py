@@ -9,12 +9,12 @@ from django.http import HttpResponse
 
 class MyImageHandler:
   @staticmethod
-  def get_random_rgb_nums() -> tuple:
+  def get_random_rgb_numbers() -> tuple:
     return [randint(0, 255) for _ in range(3)]
 
   @staticmethod
   def get_random_color() -> str:
-    random_rgb = MyImageHandler.get_random_rgb_nums()
+    random_rgb = MyImageHandler.get_random_rgb_numbers()
     color = 'rgb({}, {}, {})'.format(*random_rgb)
     return color
 
@@ -26,8 +26,8 @@ class MyImageHandler:
     if not color.startswith('rgb('):
       return black
 
-    nums = list(map(int, color[4:-1].replace(' ', '').split(',')))
-    avr = sum(nums) / len(nums)
+    numbers = list(map(int, color[4:-1].replace(' ', '').split(',')))
+    avr = sum(numbers) / len(numbers)
 
     if avr <= 127.5: clr = white
     else: clr = black

@@ -22,12 +22,11 @@ def get_my_ip(request):
 
 @require_http_methods(['GET'])
 @tool_handler(limitation=[])
-def get_my_proxy_anonimity(request):
-  anonimity = RequestAnalyzerTools.get_proxy_anonimity(request)
-  return HttpResponse(anonimity)
+def get_my_proxy_anonymity(request):
+  anonymity = RequestAnalyzerTools.get_proxy_anonymity(request)
+  return HttpResponse(anonymity)
 
 
-@require_http_methods(['GET'])
 @tool_handler(limitation=[])
 def get_my_request_headers(request):
   headers = RequestAnalyzerTools.get_request_headers(request)
