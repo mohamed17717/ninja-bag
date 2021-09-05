@@ -34,9 +34,14 @@ def tool_handler(limitation=[]):
     tool = ToolViewsFunctions.objects.reverse_view_func_to_tool(func)
 
     def wrapper(request, *args, **kwargs):
-      api_key = request.GET.get('token', None)
+      # make sure tool is active
+      if not tool.active:
+        raise PermissionDenied('You can\'t access this tool.' )
+
+      # make sure tool accessable by this user (limits and token)
+      token = request.GET.get('token', None)
       is_acc_required = bool(th.is_limits_active and len(limitation))
-      acc = api_key and Account.objects.get_user_acc_by_api_key(api_key, required=is_acc_required)
+      acc = token and Account.objects.get_user_acc_by_token(token, required=is_acc_required)
 
       limits_handler = LimitsHandler(acc)
 

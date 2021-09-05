@@ -1,5 +1,4 @@
 from django.http import HttpResponseBadRequest
-import os
 
 class Limit:
   def __init__(self, acc):

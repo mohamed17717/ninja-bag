@@ -2,7 +2,6 @@ from django.db import models
 from django.db.models import Q
 
 
-
 class ToolDatabaseQuerySet(models.QuerySet):
   def get_user_records(self, user):
     return self.filter(user=user).order_by('-created')
@@ -26,5 +25,4 @@ class ToolDatabaseManager(models.Manager):
 
   def check_user_has_new_records(self, user):
     return self.get_queryset().check_user_has_new_records(user)
-
 

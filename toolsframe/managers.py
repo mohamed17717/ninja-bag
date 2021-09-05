@@ -9,7 +9,6 @@ class UpcomingToolQuerySet(models.QuerySet):
   def get_active(self):
     return self.filter(active=True)
 
-
 class UpcomingToolManager(models.Manager):
   def get_queryset(self):
     return UpcomingToolQuerySet(model=self.model, using=self._db, hints=self._hints)
@@ -27,7 +26,6 @@ class ToolViewsFunctionsQuerySet(models.QuerySet):
     view_obj = self.filter(name=func.__name__).first()
     tool = view_obj and view_obj.tool
     return tool
-
 
 class ToolViewsFunctionsManager(models.Manager):
   def get_queryset(self):

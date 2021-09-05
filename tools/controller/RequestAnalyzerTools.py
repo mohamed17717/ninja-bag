@@ -32,7 +32,6 @@ def get_proxy_anonymity(request) -> str:
   elif rename_header('X-Forwarded-For') in found_headers:
     anonymity = 'transparent'
 
-
   return anonymity
 
 def get_request_headers(request) -> dict:

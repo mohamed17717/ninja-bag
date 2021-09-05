@@ -74,3 +74,4 @@ class FormSaveMixin(object):
 
   def update_saved_object(self, request, obj, *args, **kwargs):
     return obj
+

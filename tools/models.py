@@ -2,12 +2,8 @@ from django.db import models
 from django.shortcuts import reverse
 from django.contrib.auth import get_user_model
 from django.core.exceptions import ValidationError
-from django.http import HttpResponseBadRequest, HttpResponse
 
-from accounts.models import Account
 from .managers import ToolDatabaseManager
-
-from utils.decorators import login_required
 from utils.helpers import FileManager
 
 import os, secrets

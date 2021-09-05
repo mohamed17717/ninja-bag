@@ -1,15 +1,10 @@
 from django.db import models
 from django.contrib.auth import get_user_model
-from django.core.exceptions import PermissionDenied
-
-from .managers import AccountManager
-
-from jsonfield import JSONField
-from toolsframe.models import Tool
 
 import secrets 
 from datetime import datetime
 
+from .managers import AccountManager
 from utils.helpers import SizeCalculator
 
 
@@ -18,7 +13,7 @@ size_handler = SizeCalculator()
 
 
 class Account(models.Model):
-  DEFAULT_USER_PICTURE = 'https://variety.com/wp-content/uploads/2015/07/naruto_movie-lionsgate.jpg?w=681&h=383&crop=1'
+  DEFAULT_USER_PICTURE = 'https://cdn2.iconfinder.com/data/icons/people-occupation-job/64/Ninja-Warrior-Assassin-Japan-Fighter-Avatar-Martial_arts-512.png'
 
   user = models.OneToOneField(User, related_name='user_account', on_delete=models.CASCADE)
   token = models.CharField(max_length=128, unique=True, editable=False, blank=True)

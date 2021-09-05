@@ -1,12 +1,10 @@
-from django.shortcuts import render, redirect
-from django.http import HttpResponse
+from django.shortcuts import render
 from django.views import View
 
-from .models import Tool, UpcomingTool, SuggestedTool, ToolIssueReport
+from .models import Tool
 
-from utils.decorators import require_http_methods, required_post_fields
-from utils.handlers import ToolHandler
-from utils.mixins import ExtractPostRequestData, GenerateDefaultContext, FormSaveMixin
+from utils.decorators import require_http_methods
+from utils.mixins import GenerateDefaultContext, FormSaveMixin
 from utils.helpers import Redirector
 
 from .forms import ToolIssueReportForm, SuggestToolForm
@@ -16,21 +14,19 @@ from .forms import ToolIssueReportForm, SuggestToolForm
 def toggle_color_mode(request):
   response = Redirector.go_previous_page(request)
   cookie_name = 'light-mode'
-  if request.COOKIES.get(cookie_name):
-    response.delete_cookie(cookie_name)
-  else:
-    response.set_cookie(cookie_name, 'true')
+  cookie_exist = request.COOKIES.get(cookie_name, False)
+
+  if cookie_exist: response.delete_cookie(cookie_name)
+  else: response.set_cookie(cookie_name, 'true')
 
   return response
 
-
-
 @require_http_methods(['GET'])
 def index(request):
-  context = {
-    **GenerateDefaultContext(request),
-    'tools': Tool.objects.list_for_homepage()
-  }
+  tools = Tool.objects.list_for_homepage()
+  context = GenerateDefaultContext(request)
+
+  context.update({ 'tools': tools })
 
   return render(request, 'd_homepage.html', context)
 
@@ -38,14 +34,14 @@ def index(request):
 @require_http_methods(['GET'])
 def get_tool_page(request, tool_id):
   tool = Tool.objects.force_get(tool_id=tool_id)
-  Tool.objects.increase_views_count(pk=tool.pk)
+  db_records = tool.get_db_records(request.user)
 
-  context = {
-    **GenerateDefaultContext(request),
-    'tool': tool,
-    'db_records': tool.get_db_records(request.user),
-    'issue_form': ToolIssueReportForm()
-  }
+  context = GenerateDefaultContext(request)
+  context.update({
+    'tool': tool, 'db_records': db_records, 'issue_form': ToolIssueReportForm()
+  })
+
+  Tool.objects.increase_views_count(pk=tool.pk)
 
   return render(request, 'd_tool-doc.html', context)
 

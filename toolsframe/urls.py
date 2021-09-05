@@ -1,10 +1,8 @@
-from django.contrib import admin
-from django.urls import path, include
+from django.urls import path
 
 from .views import index, get_tool_page, SuggestTool, ReportToolIssue, toggle_color_mode
 
 app_name = 'toolsframe'
-
 
 urlpatterns = [
   path('', index, name='homepage'),

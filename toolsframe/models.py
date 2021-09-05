@@ -1,11 +1,11 @@
 from django.db import models
-from jsonfield import JSONField
-from django.shortcuts import resolve_url, get_object_or_404
 from django.urls import reverse
 from django.contrib.auth import get_user_model
 from django.utils.text import slugify
+from jsonfield import JSONField
 
 from utils.helpers import dynamic_import
+from utils import emoji
 import secrets
 
 from .managers import  (
@@ -42,18 +42,16 @@ class Tool(models.Model):
   logo = models.ImageField(upload_to='tool_logo', blank=True, null=True)
   description = models.TextField(blank=True, null=True) # SEO && after title
   url_reverser = models.CharField(max_length=64, default='toolsframe:tool') # 'app_name:home'
-
   endpoints = JSONField(blank=True, null=True)
+
   category = models.ManyToManyField(Category, related_name='category_tools')
 
   login_required = models.BooleanField(default=False)
-
   active = models.BooleanField(default=True)
-  status = models.CharField(max_length=32, blank=True, null=True) # alpha || beta
-  # counters
+
   uses_count = models.IntegerField(default=0)
   views_count = models.IntegerField(default=0)
-  # dates
+
   created = models.DateField(auto_now_add=True)
   updated = models.DateField(auto_now=True)
 
@@ -64,7 +62,8 @@ class Tool(models.Model):
     verbose_name_plural = 'Tools'
 
   def __str__(self):
-    return f'{self.pk}- {self.tool_id}'
+    status = emoji.ACTIVE if self.active else emoji.DISABLE
+    return f'{self.pk}- {self.tool_id} {status}'
 
   def save(self, *args, **kwargs):
     if not self.pk:
@@ -110,7 +109,8 @@ class UpcomingTool(models.Model):
   objects = UpcomingToolManager()
 
   def __str__(self):
-    return self.name
+    status = emoji.ACTIVE if self.active else emoji.DISABLE
+    return f'{self.name} {status}'
 
 
 class SuggestedTool(models.Model):
@@ -123,16 +123,12 @@ class SuggestedTool(models.Model):
   updated = models.DateField(auto_now=True)
 
   def __str__(self):
-    user_info = f'{self.pk} - '
-    if self.user:
-      user_info += self.user.username
-    else:
-      user_info += 'Anonymous'
-
+    user = self.user
+    username = user.username if user else 'Anonymous' 
     description = self.description[:30]
-    status = "👀" if self.seen else "🔒"
+    status = emoji.SEEN if self.seen else emoji.UN_SEEN
 
-    return f'{user_info} ({description}) {status}'
+    return f'{self.pk} - {username} {username} ({description}) {status}'
 
 
 class ToolIssueReport(models.Model):
@@ -146,16 +142,12 @@ class ToolIssueReport(models.Model):
   updated = models.DateField(auto_now=True)
 
   def __str__(self):
-    user_info = f'{self.pk} - '
-    if self.user:
-      user_info += self.user.username
-    else:
-      user_info += 'Anonymous'
-
+    user = self.user
+    username = user.username if user else 'Anonymous' 
     description = self.description[:30]
-    status = "👀" if self.seen else "🔒"
+    status = emoji.SEEN if self.seen else emoji.UN_SEEN
 
-    return f'{user_info} ({description[:17]}...) {status}'
+    return f'{self.pk} - {username} {username} ({description}) {status}'
 
 
 # handle (tool record) in database and (tool views and models)
@@ -169,7 +161,8 @@ class ToolViewsFunctions(models.Model):
   objects = ToolViewsFunctionsManager()
 
   def __str__(self):
-    return self.name
+    tool_status = emoji.HAPPY if self.tool else emoji.SAD
+    return f'{self.name} {tool_status}'
 
 class ToolDatabaseClass(models.Model):
   name = models.CharField(max_length=120, unique=True)
@@ -179,4 +172,5 @@ class ToolDatabaseClass(models.Model):
   updated = models.DateField(auto_now=True)
 
   def __str__(self):
-    return self.name
+    tool_status = emoji.HAPPY if self.tool else emoji.SAD
+    return f'{self.name} {tool_status}'

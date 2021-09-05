@@ -1,6 +1,5 @@
 import re, base64, qrcode # BytesIO
 
-
 from io import BytesIO
 from random import randint
 from PIL import Image, ImageDraw, ImageFont
