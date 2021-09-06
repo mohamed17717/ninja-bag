@@ -31,12 +31,12 @@ def cache_request(name_format, timeout=60*60*24, identifier=None):
 def tool_handler(limitation=[]):
   def decorator(func):
     th = ToolHandler()
-    # tool = ToolViewsFunctions.objects.reverse_view_func_to_tool(func)
+    tool = ToolViewsFunctions.objects.reverse_view_func_to_tool(func)
 
     def wrapper(request, *args, **kwargs):
       # make sure tool is active
-      # if not tool.active:
-      #   raise PermissionDenied('You can\'t access this tool.' )
+      if not tool.active:
+        raise PermissionDenied('You can\'t access this tool.' )
 
       # make sure tool accessable by this user (limits and token)
       token = request.GET.get('token', None)
@@ -55,7 +55,7 @@ def tool_handler(limitation=[]):
         args_of_limit_after_hook = (request, response)
         th.run_limits_after(limits_handler, limitation, args_of_limit_after_hook)
 
-        # Tool.objects.increase_uses_count(tool.pk)
+        Tool.objects.increase_uses_count(tool.pk)
 
       return response
     return wrapper
