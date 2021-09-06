@@ -5,9 +5,15 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
 SECRET_KEY = '$e5rh03te^#or+2dvix(9zgnp0*xjya92e3guwni)r30p73x4-'
 
-DEBUG = True
+DEBUG = False
 
-ALLOWED_HOSTS = ['127.0.0.1', 'localhost']
+ALLOWED_HOSTS = [
+  #  '127.0.0.1', 'localhost',
+
+  # linode server
+  '139.162.149.74',
+  'ninja-bag.site'
+]
 
 INSTALLED_APPS = [
   'django.contrib.admin',
