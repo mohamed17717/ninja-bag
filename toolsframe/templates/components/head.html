@@ -5,14 +5,14 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<link rel="stylesheet" href="{% static 'css/tailwind.min.css.css' %}">
-<link rel="stylesheet" href="{% static 'css/style.min.css.css' %}">
-<link rel="stylesheet" href="{% static 'css/loading.min.css.css' %}">
-<link rel="stylesheet" href="{% static 'css/logo.min.css.css' %}">
-<link rel="stylesheet" href="{% static 'css/fa.all.min.css.css' %}">
+<link rel="stylesheet" media="screen" href="{% static 'css/tailwind.min.css.css' %}">
+<link rel="stylesheet" media="screen" href="{% static 'css/style.min.css.css' %}">
+<link rel="stylesheet" media="screen" href="{% static 'css/loading.min.css.css' %}">
+<link rel="stylesheet" media="screen" href="{% static 'css/logo.min.css.css' %}">
+<link rel="stylesheet" media="screen" href="{% static 'css/fa.all.min.css.css' %}">
 
 {% if is_light_mode %}
-<link rel="stylesheet" href="{% static 'css/light-mode.min.css.css' %}">
+<link rel="stylesheet" media="screen" href="{% static 'css/light-mode.min.css.css' %}">
 {% endif %}
 
 <link rel="apple-touch-icon" sizes="57x57" href="{% static 'favicon/apple-icon-57x57.png' %}">
@@ -40,7 +40,7 @@
 </script>
 
 <script src="{% static 'js/main.js' %}" async></script>
+<script src="{% static 'js/alpine-data-functions.js' %}" async></script>
 <script src="https://cdn.jsdelivr.net/gh/alpinejs/alpine@v2.x.x/dist/alpine.min.js" async></script>
-<script src="{% static 'js/alpine-data-functions.js' %}"></script>
 
 <script src="{% static 'js/executeOnload.js' %}" defer></script>
