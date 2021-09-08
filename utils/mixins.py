@@ -27,6 +27,7 @@ def ImageResponse(image:Image) -> HttpResponse:
 def GenerateDefaultContext(request):
   is_authenticated = request.user.is_authenticated
   context = {
+    'request': request,
     'upcoming_tools': UpcomingTool.objects.get_active(),
     'is_limits_active': ToolHandler.is_limits_active,
     'is_authenticated': request.user.is_authenticated,

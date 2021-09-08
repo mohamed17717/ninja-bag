@@ -5,10 +5,10 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<link rel="stylesheet" media="screen" href="{% static 'css/all-style.css' %}">
+<link rel="stylesheet" media="screen" href="{{request.scheme}}://{{request.META.HTTP_HOST}}{% static 'css/all-style.css' %}">
 
 {% if is_light_mode %}
-<link rel="stylesheet" media="screen" href="{% static 'css/light-mode.min.css.css' %}">
+<link rel="stylesheet" media="screen" href="{{request.scheme}}://{{request.META.HTTP_HOST}}{% static 'css/light-mode.min.css.css' %}">
 {% endif %}
 
 <link rel="apple-touch-icon" sizes="57x57" href="{% static 'favicon/apple-icon-57x57.png' %}">
@@ -36,5 +36,5 @@
 </script>
 
 
-<script src="{% static 'js/all-script.js' %}" defer></script>
+<script src="{{request.scheme}}://{{request.META.HTTP_HOST}}{% static 'js/all-script.js' %}" defer></script>
 <script src="https://cdn.jsdelivr.net/gh/alpinejs/alpine@v2.x.x/dist/alpine.min.js" defer></script>
