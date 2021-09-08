@@ -8,10 +8,6 @@ SECRET_KEY = '$e5rh03te^#or+2dvix(9zgnp0*xjya92e3guwni)r30p73x4-'
 DEBUG = False
 
 ALLOWED_HOSTS = [
-  #  '127.0.0.1', 'localhost',
-
-  # linode server
-  '139.162.149.74',
   'ninja-bag.site'
 ]
 
