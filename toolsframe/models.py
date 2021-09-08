@@ -66,7 +66,7 @@ class Tool(models.Model):
     return f'{self.pk}- {self.tool_id} {status}'
 
   def save(self, *args, **kwargs):
-    if not self.pk:
+    if not self.pk and not self.tool_id:
       self.tool_id = slugify(self.name + ' ' + secrets.token_hex(nbytes=4))
     return super(Tool, self).save(*args, **kwargs)
 

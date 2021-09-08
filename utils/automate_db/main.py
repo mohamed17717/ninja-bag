@@ -21,7 +21,8 @@ class ToolDatabaseHandler:
       'description': self.tool.get('description'),
       'app_type': self.tool.get('type'),
       'endpoints': self.tool.get('endpoints'),
-      'login_required': self.tool.get('login_required', False)
+      'login_required': self.tool.get('login_required', False),
+      'tool_id': self.tool.get('tool_id')
     }
 
     tool = Tool.objects.create(**tool_fields)
@@ -53,9 +54,8 @@ class ToolDatabaseHandler:
     return tool
 
   def run(self):
-    is_tool_exist = self.tool.get('tool_id')
-    tool_setup_method = self.update if is_tool_exist else self.create
-    tool_obj = tool_setup_method()
+    try: tool_obj = self.update()
+    except: tool_obj = self.create()
 
     return tool_obj
 
