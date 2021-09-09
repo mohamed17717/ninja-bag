@@ -63,7 +63,7 @@ class Tool(models.Model):
 
   def __str__(self):
     status = emoji.ACTIVE if self.active else emoji.DISABLE
-    return f'{self.pk}- {self.tool_id} {status}'
+    return f'{self.pk}- {self.tool_id} {status}{" | NoImage" if not self.logo else ""}'
 
   def save(self, *args, **kwargs):
     if not self.pk and not self.tool_id:
