@@ -54,10 +54,9 @@ class WebRequestMiddleware(object):
     return response
 
   def save(self, request, response):
+    user = None
     if hasattr(request, 'user'):
-      user = request.user if type(request.user) == User else None
-    else:
-      user = None
+      user = request.user if request.user.is_authenticated else None
 
     meta = request.META.copy()
     meta.pop('QUERY_STRING',None)
