@@ -69,10 +69,11 @@ def set_tools_docs_to_table():
   for name, info in tools.items():
     print(name)
 
-    if info.get('is_changed', True):
-      tool_handler = ToolDatabaseHandler({ **info, 'name': name })
-      tool_obj = tool_handler.run()
-      info.update({ 'tool_id': tool_obj.tool_id, 'is_changed': False  })
+    # if info.get('is_changed', True):
+    tool_handler = ToolDatabaseHandler({ **info, 'name': name })
+    tool_obj = tool_handler.run()
+    # info.update({ 'tool_id': tool_obj.tool_id, 'is_changed': False  })
+    info.update({ 'tool_id': tool_obj.tool_id })
 
     updated_tools.update({ name: info })
 
