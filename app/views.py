@@ -1,7 +1,8 @@
 from django import template
 from django.shortcuts import render_to_response, HttpResponse
-from django.template import RequestContext
 from tools.controller import RequestAnalyzerTools
+
+from utils.mixins import GenerateRequestContext
 
 def error_page(number):
   template_name = 'error-page.html'
@@ -13,7 +14,8 @@ def error_page(number):
     if is_from_api:
       response = HttpResponse(status=number)
     else:
-      response = render_to_response(template_name, {'number': number})
+      context = { 'number': number, **GenerateRequestContext(request) }
+      response = render_to_response(template_name, context)
       response.status_code = number
 
     return response

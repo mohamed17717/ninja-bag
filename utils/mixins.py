@@ -23,19 +23,24 @@ def ImageResponse(image:Image) -> HttpResponse:
 
   return response
 
-
-def GenerateDefaultContext(request):
-  is_authenticated = request.user.is_authenticated
+def GenerateRequestContext(request):
   context = {
     'request': request,
-    'upcoming_tools': UpcomingTool.objects.get_active(),
-    'is_limits_active': ToolHandler.is_limits_active,
     'is_authenticated': request.user.is_authenticated,
-    'suggest_form': SuggestToolForm,
     'is_light_mode': request.COOKIES.get('light-mode', False)
   }
 
-  if is_authenticated:
+  return context
+
+def GenerateDefaultContext(request):
+  context = {
+    **GenerateRequestContext(request),
+    'upcoming_tools': UpcomingTool.objects.get_active(),
+    'is_limits_active': ToolHandler.is_limits_active,
+    'suggest_form': SuggestToolForm,
+  }
+
+  if request.user.is_authenticated:
     user = request.user
     context.update({ 
       'account': user.user_account,

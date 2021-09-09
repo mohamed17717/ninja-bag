@@ -3,9 +3,10 @@ from django.contrib.auth import logout
 from django.contrib import messages
 
 from utils.helpers import Redirector
+from utils.mixins import GenerateRequestContext
 
 def index(request):
-  response = render(request, 'd_login.html', {})
+  response = render(request, 'd_login.html', GenerateRequestContext(request))
   if request.user.is_authenticated:
     response = Redirector.go_home()
 
