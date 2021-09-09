@@ -5,6 +5,10 @@ from toolsframe.models import Tool, UpcomingTool
 from utils.handlers import ToolHandler
 from toolsframe.forms import SuggestToolForm
 from django.core.exceptions import ValidationError
+from io import BytesIO
+import uuid
+from django.core.files import File
+from django.core.files.base import ContentFile
 
 def JsonResponseOverride(data):
   return JsonResponse(data, safe=False, json_dumps_params={'indent': 2})
@@ -49,6 +53,29 @@ def GenerateDefaultContext(request):
 
   return context
 
+
+def OptimizeImageField(image_field, min_dimension):
+  image = Image.open(image_field)
+
+  width, height = image.size
+  new_width = min_dimension
+  new_height = new_width * height / width
+  if new_height < min_dimension:
+    new_height = min_dimension
+    new_width = new_height * width / height
+  size = new_width, new_height
+
+  source_image = image.convert('RGB')
+  source_image.thumbnail(size, Image.ANTIALIAS)  # Resize to size
+  output = BytesIO()
+  source_image.save(output, format='JPEG') # Save resize image to bytes
+  output.seek(0)
+
+  content_file = ContentFile(output.read())  # Read output and create ContentFile in memory
+  img_file = File(content_file)
+
+  random_name = f'{uuid.uuid4()}.jpeg'
+  image_field.save(random_name, img_file, save=False)
 
 class FormSaveMixin(object):
   form_class = None

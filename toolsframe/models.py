@@ -6,6 +6,8 @@ from jsonfield import JSONField
 
 from utils.helpers import dynamic_import
 from utils import emoji
+from utils.mixins import OptimizeImageField
+
 import secrets
 
 from .managers import  (
@@ -35,6 +37,7 @@ class Category(models.Model):
 
 
 class Tool(models.Model):
+  LOGO_MINIMUM_DIMENSION = 170
   # required
   name = models.CharField(max_length=128)
   app_type = models.CharField(max_length=32) # api || web based
@@ -68,6 +71,10 @@ class Tool(models.Model):
   def save(self, *args, **kwargs):
     if not self.pk and not self.tool_id:
       self.tool_id = slugify(self.name + ' ' + secrets.token_hex(nbytes=4))
+
+    if self.logo:
+      OptimizeImageField(self.logo, self.LOGO_MINIMUM_DIMENSION)
+
     return super(Tool, self).save(*args, **kwargs)
 
   def get_absolute_url(self):
