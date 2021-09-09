@@ -110,15 +110,15 @@
     incase its consume too much server's resources which i can't afford, i will
     activate some limits.
     <br />
-    but i hope not to write code for those limits 😄 hope you good time ❤️
+    but i hope not to write code for those limits, hope you good time ❤️
   </div>
   {% endif %}
 </div>
 
-{% if db_tools %}
+{% if db_tools|length > 0 %}
 <div class="upcoming-tools rounded-lg">
   <h2 class="text-2xl capitalize font-bold mb-3 px-5 py-3">
-    Your records in the tools
+    Your Databases
   </h2>
 
   <ul>
@@ -168,7 +168,7 @@
 
   <p class="px-5">
     If you have any idea, or tool you hope that it exist. please send me details
-    about, and may be i added it for you. Thanks 😄
+    about, and may be i added it for you. Thanks ❤️
   </p>
 
   <form
@@ -176,15 +176,6 @@
     class="flex flex-col items-stretch px-5 py-5"
     @submit.prevent="submitToolSuggestion()"
   >
-    <!-- <textarea 
-        x-model="toolDescription" 
-        class="h-24 px-3 py-2 border-0 bg-primary-600" 
-        placeholder="Tool description" 
-        name="tool-suggestion" 
-        x-ref="suggestionTextarea" 
-        x-on:input="textareaAutoGrow()"
-        style="max-height: 390px;"
-      ></textarea> -->
     {{ suggest_form }}
 
     <button

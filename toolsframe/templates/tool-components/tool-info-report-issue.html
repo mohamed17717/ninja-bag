@@ -41,14 +41,6 @@
             x-on:submit.prevent="submitToolReport()"
             class="flex flex-col item-strech"
           >
-            <!-- <textarea 
-              x-model="issueDescription" class="w-full h-32 bg-primary-600 px-3 py-2" 
-              placeholder="Explain..." required
-              x-ref="reportIssueTextarea"
-              x-on:input="textareaAutoGrow()"
-              style="max-height: 60vh;"
-            ></textarea> -->
-
             {{ issue_form.as_p }}
 
             <button
