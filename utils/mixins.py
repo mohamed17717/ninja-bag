@@ -1,58 +1,17 @@
-from django.http import HttpResponse, JsonResponse
+from django.http import HttpResponse
 import json
 from PIL import Image
-# from toolsframe.models import Tool, UpcomingTool
-import toolsframe.models as toolsframe_models
-from utils.handlers import ToolHandler
-from toolsframe.forms import SuggestToolForm
+
 from django.core.exceptions import ValidationError
 from io import BytesIO
 import uuid
 from django.core.files import File
 from django.core.files.base import ContentFile
 
-def JsonResponseOverride(data):
-  return JsonResponse(data, safe=False, json_dumps_params={'indent': 2})
-
 
 def ExtractPostRequestData(request):
   # may be sent from forms of ajax so i extract it either way
   return json.loads(request.body.decode('utf8')) or request.POST
-
-
-def ImageResponse(image:Image) -> HttpResponse:
-  image_type = 'png' if image.mode == 'RGBA' else 'jpeg'
-
-  response = HttpResponse(content_type=f"image/{image_type}")
-  image.save(response, image_type)
-
-  return response
-
-def GenerateRequestContext(request):
-  context = {
-    'request': request,
-    'is_authenticated': request.user.is_authenticated,
-    'is_light_mode': request.COOKIES.get('light-mode', False)
-  }
-
-  return context
-
-def GenerateDefaultContext(request):
-  context = {
-    **GenerateRequestContext(request),
-    'upcoming_tools': toolsframe_models.UpcomingTool.objects.get_active(),
-    'is_limits_active': ToolHandler.is_limits_active,
-    'suggest_form': SuggestToolForm,
-  }
-
-  if request.user.is_authenticated:
-    user = request.user
-    context.update({ 
-      'account': user.user_account,
-      'db_tools': toolsframe_models.Tool.objects.get_tools_that_has_db_for_aside_section(user)
-    })
-
-  return context
 
 
 def OptimizeImageField(image_field, min_dimension):

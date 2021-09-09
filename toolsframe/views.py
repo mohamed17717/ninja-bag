@@ -4,7 +4,8 @@ from django.views import View
 from .models import Tool
 
 from utils.decorators import require_http_methods
-from utils.mixins import GenerateDefaultContext, FormSaveMixin
+from utils.views_mixins import GenerateDefaultContext
+from utils.mixins import FormSaveMixin
 from utils.helpers import Redirector
 
 from .forms import ToolIssueReportForm, SuggestToolForm

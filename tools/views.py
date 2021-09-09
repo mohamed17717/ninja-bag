@@ -6,7 +6,8 @@ from .models import TextSaverModel
 from .controller import RequestAnalyzerTools, ScrapingTools
 from .controller.ImageTools import MyImageHandler
 
-from utils.mixins import JsonResponseOverride, ExtractPostRequestData, ImageResponse
+from utils.views_mixins import JsonResponseOverride, ImageResponse
+from utils.mixins import ExtractPostRequestData
 from utils.decorators import require_http_methods, tool_handler, required_post_fields, function_nickname
 from utils.helpers import FileManager
 

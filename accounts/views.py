@@ -3,7 +3,7 @@ from django.contrib.auth import logout
 from django.contrib import messages
 
 from utils.helpers import Redirector
-from utils.mixins import GenerateRequestContext
+from utils.views_mixins import GenerateRequestContext
 
 def index(request):
   response = render(request, 'd_login.html', GenerateRequestContext(request))

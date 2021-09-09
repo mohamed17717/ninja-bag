@@ -2,7 +2,7 @@ from django import template
 from django.shortcuts import render_to_response, HttpResponse
 from tools.controller import RequestAnalyzerTools
 
-from utils.mixins import GenerateRequestContext
+from utils.views_mixins import GenerateRequestContext
 
 def error_page(number):
   template_name = 'error-page.html'
