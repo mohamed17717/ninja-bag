@@ -6,14 +6,8 @@
   {% include 'components/head.html' %}
 
   <title>Ninja-Bag | Login</title>
-
-  <style>
-    body {
-      background-color: var(--color-primary-900);
-    }
-  </style>
 </head>
-<body>
+<body class="bg-primary-900">
   {% include 'components/loading-page.html' %}
 
   <div id="login-page" class="flex flex-col justify-center items-center relative">
@@ -54,6 +48,10 @@
       </a>
     </div>
   </div>
+
+  <style>
+    body { background-color: var(--color-primary-900); }
+  </style>
 
 </body>
 </html>
