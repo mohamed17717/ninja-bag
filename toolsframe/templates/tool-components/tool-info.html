@@ -15,7 +15,7 @@
 
   <h1 class="text-4xl font-bold">{{ tool.name }}</h1>
 
-  <div class="description text-left mt-8">{{ tool.description }}</div>
+  <div class="description text-left mt-8">{{ tool.description|safe }}</div>
 
   {% include './tool-info-report-issue.html' %}
 </div>

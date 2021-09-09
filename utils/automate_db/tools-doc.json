@@ -431,7 +431,7 @@
     "tool_id": "facebook-user-id-90382721"
   },
   "cors proxy": {
-    "description": "simple proxy give your js in the browser the ability to navigate the web, and avoid cors policy <br><br> Url Example: <b>/cors-proxy/?url=https://google.com/?q=coffee<b>",
+    "description": "simple proxy give your js in the browser the ability to navigate the web, and avoid cors policy <br /><br /> Url Example: <b>/cors-proxy/?url=https://google.com/?q=coffee</b>",
     "category": [
       "developer helper",
       "network",
