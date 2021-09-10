@@ -37,7 +37,7 @@ class WebRequestMiddleware(object):
       new_location = response.get('location',None)
       content_length = response.get('content-length',None)
 
-      if new_location and content_length == '0':
+      if new_location and content_length is '0':
         new_parsed = urlparse(new_location)
 
         old = (('http','https')[request.is_secure()], request.get_host(), '{0}/'.format(request.path), request.META['QUERY_STRING'])
@@ -70,14 +70,14 @@ class WebRequestMiddleware(object):
 
     post = None
     uri = request.build_absolute_uri()
-    if request.POST and uri != '/login/':
+    if request.POST and getattr(request,'hide_post') != True:
       post = dumps(request.POST)
 
     models.WebRequest(
       host = request.get_host(),
       path = request.path,
       method = request.method,
-      uri = request.build_absolute_uri(),
+      uri = uri,
       status_code = response.status_code,
       user_agent = meta.pop('HTTP_USER_AGENT',None),
       remote_addr = meta.pop('REMOTE_ADDR',None),
@@ -85,7 +85,7 @@ class WebRequestMiddleware(object):
       meta = None if not meta else dumps(meta),
       cookies = None if not request.COOKIES else dumps(request.COOKIES),
       get = None if not request.GET else dumps(request.GET),
-      post = None if (not request.POST or getattr(request,'hide_post') == True) else dumps(request.POST),
+      post = post,
       raw_post = None,
       is_secure = request.is_secure(),
       is_ajax = request.is_ajax(),
