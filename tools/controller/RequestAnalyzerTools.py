@@ -31,7 +31,7 @@ def get_proxy_anonymity(request:HttpRequest) -> str:
     # Anonymous
     'HTTP_AUTHORIZATION', 'HTTP_FROM', 'HTTP_PROXY_AUTHORIZATION', 'HTTP_PROXY_CONNECTION', 'HTTP_VIA',
     # transparent
-    'HTTP_X_FORWARDED_FOR'
+    # 'HTTP_X_FORWARDED_FOR'
   ]
 
   proxy_ip = request.META.get('HTTP_X_FORWARDED_FOR', '').split(',')[0]
