@@ -23,7 +23,5 @@ class WebRequest(models.Model):
   is_ajax = models.BooleanField()
   user = models.ForeignKey(User,blank=True,null=True, on_delete=models.DO_NOTHING)
 
-  created = models.DateField(auto_now_add=True)
-
   def __str__(self) -> str:
-    return f'{self.pk} - ({self.method}){self.remote_addr} -> {self.path} -- BY -- ({self.user.username if self.user else "Anonymous"})'
+    return f'{self.pk} - ({self.method}){self.remote_addr} -> {self.path} -- BY -- ({self.user.username if self.user else "Anonymous"}) --> {self.time}'
