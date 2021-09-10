@@ -35,7 +35,7 @@ def tool_handler(limitation=[]):
 
     def wrapper(request, *args, **kwargs):
       # make sure tool is active
-      if not tool.active:
+      if not tool or not tool.active:
         raise PermissionDenied('You can\'t access this tool.' )
 
       # make sure tool accessable by this user (limits and token)
