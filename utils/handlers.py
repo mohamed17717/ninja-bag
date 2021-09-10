@@ -1,4 +1,5 @@
 from django.http import HttpResponseBadRequest
+from django.conf import settings
 
 class Limit:
   def __init__(self, acc):
@@ -60,10 +61,13 @@ class ToolHandler:
       limit_handler.after(*args)
 
   def run_func(self, func, request, *args, **kwargs):
-    try:
+    if settings.DEBUG:
       response = func(request, *args, **kwargs)
-    except Exception as e:
-      response = HttpResponseBadRequest('unexpected error happened.')
+    else:
+      try:
+        response = func(request, *args, **kwargs)
+      except Exception as e:
+        response = HttpResponseBadRequest('unexpected error happened.')
     
     return response
 
