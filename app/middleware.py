@@ -67,6 +67,7 @@ class WebRequestMiddleware(object):
       remote_addr_fwd = meta['HTTP_X_FORWARDED_FOR'].split(",")[0].strip()
       if remote_addr_fwd == meta['HTTP_X_FORWARDED_FOR']:
         meta.pop('HTTP_X_FORWARDED_FOR')
+    remote_addr = meta.pop('REMOTE_ADDR', None) or meta.pop('HTTP_X_REAL_IP', None) or remote_addr_fwd
 
     post = None
     uri = request.build_absolute_uri()
@@ -80,7 +81,7 @@ class WebRequestMiddleware(object):
       uri = uri,
       status_code = response.status_code,
       user_agent = meta.pop('HTTP_USER_AGENT',None),
-      remote_addr = meta.pop('REMOTE_ADDR',None),
+      remote_addr = remote_addr,
       remote_addr_fwd = remote_addr_fwd,
       meta = None if not meta else dumps(meta),
       cookies = None if not request.COOKIES else dumps(request.COOKIES),
