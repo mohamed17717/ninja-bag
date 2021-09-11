@@ -11,6 +11,10 @@
   {% include 'components/loading-page.html' %}
 
   <div id="login-page" class="flex flex-col justify-center items-center relative">
+    <a href="{% url 'toolsframe:homepage' %}" title="Homepage">
+      <i class="fas fa-arrow-left text-primary-100 text-3xl absolute top-10 left-10"></i>
+    </a>
+
     <div class="login-form py-12 px-10 mx-auto rounded-lg">
       <a href="{% url 'toolsframe:homepage' %}" class="logo inline-block" title="Homepage">
         <div class="logo flex justify-center items-center flex-col">
