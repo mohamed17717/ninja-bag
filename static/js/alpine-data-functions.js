@@ -299,3 +299,18 @@ function getFooterData() {
     },
   };
 }
+
+function ToolDatabaseRecordsData() {
+  return {
+    confirmDelete (e) {
+      const href = e.target.href
+      if(confirm('Do you really wanna delete this file ? you will lose it forever.'))
+        window.location.href = href
+    },
+
+    copyFileName(fileName) {
+      copyToClipboard(fileName)
+      notify('Copied', 'success')
+    }
+  }
+}

@@ -89,15 +89,26 @@
               tool database records
             </h2>
 
-            <ul class="no-select">
+            <ul class="no-select" x-data="ToolDatabaseRecordsData()">
               {% for record in db_records %}
               <li class="flex justify-between border-b-2 pb-1 mb-2">
                 <a href="{{ record.get_absolute_url_read }}">
                   {{ record.file_name }}
                 </a>
-                <a
-                  class="text-sm font-bold text-primary-200 capitalize"
-                  href="{{ record.get_absolute_url_delete }}">delete</a>
+
+                <div class="actions">
+                  <a
+                    class="text-sm font-bold text-primary-200 capitalize mr-2"
+                    href="{{ record.get_absolute_url_delete }}"
+                    x-on:click.prevent="confirmDelete($event)"
+                  >delete</a>
+
+                  <a
+                    class="text-sm font-bold text-primary-200 capitalize"
+                    href="#"
+                    x-on:click.prevent="copyFileName('{{ record.file_name }}')"
+                  >copy name</a>
+                </div>
               </li>
               {% endfor %}
             </ul>
