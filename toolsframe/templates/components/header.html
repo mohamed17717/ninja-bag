@@ -1,6 +1,6 @@
 <header class="flex justify-between items-center relative">
   <div></div>
-  <a href="{% url 'toolsframe:homepage' %}" class="logo">
+  <a href="{% url 'toolsframe:homepage' %}" class="logo" title="Homepage">
     {% include 'components/logo.html' %}
   </a>
   <div class="w-0 relative">
@@ -12,6 +12,7 @@
         <a
           class="px-3 py-1 capitalize font-bold hover:underline mr-2"
           href="{% url 'toolsframe:homepage' %}"
+          title="Homepage"
           >home</a
         >
       </li>
@@ -19,6 +20,7 @@
         <a
           class="px-3 py-1 capitalize font-bold hover:underline mr-2 whitespace-nowrap hidden md:block"
           href="{% url 'toolsframe:toggle-color' %}"
+          title="change color mode"
           >toggle-color</a
         >
       </li>
@@ -28,6 +30,7 @@
         <a
           class="px-3 py-1 capitalize font-bold hover:underline"
           href="{% url 'accounts:logout' %}"
+          title="Logout"
           >logout</a
         >
       </li>
@@ -36,6 +39,7 @@
         <a
           class="px-3 py-1 capitalize font-bold hover:underline"
           href="{% url 'accounts:login-page' %}"
+          title="Login"
           >login</a
         >
       </li>

@@ -12,7 +12,7 @@
 
   <div id="login-page" class="flex flex-col justify-center items-center relative">
     <div class="login-form py-12 px-10 mx-auto rounded-lg">
-      <a href="{% url 'toolsframe:homepage' %}" class="logo inline-block">
+      <a href="{% url 'toolsframe:homepage' %}" class="logo inline-block" title="Homepage">
         <div class="logo flex justify-center items-center flex-col">
           <div class="ninja bg-primary-100">
             <div class="eyes bg-primary-600 w-full flex justify-around items-center">
@@ -34,6 +34,7 @@
       <a 
         class="btn font-bold w-full py-4 flex items-center justify-center rounded-lg mb-8"
         href="{% url 'social:begin' 'github' %}"
+        title="login with github"
       >
         <i class="fab fa-github text-2xl mr-4"></i>
         <span>Log in with GitHub</span>
@@ -42,6 +43,7 @@
       <a 
         class="btn font-bold w-full py-4 flex items-center justify-center rounded-lg"
         href="{% url 'social:begin' 'google-oauth2' %}"
+        title="login with google"
       >
         <i class="fab fa-google text-2xl mr-4"></i>
         <span>Log in with Google</span>

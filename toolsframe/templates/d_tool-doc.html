@@ -92,14 +92,12 @@
             <ul class="no-select">
               {% for record in db_records %}
               <li class="flex justify-between border-b-2 pb-1 mb-2">
-                <a href="{{ record.get_absolute_url_read }}"
-                  >{{ record.file_name }}</a
-                >
+                <a href="{{ record.get_absolute_url_read }}">
+                  {{ record.file_name }}
+                </a>
                 <a
                   class="text-sm font-bold text-primary-200 capitalize"
-                  href="{{ record.get_absolute_url_delete }}"
-                  >delete</a
-                >
+                  href="{{ record.get_absolute_url_delete }}">delete</a>
               </li>
               {% endfor %}
             </ul>
