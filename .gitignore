@@ -115,3 +115,24 @@ media/
 **/migrations/**
 !**/migrations
 !**/migrations/__init__.py
+
+
+# css
+static/css/fa.all.css
+static/css/fa.all.min.css
+static/css/fa.all.min.css.css
+static/css/light-mode.css
+static/css/light-mode.min.css
+static/css/light-mode.min.css.css
+static/css/loading.css
+static/css/loading.min.css
+static/css/loading.min.css.css
+static/css/logo.css
+static/css/logo.min.css
+static/css/logo.min.css.css
+static/css/style.css
+static/css/style.min.css
+static/css/style.min.css.css
+static/css/tailwind.css
+static/css/tailwind.min.css
+static/css/tailwind.min.css.css
