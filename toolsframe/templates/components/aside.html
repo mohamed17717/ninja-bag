@@ -86,7 +86,9 @@
     You can add token to your request just by pass it throw url
     "token=&lt;value&gt;"
   </div>
-  {% endif %} {% if is_limits_active %}
+  {% endif %}
+
+  {% if is_limits_active %}
   <div class="note px-5 py-3">
     <span
       class="font-bold text-xs px-2 py-1 inline-block text-button-text uppercase"
@@ -108,7 +110,7 @@
   {% endif %}
 </div>
 
-{% if db_tools|length > 0 %}
+{% if db_tools %}
 <div class="upcoming-tools rounded-lg">
   <h2 class="text-2xl capitalize font-bold mb-3 px-5 py-3">
     Your Databases
