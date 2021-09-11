@@ -10,7 +10,8 @@ def GenerateRequestContext(request):
   context = {
     'request': request,
     'is_authenticated': request.user.is_authenticated,
-    'is_light_mode': request.COOKIES.get('light-mode', False)
+    'is_light_mode': request.COOKIES.get('light-mode', False),
+    'previous_url': request.META.get('HTTP_REFERER', '/')
   }
 
   return context

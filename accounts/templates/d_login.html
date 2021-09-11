@@ -11,7 +11,7 @@
   {% include 'components/loading-page.html' %}
 
   <div id="login-page" class="flex flex-col justify-center items-center relative">
-    <a href="{% url 'toolsframe:homepage' %}" title="Homepage">
+    <a href="{{ previous_url }}" title="Go back">
       <i class="fas fa-arrow-left text-primary-100 text-3xl absolute top-10 left-10"></i>
     </a>
 
