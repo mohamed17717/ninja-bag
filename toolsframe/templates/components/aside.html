@@ -136,7 +136,7 @@
 
         <div>
           <h3 class="text-xl font-bold mb-2">{{ db_tool.name }}</h3>
-          <p class="">{{ db_tool.description }}</p>
+          <p class="">{{ db_tool.description|safe|truncatechars:100 }}</p>
         </div>
       </a>
     </li>
