@@ -1,4 +1,3 @@
-from django.shortcuts import redirect
 from django.http import HttpResponse, HttpResponseBadRequest
 
 from accounts.models import Account
@@ -9,7 +8,7 @@ from .controller.ImageTools import MyImageHandler
 from utils.views_mixins import JsonResponseOverride, ImageResponse
 from utils.mixins import ExtractPostRequestData
 from utils.decorators import require_http_methods, tool_handler, required_post_fields, function_nickname
-from utils.helpers import FileManager
+from utils.helpers import FileManager, Redirector
 
 
 #--------------------- start RequestAnalyzer tools ---------------------#
@@ -189,7 +188,11 @@ class TextSaverView:
   def add(request, file_name=None):
     # get account
     acc = Account.objects.get_user_acc_from_api_or_web(request, required=True)
-    text = request.body.decode('utf8')
+
+    text = request.data
+    if request.POST:
+      # it a form
+      text = '&'.join(['='.join(map(str, item)) for item in request.POST.dict().items()])
 
     file_path = TextSaverModel.add(acc, text, file_name)
     file_full_url = request.build_absolute_uri(file_path)
@@ -234,7 +237,7 @@ class TextSaverView:
 
     response = HttpResponse() if delete_status else HttpResponseBadRequest('file is not exist') 
     if request.user:
-      response = redirect(request.META.get('HTTP_REFERER', '/'))
+      response = Redirector.go_previous_page(request)
     return response
 
   @classmethod
@@ -246,3 +249,32 @@ class TextSaverView:
     }
 
     return views.get(request.method)(request, file_name)
+
+  @staticmethod
+  @require_http_methods(['POST'])
+  @required_post_fields(['line'])
+  @function_nickname('text_saver_add')
+  def check_line_exist(request, file_name):
+    acc = Account.objects.get_user_acc_from_api_or_web(request, required=True)
+
+    try:
+      location = TextSaverModel.read(acc, file_name)
+      lines = FileManager.read(location).split('\n')
+    except:
+      return HttpResponse('Please make sure file name is exist.', status=400)
+
+    post_data = ExtractPostRequestData(request)
+    line = post_data.get('line', 'None')
+
+    exists = False
+    for file_line in lines:
+      if file_line.startswith(line):
+        exists = True
+        break
+
+    response = HttpResponse('Not Found', status=404)
+    if exists:
+      response = HttpResponse('Found', status=200)
+
+    return response 
+

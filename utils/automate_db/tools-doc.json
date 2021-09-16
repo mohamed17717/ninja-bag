@@ -5,10 +5,12 @@
       "how server see you",
       "network"
     ],
-    "endpoints": [{
-      "url": "/get-my-ip/",
-      "method": "GET"
-    }],
+    "endpoints": [
+      {
+        "url": "/get-my-ip/",
+        "method": "GET"
+      }
+    ],
     "type": "api",
     "tool_id": "what-is-my-ip-fd1c6285"
   },
@@ -18,10 +20,12 @@
       "how server see you",
       "network"
     ],
-    "endpoints": [{
-      "url": "/get-my-proxy-anonymity/",
-      "method": "GET"
-    }],
+    "endpoints": [
+      {
+        "url": "/get-my-proxy-anonymity/",
+        "method": "GET"
+      }
+    ],
     "type": "api",
     "tool_id": "proxy-anonymeter-2c9405b6"
   },
@@ -31,10 +35,12 @@
       "how server see you",
       "network"
     ],
-    "endpoints": [{
-      "url": "/get-my-request-headers/",
-      "method": "ANY"
-    }],
+    "endpoints": [
+      {
+        "url": "/get-my-request-headers/",
+        "method": "ANY"
+      }
+    ],
     "type": "api",
     "tool_id": "request-headers-61ef8edf"
   },
@@ -44,10 +50,12 @@
       "how server see you",
       "network"
     ],
-    "endpoints": [{
-      "url": "/analyze-my-machine/",
-      "method": "GET"
-    }],
+    "endpoints": [
+      {
+        "url": "/analyze-my-machine/",
+        "method": "GET"
+      }
+    ],
     "type": "api",
     "tool_id": "my-machine-analyzer-c7d9f145"
   },
@@ -57,20 +65,24 @@
       "how server see you",
       "network"
     ],
-    "endpoints": [{
-      "url": "/analyze-user-agent/",
-      "method": "POST",
-      "dataType": "json",
-      "params": {
-        "POST": [{
-          "name": "user-agent",
-          "default": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/74.0.3729.169 Safari/537.36",
-          "required": true,
-          "type": "text",
-          "description": "The user-agent you want to analyze"
-        }]
+    "endpoints": [
+      {
+        "url": "/analyze-user-agent/",
+        "method": "POST",
+        "dataType": "json",
+        "params": {
+          "POST": [
+            {
+              "name": "user-agent",
+              "default": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/74.0.3729.169 Safari/537.36",
+              "required": true,
+              "type": "text",
+              "description": "The user-agent you want to analyze"
+            }
+          ]
+        }
       }
-    }],
+    ],
     "type": "api",
     "tool_id": "user-agent-analyzer-283c7f0c"
   },
@@ -81,18 +93,21 @@
       "image",
       "frontend helper"
     ],
-    "endpoints": [{
+    "endpoints": [
+      {
         "url": "/get-image-placeholder/{size}/",
         "description": "return a square image with a specific size and a random color",
         "method": "GET",
         "params": {
-          "URL": [{
-            "name": "size",
-            "default": 300,
-            "required": true,
-            "type": "number",
-            "description": "the size of the image's dimensions in px"
-          }]
+          "URL": [
+            {
+              "name": "size",
+              "default": 300,
+              "required": true,
+              "type": "number",
+              "description": "the size of the image's dimensions in px"
+            }
+          ]
         }
       },
       {
@@ -100,7 +115,8 @@
         "description": "return a square image with a specific width and color",
         "method": "GET",
         "params": {
-          "URL": [{
+          "URL": [
+            {
               "name": "size",
               "default": 300,
               "required": true,
@@ -122,7 +138,8 @@
         "description": "return an image with specific width and height and random color",
         "method": "GET",
         "params": {
-          "URL": [{
+          "URL": [
+            {
               "name": "width",
               "default": 300,
               "required": true,
@@ -144,7 +161,8 @@
         "description": "return an image with specific width, height and color",
         "method": "GET",
         "params": {
-          "URL": [{
+          "URL": [
+            {
               "name": "width",
               "default": 300,
               "required": true,
@@ -179,12 +197,14 @@
       "image",
       "frontend helper"
     ],
-    "endpoints": [{
+    "endpoints": [
+      {
         "url": "/username-to-profile-pic/{size}/{username}/",
         "method": "GET",
         "description": "generate profile picture with specific size and random color using user's first letters",
         "params": {
-          "URL": [{
+          "URL": [
+            {
               "name": "size",
               "default": 300,
               "required": true,
@@ -206,7 +226,8 @@
         "method": "GET",
         "description": "generate profile picture with specific size and color using user's first letters",
         "params": {
-          "URL": [{
+          "URL": [
+            {
               "name": "size",
               "default": 300,
               "required": true,
@@ -241,28 +262,31 @@
       "image",
       "frontend helper"
     ],
-    "endpoints": [{
-      "url": "/image-to-thumbnail/",
-      "method": "POST",
-      "dataType": "form",
-      "params": {
-        "POST": [{
-            "name": "image",
-            "required": true,
-            "type": "file",
-            "accept": "accept='image/png, image/jpeg'",
-            "description": "The image you want to convert to thumbnail"
-          },
-          {
-            "name": "width",
-            "default": 128,
-            "required": false,
-            "type": "number",
-            "description": "The width needed for the image -- (height is computed dynamically to maintain the scale)"
-          }
-        ]
+    "endpoints": [
+      {
+        "url": "/image-to-thumbnail/",
+        "method": "POST",
+        "dataType": "form",
+        "params": {
+          "POST": [
+            {
+              "name": "image",
+              "required": true,
+              "type": "file",
+              "accept": "accept='image/png, image/jpeg'",
+              "description": "The image you want to convert to thumbnail"
+            },
+            {
+              "name": "width",
+              "default": 128,
+              "required": false,
+              "type": "number",
+              "description": "The width needed for the image -- (height is computed dynamically to maintain the scale)"
+            }
+          ]
+        }
       }
-    }],
+    ],
     "type": "api",
     "tool_id": "thumbnail-generator-3d46d981"
   },
@@ -272,20 +296,24 @@
       "developer helper",
       "image"
     ],
-    "endpoints": [{
-      "url": "/remove-image-meta-data/",
-      "method": "POST",
-      "dataType": "form",
-      "params": {
-        "POST": [{
-          "name": "image",
-          "required": true,
-          "type": "file",
-          "accept": "accept='image/png, image/jpeg'",
-          "description": "The image you want to convert to clean from meta data"
-        }]
+    "endpoints": [
+      {
+        "url": "/remove-image-meta-data/",
+        "method": "POST",
+        "dataType": "form",
+        "params": {
+          "POST": [
+            {
+              "name": "image",
+              "required": true,
+              "type": "file",
+              "accept": "accept='image/png, image/jpeg'",
+              "description": "The image you want to convert to clean from meta data"
+            }
+          ]
+        }
       }
-    }],
+    ],
     "type": "api",
     "tool_id": "image-meta-cleaner-b4f8ebe7"
   },
@@ -296,19 +324,22 @@
       "image",
       "encode"
     ],
-    "endpoints": [{
+    "endpoints": [
+      {
         "url": "/image-to-b64/",
         "method": "POST",
         "description": "Convert any image to base64 encode",
         "dataType": "form",
         "params": {
-          "POST": [{
-            "name": "image",
-            "required": true,
-            "type": "file",
-            "accept": "accept='image/png, image/jpeg'",
-            "description": "The image you want to convert to encode to base64"
-          }]
+          "POST": [
+            {
+              "name": "image",
+              "required": true,
+              "type": "file",
+              "accept": "accept='image/png, image/jpeg'",
+              "description": "The image you want to convert to encode to base64"
+            }
+          ]
         }
       },
       {
@@ -317,13 +348,15 @@
         "description": "Decode any base64 image to the jpg version of it",
         "dataType": "json",
         "params": {
-          "POST": [{
-            "name": "image",
-            "default": "",
-            "required": true,
-            "type": "text",
-            "description": "Base64 string you wanna to convert to the jpg image"
-          }]
+          "POST": [
+            {
+              "name": "image",
+              "default": "",
+              "required": true,
+              "type": "text",
+              "description": "Base64 string you wanna to convert to the jpg image"
+            }
+          ]
         }
       }
     ],
@@ -336,20 +369,24 @@
       "image",
       "encode"
     ],
-    "endpoints": [{
-      "url": "/gen-qrcode/",
-      "method": "POST",
-      "dataType": "json",
-      "params": {
-        "POST": [{
-          "name": "text",
-          "default": "lorem ipsum text example",
-          "required": true,
-          "type": "text",
-          "description": "The text you want to encode into qr-code"
-        }]
+    "endpoints": [
+      {
+        "url": "/gen-qrcode/",
+        "method": "POST",
+        "dataType": "json",
+        "params": {
+          "POST": [
+            {
+              "name": "text",
+              "default": "lorem ipsum text example",
+              "required": true,
+              "type": "text",
+              "description": "The text you want to encode into qr-code"
+            }
+          ]
+        }
       }
-    }],
+    ],
     "type": "api",
     "tool_id": "qr-code-generator-71dcb25b"
   },
@@ -360,20 +397,24 @@
       "social",
       "scraping"
     ],
-    "endpoints": [{
-      "url": "/fb-user-id/",
-      "method": "POST",
-      "dataType": "json",
-      "params": {
-        "POST": [{
-          "name": "url",
-          "default": "https://fb.com/mohamed17717/",
-          "required": true,
-          "type": "text",
-          "description": "profile url"
-        }]
+    "endpoints": [
+      {
+        "url": "/fb-user-id/",
+        "method": "POST",
+        "dataType": "json",
+        "params": {
+          "POST": [
+            {
+              "name": "url",
+              "default": "https://fb.com/mohamed17717/",
+              "required": true,
+              "type": "text",
+              "description": "profile url"
+            }
+          ]
+        }
       }
-    }],
+    ],
     "type": "api",
     "tool_id": "facebook-user-id-90382721"
   },
@@ -384,21 +425,25 @@
       "network",
       "scraping"
     ],
-    "endpoints": [{
-      "url": "/cors-proxy/",
-      "method": "ANY",
-      "description": "like a proxy it will simulate the request you sent (header/body) on the url you set, then simulate the response back to you",
-      "stop_http_testing": true,
-      "params": {
-        "GET": [{
-          "name": "url",
-          "default": "https://google.com",
-          "required": true,
-          "type": "text",
-          "description": "url you wanna navigate"
-        }]
+    "endpoints": [
+      {
+        "url": "/cors-proxy/",
+        "method": "ANY",
+        "description": "like a proxy it will simulate the request you sent (header/body) on the url you set, then simulate the response back to you",
+        "stop_http_testing": true,
+        "params": {
+          "GET": [
+            {
+              "name": "url",
+              "default": "https://google.com",
+              "required": true,
+              "type": "text",
+              "description": "url you wanna navigate"
+            }
+          ]
+        }
       }
-    }],
+    ],
     "type": "api",
     "tool_id": "cors-proxy-02b8fb50"
   },
@@ -407,19 +452,22 @@
     "category": [
       "network"
     ],
-    "endpoints": [{
+    "endpoints": [
+      {
         "url": "/unshorten-url/",
         "method": "POST",
         "description": "unpack the url and return the last destination",
         "dataType": "json",
         "params": {
-          "POST": [{
-            "name": "url",
-            "default": "https://bit.ly/3i4L5Uk",
-            "required": true,
-            "type": "text",
-            "description": "shorten url you wanna to unshorten it"
-          }]
+          "POST": [
+            {
+              "name": "url",
+              "default": "https://bit.ly/3i4L5Uk",
+              "required": true,
+              "type": "text",
+              "description": "shorten url you wanna to unshorten it"
+            }
+          ]
         }
       },
       {
@@ -428,13 +476,15 @@
         "description": "unpack the url and return the all redirects till the destination",
         "dataType": "json",
         "params": {
-          "POST": [{
-            "name": "url",
-            "default": "https://bit.ly/3i4L5Uk",
-            "required": true,
-            "type": "text",
-            "description": "shorten url you wanna to unshorten it"
-          }]
+          "POST": [
+            {
+              "name": "url",
+              "default": "https://bit.ly/3i4L5Uk",
+              "required": true,
+              "type": "text",
+              "description": "shorten url you wanna to unshorten it"
+            }
+          ]
         }
       }
     ],
@@ -448,7 +498,8 @@
       "frontend helper",
       "store"
     ],
-    "endpoints": [{
+    "endpoints": [
+      {
         "url": "/save-text/",
         "method": "POST",
         "description": "save any text post to this endpoint in your request body.<br>it creates file with random name, and return the full path to that file",
@@ -462,13 +513,15 @@
         "dataType": "text",
         "defaultText": "Try to post that example text.",
         "params": {
-          "URL": [{
-            "name": "filename",
-            "default": "default_file.txt",
-            "required": true,
-            "type": "text",
-            "description": "the name of a file you want to create|update"
-          }]
+          "URL": [
+            {
+              "name": "filename",
+              "default": "default_file.txt",
+              "required": true,
+              "type": "text",
+              "description": "the name of a file you want to create|update"
+            }
+          ]
         }
       },
       {
@@ -476,13 +529,15 @@
         "method": "GET",
         "description": "delete the unwanted file, using ite name",
         "params": {
-          "URL": [{
-            "name": "filename",
-            "default": "default_file.txt",
-            "required": true,
-            "type": "text",
-            "description": "the name of a file you want to delete"
-          }]
+          "URL": [
+            {
+              "name": "filename",
+              "default": "default_file.txt",
+              "required": true,
+              "type": "text",
+              "description": "the name of a file you want to delete"
+            }
+          ]
         }
       },
       {
@@ -490,13 +545,15 @@
         "method": "DELETE",
         "description": "delete the unwanted file, using ite name",
         "params": {
-          "URL": [{
-            "name": "filename",
-            "default": "default_file.txt",
-            "required": true,
-            "type": "text",
-            "description": "the name of a file you want to delete"
-          }]
+          "URL": [
+            {
+              "name": "filename",
+              "default": "default_file.txt",
+              "required": true,
+              "type": "text",
+              "description": "the name of a file you want to delete"
+            }
+          ]
         }
       },
       {
@@ -504,13 +561,15 @@
         "method": "DELETE",
         "description": "delete the unwanted file, using ite name",
         "params": {
-          "URL": [{
-            "name": "filename",
-            "default": "default_file.txt",
-            "required": true,
-            "type": "text",
-            "description": "the name of a file you want to delete"
-          }]
+          "URL": [
+            {
+              "name": "filename",
+              "default": "default_file.txt",
+              "required": true,
+              "type": "text",
+              "description": "the name of a file you want to delete"
+            }
+          ]
         }
       },
       {
@@ -518,13 +577,15 @@
         "method": "GET",
         "description": "read your file saved content",
         "params": {
-          "URL": [{
-            "name": "filename",
-            "default": "default_file.txt",
-            "required": true,
-            "type": "text",
-            "description": "the name of a file you want to read"
-          }]
+          "URL": [
+            {
+              "name": "filename",
+              "default": "default_file.txt",
+              "required": true,
+              "type": "text",
+              "description": "the name of a file you want to read"
+            }
+          ]
         }
       },
       {
@@ -532,13 +593,15 @@
         "method": "GET",
         "description": "read file and return its content as a text",
         "params": {
-          "URL": [{
-            "name": "filename",
-            "default": "default_file.txt",
-            "required": true,
-            "type": "text",
-            "description": "the name of a file you want to read"
-          }]
+          "URL": [
+            {
+              "name": "filename",
+              "default": "default_file.txt",
+              "required": true,
+              "type": "text",
+              "description": "the name of a file you want to read"
+            }
+          ]
         }
       },
       {
@@ -546,13 +609,41 @@
         "method": "GET",
         "description": "read your file saved content",
         "params": {
-          "URL": [{
-            "name": "filename",
-            "default": "default_file.txt",
-            "required": true,
-            "type": "text",
-            "description": "the name of a file you want to read"
-          }]
+          "URL": [
+            {
+              "name": "filename",
+              "default": "default_file.txt",
+              "required": true,
+              "type": "text",
+              "description": "the name of a file you want to read"
+            }
+          ]
+        }
+      },
+      {
+        "url": "/save-text/check-line-exist/{filename}/",
+        "method": "POST",
+        "description": "Check if there is a line in file <b>starts with</b> your text <br> it may used to check a record set from your form, etc...",
+        "dataType": "json",
+        "params": {
+          "URL": [
+            {
+              "name": "filename",
+              "default": "default_file.txt",
+              "required": true,
+              "type": "text",
+              "description": "the name of a file you want to create|update"
+            }
+          ],
+          "POST": [
+            {
+              "name": "line",
+              "default": "check this line",
+              "required": true,
+              "type": "text",
+              "description": "line you want to check inside the file, if any line start with it"
+            }
+          ]
         }
       }
     ],
