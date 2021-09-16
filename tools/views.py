@@ -259,22 +259,17 @@ class TextSaverView:
 
     try:
       location = TextSaverModel.read(acc, file_name)
-      lines = FileManager.read(location).split('\n')
     except:
       return HttpResponse('Please make sure file name is exist.', status=400)
 
+    lines = FileManager.read(location).split('\n')
+
     post_data = ExtractPostRequestData(request)
-    line = post_data.get('line', 'None')
+    line = post_data.get('line')
 
-    exists = False
     for file_line in lines:
-      if file_line.startswith(line):
-        exists = True
-        break
+      if line and file_line.startswith(line):
+        return HttpResponse('Found', status=200)
 
-    response = HttpResponse('Not Found', status=404)
-    if exists:
-      response = HttpResponse('Found', status=200)
-
-    return response 
+    return HttpResponse(f'Not Found', status=404)
 

@@ -1,5 +1,6 @@
 from django.shortcuts import redirect
 import json, os, hashlib
+import unicodedata
 
 
 class Redirector:
@@ -40,6 +41,7 @@ class FileManager:
     if to_json == None and location.endswith('.json'):
       to_json = True
 
+    data = unicodedata.normalize("NFKD", data)
     if to_json:
       data = json.loads(data)
     elif lines:
@@ -74,6 +76,7 @@ class FileManager:
       location = '/'.join(_dir)
 
     encoding = None if is_binary else 'utf8'
+    data = unicodedata.normalize("NFKD", data)
     with open(location, mode, encoding=encoding) as f:
       f.write(data)
 
