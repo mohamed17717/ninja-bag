@@ -15,6 +15,21 @@ User = get_user_model()
 def dumps(value):
   return json.dumps(value,default=lambda o:None)
 
+class RequestBodyToDataMiddleware(object):
+  def __init__(self, get_response):
+    self.get_response = get_response
+
+  def __call__(self, request):
+    return self.get_response(request)
+
+  def process_view(self, request, view_func, view_args, view_kwargs):
+    if not hasattr(request, 'data'):
+      request_body = request.body
+      try: request_body = request_body.decode('utf8')
+      except: pass
+
+      setattr(request,'data', request_body)
+
 class WebRequestMiddleware(object):
   def process_view(self, request, view_func, view_args, view_kwargs):
     setattr(request,'hide_post',view_kwargs.pop('hide_post',False))
@@ -92,3 +107,4 @@ class WebRequestMiddleware(object):
       is_ajax = request.is_ajax(),
       user = user
     ).save()
+

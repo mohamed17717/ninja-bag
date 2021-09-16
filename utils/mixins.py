@@ -11,7 +11,13 @@ from django.core.files.base import ContentFile
 
 def ExtractPostRequestData(request):
   # may be sent from forms of ajax so i extract it either way
-  return json.loads(request.body.decode('utf8')) or request.POST
+  try:
+    body = json.loads(request.data)
+  except:
+    body = None
+
+  data = body or request.POST
+  return data
 
 
 def OptimizeImageField(image_field, min_dimension):

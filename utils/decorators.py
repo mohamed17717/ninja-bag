@@ -70,8 +70,8 @@ def required_post_fields(required_fields=[]):
       fields.update(request.POST.dict())
       fields.update(request.FILES.dict())
 
-      try: 
-        request_body = json.loads(request.body.decode('utf8'))
+      try:
+        request_body = json.loads(request.data)
         fields.update(request_body)
       except: pass
 

@@ -8,6 +8,7 @@ SECRET_KEY = '$e5rh03te^#or+2dvix(9zgnp0*xjya92e3guwni)r30p73x4-'
 DEBUG = False
 
 ALLOWED_HOSTS = [
+  # '127.0.0.1',
   'ninja-bag.site'
 ]
 
@@ -46,6 +47,7 @@ MIDDLEWARE = [
 
   'social_django.middleware.SocialAuthExceptionMiddleware',
   'app.middleware.WebRequestMiddleware',
+  'app.middleware.RequestBodyToDataMiddleware',
   'debug_toolbar.middleware.DebugToolbarMiddleware'
 ]
 

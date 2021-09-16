@@ -37,10 +37,12 @@ class CorsProxy:
     self.request = request
 
   def __get_body(self):
-    body = self.request.body.decode('utf8')
+    body = self.request.data
   
-    try: body = json.loads(body)
-    except: pass
+    try:
+      body = json.loads(body)
+    except:
+      pass
 
     return body
 

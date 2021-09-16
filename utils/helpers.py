@@ -134,7 +134,7 @@ class SizeCalculator:
     return size
 
   def get_request_size(self, request, unit):
-    size = len(request.body)
+    size = len(request.data)
     return self.convert_size(size, unit)
 
   def get_response_size(self, response, unit):
