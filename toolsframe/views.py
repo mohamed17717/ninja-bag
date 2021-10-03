@@ -54,6 +54,8 @@ class SuggestTool(FormSaveMixin, View):
     if request.user.is_authenticated:
       obj.user = request.user
     return obj
+
+
 class ReportToolIssue(FormSaveMixin, View):
   form_class = ToolIssueReportForm
 

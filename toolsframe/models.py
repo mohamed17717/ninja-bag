@@ -41,7 +41,7 @@ class Tool(models.Model):
   # required
   name = models.CharField(max_length=128)
   app_type = models.CharField(max_length=32) # api || web based
-  tool_id = models.CharField(max_length=128, unique=True, editable=False, blank=True) # generated 32 char
+  tool_id = models.CharField(max_length=128, unique=True, editable=False, blank=True, db_index=True)
   logo = models.ImageField(upload_to='tool_logo', blank=True, null=True)
   description = models.TextField(blank=True, null=True) # SEO && after title
   url_reverser = models.CharField(max_length=64, default='toolsframe:tool') # 'app_name:home'
@@ -50,7 +50,7 @@ class Tool(models.Model):
   category = models.ManyToManyField(Category, related_name='category_tools')
 
   login_required = models.BooleanField(default=False)
-  active = models.BooleanField(default=True)
+  active = models.BooleanField(default=True, db_index=True)
 
   uses_count = models.IntegerField(default=0)
   views_count = models.IntegerField(default=0)
@@ -114,6 +114,11 @@ class UpcomingTool(models.Model):
   updated = models.DateField(auto_now=True)
 
   objects = UpcomingToolManager()
+
+  class Meta:
+    indexes = [
+      models.Index(fields=['active'], name='upcoming_active_idx')
+    ]
 
   def __str__(self):
     status = emoji.ACTIVE if self.active else emoji.DISABLE

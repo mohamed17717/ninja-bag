@@ -1,7 +1,7 @@
 from django.db import models
 from django.db.models import F
 from django.shortcuts import get_object_or_404
-
+from utils.decorators import cache_counter
 
 # ------------------------------------------------------------- #
 
@@ -61,11 +61,13 @@ class ToolQuerySet(models.QuerySet):
   def force_get(self, **kwargs):
     return get_object_or_404(self.model, **kwargs)
 
+  @cache_counter('tool_views_{}')
   def increase_views_count(self, pk):
-    self.select_for_update().filter(pk=pk).update(views_count=F('views_count')+1)
+    self.select_for_update().filter(pk=pk).update(views_count=F('views_count')+100)
 
+  @cache_counter('tool_uses_{}')
   def increase_uses_count(self, pk):
-    self.select_for_update().filter(pk=pk).update(uses_count=F('uses_count')+1)
+    self.select_for_update().filter(pk=pk).update(uses_count=F('uses_count')+100)
 
 class ToolManager(models.Manager):
   def get_queryset(self):
