@@ -8,7 +8,6 @@ SECRET_KEY = '$e5rh03te^#or+2dvix(9zgnp0*xjya92e3guwni)r30p73x4-'
 DEBUG = False
 
 ALLOWED_HOSTS = [
-  # '127.0.0.1',
   'ninja-bag.site'
 ]
 
@@ -31,7 +30,7 @@ INSTALLED_APPS = [
   'crispy_forms',
   'corsheaders',
   'social_django',
-  'debug_toolbar'
+  'debug_toolbar',
 ]
 
 MIDDLEWARE = [
@@ -137,3 +136,20 @@ CORS_ALLOW_ALL_ORIGINS = True
 # django debug toolbar setup
 EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
 INTERNAL_IPS = ['127.0.0.1']
+
+# caching
+CACHES = {
+  'default': {
+    'BACKEND': 'django.core.cache.backends.filebased.FileBasedCache',
+    'LOCATION': '/var/tmp/django_cache',
+
+    # 'TIMEOUT': 60,
+    'OPTIONS': {
+      'MAX_ENTRIES': 1000
+    }
+  }
+}
+
+if DEBUG:
+  ALLOWED_HOSTS.append('127.0.0.1')
+
