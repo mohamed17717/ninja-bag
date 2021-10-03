@@ -7,7 +7,8 @@ from .controller.ImageTools import MyImageHandler
 
 from utils.views_mixins import JsonResponseOverride, ImageResponse
 from utils.mixins import ExtractPostRequestData
-from utils.decorators import require_http_methods, tool_handler, required_post_fields, function_nickname
+from utils.decorators import require_http_methods, required_post_fields, function_nickname
+from utils.not_refactored_decorators import tool_handler
 from utils.helpers import FileManager, Redirector
 
 
