@@ -100,6 +100,9 @@ class Tool(models.Model):
     db = self.db_class
     return db and db.list_all(user) or []
 
+  def increase_uses_count(self):
+    return Tool.objects.increase_uses_count(self.pk)
+
 
 class UpcomingTool(models.Model):
   name = models.CharField(max_length=128)

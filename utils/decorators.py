@@ -2,6 +2,9 @@ from django.views.decorators.http import require_http_methods
 from django.contrib.auth.decorators import login_required
 from django.http import HttpResponseBadRequest
 from django.core.cache import cache
+from django.core.exceptions import PermissionDenied
+from django.http import HttpResponseBadRequest
+from django.conf import settings
 
 import json
 
@@ -64,6 +67,40 @@ def cache_counter(name_format):
       cache.set(key, count)
       if count % 100 == 0:
         func(*args, **kwargs)
+
+    return wrapper
+  return decorator
+
+
+
+
+
+
+
+def tool_handler(func_reverser):
+  def run_tool_view_safely(func, request, *args, **kwargs):
+    if settings.DEBUG:
+      response = func(request, *args, **kwargs)
+    else:
+      try:
+        response = func(request, *args, **kwargs)
+      except Exception as e:
+        response = HttpResponseBadRequest('unexpected error happened.')
+    
+    return response
+
+  def decorator(func):
+    def wrapper(request, *args, **kwargs):
+      tool = func_reverser(func)
+
+      is_tool_accessable = tool and tool.active
+      if is_tool_accessable == False:
+        raise PermissionDenied('You can\'t access this tool.' )
+
+      response = run_tool_view_safely(func, request, *args, **kwargs)
+      tool.increase_uses_count()
+
+      return response
 
     return wrapper
   return decorator

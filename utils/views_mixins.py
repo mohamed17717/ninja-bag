@@ -1,5 +1,4 @@
 from toolsframe.models import Tool, UpcomingTool
-from utils.handlers import ToolHandler
 from toolsframe.forms import SuggestToolForm
 from django.http import HttpResponse, JsonResponse
 from PIL import Image
@@ -20,7 +19,7 @@ def GenerateDefaultContext(request):
   context = {
     **GenerateRequestContext(request),
     'upcoming_tools': UpcomingTool.objects.get_active(),
-    'is_limits_active': ToolHandler.is_limits_active,
+    'is_limits_active': False,
     'suggest_form': SuggestToolForm,
   }
 

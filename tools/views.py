@@ -7,35 +7,40 @@ from .controller.ImageTools import MyImageHandler
 
 from utils.views_mixins import JsonResponseOverride, ImageResponse
 from utils.mixins import ExtractPostRequestData
-from utils.decorators import require_http_methods, required_post_fields, function_nickname
-from utils.not_refactored_decorators import tool_handler
+from utils.decorators import require_http_methods, required_post_fields, function_nickname, tool_handler
 from utils.helpers import FileManager, Redirector
 
+from functools import partial
+
+from toolsframe.models import ToolViewsFunctions
+
+
+tool_handler_plus = partial(tool_handler, ToolViewsFunctions.objects.reverse_view_func_to_tool)
 
 #--------------------- start RequestAnalyzer tools ---------------------#
 
 @require_http_methods(['GET'])
-@tool_handler(limitation=[])
+@tool_handler_plus()
 def get_my_ip(request):
   ip = RequestAnalyzerTools.get_ip(request)
   return HttpResponse(ip)
 
 
 @require_http_methods(['GET'])
-@tool_handler(limitation=[])
+@tool_handler_plus()
 def get_my_proxy_anonymity(request):
   anonymity = RequestAnalyzerTools.get_proxy_anonymity(request)
   return HttpResponse(anonymity)
 
 
-@tool_handler(limitation=[])
+@tool_handler_plus()
 def get_my_request_headers(request):
   headers = RequestAnalyzerTools.get_request_headers(request)
   return JsonResponseOverride(headers)
 
 
 @require_http_methods(['GET'])
-@tool_handler(limitation=['requests'])
+@tool_handler_plus()
 def analyze_my_machine_user_agent(request):
   ua = request.META['HTTP_USER_AGENT']
   ua_details = RequestAnalyzerTools.get_user_agent_details(ua)
@@ -45,7 +50,7 @@ def analyze_my_machine_user_agent(request):
 
 @require_http_methods(['POST'])
 @required_post_fields(['user-agent'])
-@tool_handler(limitation=['requests'])
+@tool_handler_plus()
 def analyze_user_agent(request):
   post_data = ExtractPostRequestData(request)
   ua = post_data.get('user-agent')
@@ -61,7 +66,7 @@ def analyze_user_agent(request):
 #--------------------- start Images tools ---------------------#
 
 @require_http_methods(['GET'])
-@tool_handler(limitation=['requests', 'bandwidth'])
+@tool_handler_plus()
 def get_image_placeholder(request, width, height=None, color=None):
   color = MyImageHandler.handle_color(color)
   height = height or width
@@ -72,7 +77,7 @@ def get_image_placeholder(request, width, height=None, color=None):
 
 
 @require_http_methods(['GET'])
-@tool_handler(limitation=['requests', 'bandwidth'])
+@tool_handler_plus()
 def convert_username_to_profile_pic(request, size, username, color=None):
   color = MyImageHandler.handle_color(color)
 
@@ -83,7 +88,7 @@ def convert_username_to_profile_pic(request, size, username, color=None):
 
 @require_http_methods(['POST'])
 @required_post_fields(['image'])
-@tool_handler(limitation=['requests', 'bandwidth'])
+@tool_handler_plus()
 def convert_image_to_thumbnail(request):
   image_file = request.FILES.get('image')
   new_width = int(request.POST.get('width') or 128)
@@ -95,7 +100,7 @@ def convert_image_to_thumbnail(request):
 
 @require_http_methods(['POST'])
 @required_post_fields(['image'])
-@tool_handler(limitation=['requests', 'bandwidth'])
+@tool_handler_plus()
 def remove_image_meta_data(request):
   image_file = request.FILES.get('image')
 
@@ -106,7 +111,7 @@ def remove_image_meta_data(request):
 
 @require_http_methods(['POST'])
 @required_post_fields(['image'])
-@tool_handler(limitation=['requests', 'bandwidth'])
+@tool_handler_plus()
 def convert_image_to_b64(request):
   image_file = request.FILES.get('image')
 
@@ -116,7 +121,7 @@ def convert_image_to_b64(request):
 
 @require_http_methods(['POST'])
 @required_post_fields(['image'])
-@tool_handler(limitation=['requests', 'bandwidth'])
+@tool_handler_plus()
 def convert_b64_to_image(request):
   post_data = ExtractPostRequestData(request)
   image_b64 = post_data.get('image')
@@ -128,7 +133,7 @@ def convert_b64_to_image(request):
 
 @require_http_methods(['POST'])
 @required_post_fields(['text'])
-@tool_handler(limitation=['requests', 'bandwidth'])
+@tool_handler_plus()
 def generate_qrcode(request):
   post_data = ExtractPostRequestData(request)
   string = post_data.get('text')
@@ -145,7 +150,7 @@ def generate_qrcode(request):
 
 @require_http_methods(['POST'])
 @required_post_fields(['url'])
-@tool_handler(limitation=['requests'])
+@tool_handler_plus()
 def get_fb_user_id(request):
   post_data = ExtractPostRequestData(request)
   acc_url = post_data.get('url')
@@ -154,7 +159,7 @@ def get_fb_user_id(request):
 
   return HttpResponse(user_id)
 
-@tool_handler(limitation=['requests', 'bandwidth'])
+@tool_handler_plus()
 def cors_proxy(request):
   cors = ScrapingTools.CorsProxy(request)
 
@@ -168,7 +173,7 @@ def unshorten_url_wrapper(full_track=False):
 
   @require_http_methods(['POST'])
   @required_post_fields(['url'])
-  @tool_handler(limitation=['requests', 'bandwidth'])
+  @tool_handler_plus()
   def unshorten_url(request):
     post_data = ExtractPostRequestData(request)
     shortened_url = post_data.get('url')
@@ -184,7 +189,7 @@ class TextSaverView:
 
   @staticmethod
   @require_http_methods(['POST'])
-  @tool_handler(limitation=['requests', 'storage', 'bandwidth'])
+  @tool_handler_plus()
   @function_nickname('text_saver_add')
   def add(request, file_name=None):
     # get account
@@ -202,7 +207,7 @@ class TextSaverView:
 
   @staticmethod
   @require_http_methods(['GET'])
-  @tool_handler(limitation=['requests', 'bandwidth'])
+  @tool_handler_plus()
   @function_nickname('text_saver_add')
   def read(request, file_name):
     acc = Account.objects.get_user_acc_from_api_or_web(request, required=True)
@@ -216,7 +221,7 @@ class TextSaverView:
 
   @staticmethod
   @require_http_methods(['GET'])
-  @tool_handler(limitation=['requests', 'bandwidth'])
+  @tool_handler_plus()
   @function_nickname('text_saver_add')
   def read_text(request, file_name):
     acc = Account.objects.get_user_acc_from_api_or_web(request, required=True)
@@ -229,7 +234,7 @@ class TextSaverView:
 
   @staticmethod
   @require_http_methods(['GET', 'DELETE'])
-  @tool_handler(limitation=['requests'])
+  @tool_handler
   @function_nickname('text_saver_add')
   def delete(request, file_name):
     acc = Account.objects.get_user_acc_from_api_or_web(request, required=True)
