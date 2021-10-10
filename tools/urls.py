@@ -17,6 +17,8 @@ from .views import (
   generate_qrcode,
   cors_proxy,
   TextSaverView,
+
+  get_fhost,
 )
 
 app_name = 'tools'
@@ -61,5 +63,9 @@ urlpatterns = [
   path('save-text/delete/<str:file_name>/', TextSaverView.delete, name='textsaver-delete'),
   path('save-text/read/<str:file_name>/', TextSaverView.read, name='textsaver-read'),
   path('save-text/read-text/<str:file_name>/', TextSaverView.read_text, name='textsaver-read-text'),
-  path('save-text/check-line-exist/<str:file_name>/', TextSaverView.check_line_exist, name='textsaver-check-line-exist')
+  path('save-text/check-line-exist/<str:file_name>/', TextSaverView.check_line_exist, name='textsaver-check-line-exist'),
+
+  # not described yet
+  path('fhost/<str:file_name>/', get_fhost, name='fhost'),
+
 ]

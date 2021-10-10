@@ -1,7 +1,7 @@
-from django.http import HttpResponse, HttpResponseBadRequest
+from django.http import HttpResponse, HttpResponseBadRequest, HttpResponseForbidden
 
 from accounts.models import Account
-from .models import TextSaverModel
+from .models import TextSaverModel, FHostModel
 from .controller import RequestAnalyzerTools, ScrapingTools
 from .controller.ImageTools import MyImageHandler
 
@@ -278,4 +278,22 @@ class TextSaverView:
         return HttpResponse('Found', status=200)
 
     return HttpResponse(f'Not Found', status=404)
+
+
+#--------------------- undescriped tools ---------------------#
+def get_fhost(request, file_name):
+  def get_domain(url):
+    if not url:
+      return 'Not Found Url'
+    return '.'.join(url.split('://', 1)[-1].split('/', 1)[0].split('.')[-2:])
+
+  obj = FHostModel.objects.get(file_name=file_name)
+  origin_url = get_domain(request.META.get('HTTP_REFERER', None))
+
+  if obj.is_public or origin_url in obj.allowed_origins:
+    response = HttpResponse(obj.text)
+  else:
+    response = HttpResponseForbidden()
+
+  return response
 

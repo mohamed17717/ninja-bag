@@ -106,3 +106,15 @@ class TextSaverModel(models.Model):
     return location
 
 
+class FHostModel(models.Model):
+  file_name = models.CharField(max_length=80, db_index=True, unique=True)
+  text = models.TextField()
+  is_public = models.BooleanField(default=True)
+  allowed_origins = models.TextField(blank=True, null=True)
+
+  created = models.DateField(auto_now_add=True)
+  updated = models.DateField(auto_now=True)
+
+
+  def __str__(self):
+    return self.file_name
