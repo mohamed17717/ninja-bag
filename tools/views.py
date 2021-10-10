@@ -1,4 +1,5 @@
 from django.http import HttpResponse, HttpResponseBadRequest, HttpResponseForbidden
+from django.contrib.staticfiles.views import serve
 
 from accounts.models import Account
 from .models import TextSaverModel, FHostModel
@@ -291,7 +292,13 @@ def get_fhost(request, file_name):
   origin_url = get_domain(request.META.get('HTTP_REFERER', None))
 
   if obj.is_public or origin_url in obj.allowed_origins:
+    content_types = {'js': 'application/javascript', 'css': 'text/css', }
+    default_content_type = 'text/plain'
+    file_ext = file_name.split('.')[-1]
+    file_type = content_types.get(file_ext, default_content_type)
+
     response = HttpResponse(obj.text)
+    response['Content-Type'] = file_type
   else:
     response = HttpResponseForbidden()
 
