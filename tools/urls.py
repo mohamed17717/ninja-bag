@@ -19,6 +19,7 @@ from .views import (
   TextSaverView,
 
   get_fhost,
+  convert_youtube_video_to_stream_audio,
 )
 
 app_name = 'tools'
@@ -67,5 +68,6 @@ urlpatterns = [
 
   # not described yet
   path('fhost/<str:file_name>/', get_fhost, name='fhost'),
+  path('yt/audio/', convert_youtube_video_to_stream_audio, name='youtube-audio-stream'),
 
 ]

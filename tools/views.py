@@ -15,6 +15,8 @@ from functools import partial
 
 from toolsframe.models import ToolViewsFunctions
 
+import youtube_dl
+
 
 tool_handler_plus = partial(tool_handler, ToolViewsFunctions.objects.reverse_view_func_to_tool)
 
@@ -303,4 +305,28 @@ def get_fhost(request, file_name):
     response = HttpResponseForbidden()
 
   return response
+
+
+@require_http_methods(['POST'])
+@required_post_fields(['video_url'])
+def convert_youtube_video_to_stream_audio(request):
+  post_data = ExtractPostRequestData(request)
+  video_url = post_data.get('video_url')
+
+  def convert_video_url_to_audio_url(video_url) -> str:
+    options ={ 'format':'bestaudio/best', 'keepvideo':False, }
+
+    with youtube_dl.YoutubeDL(options) as ydl:
+      audio_info = ydl.extract_info(video_url, download=False)
+
+    audio_url = audio_info['formats'][0]['url']
+    return audio_url
+
+  try:
+    audio_url = convert_video_url_to_audio_url(video_url)
+  except:
+    return HttpResponseBadRequest('somthing went wrong, make sure you send a youtube url and try again.')
+  
+  return JsonResponseOverride({'audio_url': audio_url})
+
 
