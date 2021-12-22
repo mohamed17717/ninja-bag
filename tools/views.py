@@ -18,6 +18,7 @@ from toolsframe.models import ToolViewsFunctions
 import youtube_dl
 from pytube import YouTube
 
+import urllib.parse
 
 
 tool_handler_plus = partial(tool_handler, ToolViewsFunctions.objects.reverse_view_func_to_tool)
@@ -315,6 +316,18 @@ def convert_youtube_video_to_stream_audio(request):
   post_data = ExtractPostRequestData(request)
   video_url = post_data.get('video_url')
 
+  def generate_url_with_proxy(url):
+    base_url = "https://api.webscrapingapi.com/v1"
+
+    params = {
+      "api_key":"0qJn8jcUHl6LjxYsEbO7vgHJvEqk1ryl",
+      "url": url,
+      "device": "desktop",
+      "proxy_type":"datacenter"
+    }
+
+    return base_url + '/?' + urllib.parse.urlencode(params)
+
   def convert_video_url_to_audio_url_method1(video_url) -> str:
     options ={ 'format':'bestaudio/best', 'keepvideo':False, }
 
@@ -325,7 +338,7 @@ def convert_youtube_video_to_stream_audio(request):
     return audio_url
 
   def convert_video_url_to_audio_url_method2(video_url) -> str:
-    yt = YouTube(video_url)
+    yt = YouTube(video_url, generate_url_with_proxy=generate_url_with_proxy)
 
     stream = yt.streams.get_audio_only()
     return stream.url
