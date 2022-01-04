@@ -328,6 +328,12 @@ def convert_youtube_video_to_stream_audio(request):
 
     return base_url + '/?' + urllib.parse.urlencode(params)
 
+  def read_from_dict(data, key):
+    if '.' in key:
+      parent, children = key.split('.', 1)
+      return read_from_dict(data[parent], children)
+    return {key: data[key]}
+
   def convert_video_url_to_audio_url_method1(video_url) -> str:
     options ={ 'format':'bestaudio/best', 'keepvideo':False, }
 
@@ -339,15 +345,21 @@ def convert_youtube_video_to_stream_audio(request):
 
   def convert_video_url_to_audio_url_method2(video_url) -> str:
     yt = YouTube(video_url, generate_url_with_proxy=generate_url_with_proxy)
-
     stream = yt.streams.get_audio_only()
-    return stream.url
+    data = yt.vid_info['videoDetails']
+
+    result = {'audio_url': stream.url}
+    tuple(map(lambda key: result.update(read_from_dict(data, key)), [
+      'videoId', 'title', 'lengthSeconds', 'keywords', 'channelId',
+      'shortDescription', 'thumbnail.thumbnails', 'viewCount', 'author',
+    ]))
+    return result
 
   try:
-    audio_url = convert_video_url_to_audio_url_method2(video_url)
+    video_data = convert_video_url_to_audio_url_method2(video_url)
   except:
     return HttpResponseBadRequest('somthing went wrong, make sure you send a youtube url and try again.')
 
-  return JsonResponseOverride({'audio_url': audio_url})
+  return JsonResponseOverride(video_data)
 
 
