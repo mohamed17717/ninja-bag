@@ -332,7 +332,7 @@ def convert_youtube_video_to_stream_audio(request):
     if '.' in key:
       parent, children = key.split('.', 1)
       return read_from_dict(data[parent], children)
-    return {key: data[key]}
+    return {key: data.get(key, '')}
 
   def convert_video_url_to_audio_url_method1(video_url) -> str:
     options ={ 'format':'bestaudio/best', 'keepvideo':False, }
