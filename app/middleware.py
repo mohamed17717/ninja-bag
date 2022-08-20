@@ -52,7 +52,7 @@ class WebRequestMiddleware(object):
       new_location = response.get('location',None)
       content_length = response.get('content-length',None)
 
-      if new_location and content_length is '0':
+      if new_location and content_length == '0':
         new_parsed = urlparse(new_location)
 
         old = (('http','https')[request.is_secure()], request.get_host(), '{0}/'.format(request.path), request.META['QUERY_STRING'])
