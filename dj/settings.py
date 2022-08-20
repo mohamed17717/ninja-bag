@@ -5,7 +5,7 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
 SECRET_KEY = '$e5rh03te^#or+2dvix(9zgnp0*xjya92e3guwni)r30p73x4-'
 
-DEBUG = False
+DEBUG = True
 
 ALLOWED_HOSTS = [
   'ninja-bag.site'
