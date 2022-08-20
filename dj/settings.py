@@ -8,7 +8,8 @@ SECRET_KEY = '$e5rh03te^#or+2dvix(9zgnp0*xjya92e3guwni)r30p73x4-'
 DEBUG = True
 
 ALLOWED_HOSTS = [
-  'ninja-bag.site'
+  'ninja-bag.site',
+  '139.162.134.211'
 ]
 
 INSTALLED_APPS = [
