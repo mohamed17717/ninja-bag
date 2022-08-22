@@ -240,7 +240,7 @@ class TextSaverView:
 
   @staticmethod
   @require_http_methods(['GET', 'DELETE'])
-  @tool_handler
+  @tool_handler_plus()
   @function_nickname('text_saver_add')
   def delete(request, file_name):
     acc = Account.objects.get_user_acc_from_api_or_web(request, required=True)
@@ -248,7 +248,7 @@ class TextSaverView:
     delete_status = TextSaverModel.delete(acc, file_name)
 
     response = HttpResponse() if delete_status else HttpResponseBadRequest('file is not exist') 
-    if request.user:
+    if request.user.is_authenticated and request.method == 'GET':
       response = Redirector.go_previous_page(request)
     return response
 
@@ -259,8 +259,8 @@ class TextSaverView:
       'GET': cls.read,
       'DELETE': cls.delete,
     }
-
-    return views.get(request.method)(request, file_name)
+    method = views.get(request.method)
+    return method(request, file_name)
 
   @staticmethod
   @require_http_methods(['POST'])
