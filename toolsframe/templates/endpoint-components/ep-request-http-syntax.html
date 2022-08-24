@@ -8,6 +8,7 @@
     x-html="endpoint.httpSyntaxHeader"
     :x-ref="`x${index}`"
     x-on:blur="endpoint.httpSyntaxHeader=$refs[`x${index}`].innerHTML"
+    x-on:paste.prevent="pasteWithoutFormat($event)"
   ></div>
 
   <template x-if="Endpoint.isHttpHasBody(endpoint)">
