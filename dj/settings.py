@@ -10,7 +10,8 @@ DEBUG = True
 ALLOWED_HOSTS = [
   'ninja-bag.site',
   '139.162.134.211',
-  'devmhmd.com'
+  'devmhmd.com',
+  'www.devmhmd.com',
 ]
 
 INSTALLED_APPS = [
