@@ -1,13 +1,6 @@
-from toolsframe.models import ToolViewsFunctions, ToolDatabaseClass
-from utils.automate_db.constants import TOOLS_VIEWS_NAMES, TOOLS_DB_CLASSES_NAMES
+from toolsframe.models import ToolDatabaseClass
+from utils.automate_db.constants import TOOLS_DB_CLASSES_NAMES
 
-
-def set_tools_views_to_table():
-  print('## set tool_views_functions ##')
-  for name in TOOLS_VIEWS_NAMES:
-    print(name)
-    if not ToolViewsFunctions.objects.filter(name=name).first():
-      ToolViewsFunctions.objects.create(name=name)
 
 def set_tools_db_classes_to_table():
   print('## set tool_db_classes ##')
@@ -17,7 +10,6 @@ def set_tools_db_classes_to_table():
       ToolDatabaseClass.objects.create(name=name)
 
 
-set_tools_views_to_table()
 set_tools_db_classes_to_table()
 
 
