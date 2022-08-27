@@ -120,7 +120,7 @@ class WhatsMyIp(ToolAbstract):
     self.endpoints = [
       Endpoint({
           "path": "/get-my-ip/",
-          "path_name": "tools:get-my-ip",
+          "path_name": f"tools:{self.tool_id}",
           "method": "GET",
           "view": self.get_my_ip
       })
