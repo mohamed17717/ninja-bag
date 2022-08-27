@@ -10,7 +10,7 @@ DEBUG = True
 ALLOWED_HOSTS = [
   '139.162.134.211',
   'devmhmd.com',
-  '*.devmhmd.com',
+  '.devmhmd.com',
 ]
 
 INSTALLED_APPS = [
