@@ -4,6 +4,13 @@ from django.http import HttpResponseBadRequest
 from django.core.cache import cache
 from django.http import HttpResponseBadRequest
 
+
+from functools import wraps
+
+from django.http import HttpResponseNotAllowed
+from django.utils.log import log_response
+
+
 import json
 
 
@@ -69,3 +76,24 @@ def cache_counter(name_format):
     return wrapper
   return decorator
 
+
+# Copied from the main source code
+def require_http_methods_for_class(request_method_list):
+  def decorator(func):
+    @wraps(func)
+    def inner(self, request, *args, **kwargs):
+      if request.method not in request_method_list:
+        response = HttpResponseNotAllowed(request_method_list)
+        log_response(
+          "Method Not Allowed (%s): %s",
+          request.method,
+          request.path,
+          response=response,
+          request=request,
+        )
+        return response
+      return func(self, request, *args, **kwargs)
+
+    return inner
+
+  return decorator
