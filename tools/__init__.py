@@ -1,6 +1,7 @@
 from django.utils.text import slugify
 from django.http import HttpResponse
 from django.urls import path
+from django.shortcuts import resolve_url
 
 from abc import ABC, abstractmethod, abstractproperty
 from enum import Enum
@@ -22,12 +23,14 @@ class Endpoint:
     self.data = data
 
   def get_path(self):
-    url = self.data['url'].strip('/') + '/'
-    return path(url, self.data['view'])
+    url = self.data['path'].strip('/') + '/'
+    path_name = self.data['path_name'].split(':').pop()
+    return path(url, self.data['view'], name=path_name)
 
   def get_docs(self):
     docs_dict = { **self.data } 
     docs_dict.pop('view')
+    docs_dict.update({'url': resolve_url(self.data['path_name'])})
     return docs_dict
 
 class ToolAbstract(ABC):
@@ -116,7 +119,8 @@ class WhatsMyIp(ToolAbstract):
   def get_endpoints(self):
     self.endpoints = [
       Endpoint({
-          "url": "/get-my-ip/",
+          "path": "/get-my-ip/",
+          "path_name": "tools:get-my-ip",
           "method": "GET",
           "view": self.get_my_ip
       })
