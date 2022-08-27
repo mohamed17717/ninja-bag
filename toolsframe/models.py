@@ -2,7 +2,6 @@ from django.db import models
 from django.urls import reverse
 from django.contrib.auth import get_user_model
 from django.utils.text import slugify
-from jsonfield import JSONField
 
 from utils.helpers import dynamic_import
 from utils import emoji
@@ -45,7 +44,7 @@ class Tool(models.Model):
   logo = models.ImageField(upload_to='tool_logo', blank=True, null=True)
   description = models.TextField(blank=True, null=True) # SEO && after title
   url_reverser = models.CharField(max_length=64, default='toolsframe:tool') # 'app_name:home'
-  endpoints = JSONField(blank=True, null=True)
+  endpoints = models.JSONField(blank=True, null=True)
 
   category = models.ManyToManyField(Category, related_name='category_tools')
 
