@@ -30,7 +30,7 @@ class Endpoint:
     docs_dict.pop('view')
     return docs_dict
 
-class Tool(ABC):
+class ToolAbstract(ABC):
   @abstractproperty
   def name(self) -> str: pass
 
@@ -75,9 +75,31 @@ class Tool(ABC):
     self.get_endpoints()
 
   def store_in_db(self):
-    ...
+    from toolsframe import models
 
-class WhatsMyIp(Tool):
+    obj_fields = {
+      'name': self.name,
+      'description': self.description,
+      'app_type': self.access_type,
+      'endpoints': self.get_endpoints_docs(),
+      'login_required': self.login_required
+    }
+    tool, created = models.Tool.objects.get_or_create(
+      tool_id=self.tool_id, defaults=obj_fields
+    )
+    if not created:
+      for field, value in obj_fields.items():
+        setattr(tool, field, value)
+      tool.save()
+
+    tool.category.clear()
+    for category_name in self.categories:
+      category, created = models.Category.objects.get_or_create(name=category_name)
+      tool.category.add(category)
+
+
+
+class WhatsMyIp(ToolAbstract):
   name = 'what is my ip ?'
   description = "get your current machine ip"
   categories = ['how server sees you', 'network']
