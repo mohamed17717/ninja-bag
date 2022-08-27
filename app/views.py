@@ -1,5 +1,5 @@
 from django import template
-from django.shortcuts import render_to_response, HttpResponse
+from django.shortcuts import render, HttpResponse
 from tools.controller import RequestAnalyzerTools
 
 from utils.views_mixins import GenerateRequestContext
@@ -15,7 +15,7 @@ def error_page(number):
       response = HttpResponse(status=number)
     else:
       context = { 'number': number, **GenerateRequestContext(request) }
-      response = render_to_response(template_name, context)
+      response = render(request, template_name, context)
       response.status_code = number
 
     return response

@@ -104,7 +104,6 @@ class WebRequestMiddleware(object):
       post = post,
       raw_post = None,
       is_secure = request.is_secure(),
-      is_ajax = request.is_ajax(),
       user = user
     ).save()
 
