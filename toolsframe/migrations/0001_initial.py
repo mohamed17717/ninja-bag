@@ -3,7 +3,7 @@
 from django.conf import settings
 from django.db import migrations, models
 import django.db.models.deletion
-import jsonfield.fields
+# import jsonfield.fields
 
 
 class Migration(migrations.Migration):
@@ -38,7 +38,7 @@ class Migration(migrations.Migration):
                 ('logo', models.ImageField(blank=True, null=True, upload_to='tool_logo')),
                 ('description', models.TextField(blank=True, null=True)),
                 ('url_reverser', models.CharField(default='toolsframe:tool', max_length=64)),
-                ('endpoints', jsonfield.fields.JSONField(blank=True, null=True)),
+                ('endpoints', models.JSONField(blank=True, null=True)),
                 ('login_required', models.BooleanField(default=False)),
                 ('active', models.BooleanField(default=True)),
                 ('uses_count', models.IntegerField(default=0)),
