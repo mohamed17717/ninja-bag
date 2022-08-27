@@ -1,5 +1,6 @@
 from django.http import HttpResponse, HttpResponseBadRequest, HttpResponseForbidden
 from django.contrib.staticfiles.views import serve
+from django.http import HttpResponse
 
 from accounts.models import Account
 from .models import TextSaverModel, FHostModel
@@ -19,6 +20,13 @@ import youtube_dl
 from pytube import YouTube
 
 import urllib.parse
+
+from . import WhatsMyIp
+
+
+def refresh_tools(request):
+  WhatsMyIp().store_in_db()
+  return HttpResponse('<h1>Tools refreshed</h1>')
 
 
 tool_handler_plus = partial(tool_handler, ToolViewsFunctions.objects.reverse_view_func_to_tool)

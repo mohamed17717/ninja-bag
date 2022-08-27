@@ -9,6 +9,8 @@ from . import WhatsMyIp
 
 
 urlpatterns = [
+  path('refresh/', views.refresh_tools, name='xxx'),
+
   # path('get-my-ip/', views.get_my_ip, name='get-my-ip'),
   *WhatsMyIp().get_endpoints_paths(),
 
