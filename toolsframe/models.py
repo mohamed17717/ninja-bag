@@ -11,7 +11,6 @@ import secrets
 
 from .managers import  (
   UpcomingToolManager,
-  ToolViewsFunctionsManager,
   ToolManager
 )
 
@@ -100,7 +99,8 @@ class Tool(models.Model):
     return db and db.list_all(user) or []
 
   def increase_uses_count(self):
-    return Tool.objects.increase_uses_count(self.pk)
+    self.uses_count += 1
+    self.save()
 
 
 class UpcomingTool(models.Model):
@@ -164,20 +164,7 @@ class ToolIssueReport(models.Model):
     return f'{self.pk} - {username} {username} ({description}) {status}'
 
 
-# handle (tool record) in database and (tool views and models)
-class ToolViewsFunctions(models.Model):
-  name = models.CharField(max_length=120, unique=True)
-  tool = models.ForeignKey(Tool, on_delete=models.SET_NULL, related_name='tool_views',blank=True, null=True)
-
-  created = models.DateField(auto_now_add=True)
-  updated = models.DateField(auto_now=True)
-
-  objects = ToolViewsFunctionsManager()
-
-  def __str__(self):
-    tool_status = emoji.HAPPY if self.tool else emoji.SAD
-    return f'{self.name} {tool_status}'
-
+# handle (tool record) in database
 class ToolDatabaseClass(models.Model):
   name = models.CharField(max_length=120, unique=True)
   tool = models.OneToOneField(Tool, on_delete=models.SET_NULL, related_name='tool_db', blank=True, null=True)
