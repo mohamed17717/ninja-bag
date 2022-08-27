@@ -10,6 +10,17 @@ from utils.helpers import Redirector
 
 from .forms import ToolIssueReportForm, SuggestToolForm
 
+from tools import WhatsMyIp, ProxyAnonymeter, RequestHeaders
+from django.http import HttpResponse
+
+
+def refresh_tools(request):
+  WhatsMyIp().store_in_db()
+  ProxyAnonymeter().store_in_db()
+  RequestHeaders().store_in_db()
+  return HttpResponse('<h1>Tools refreshed</h1>')
+
+
 
 @require_http_methods(['GET'])
 def toggle_color_mode(request):
