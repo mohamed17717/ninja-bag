@@ -6,6 +6,9 @@ from django.shortcuts import resolve_url
 from abc import ABC, abstractmethod, abstractproperty
 from enum import Enum
 
+from utils.decorators import require_http_methods_for_class
+# from utils.views_mixins import JsonResponseOverride, ImageResponse
+
 from .controller import RequestAnalyzerTools
 
 
@@ -112,6 +115,7 @@ class WhatsMyIp(ToolAbstract):
   endpoints = None
 
   # views
+  @require_http_methods_for_class(['GET'])
   def get_my_ip(self, request):
     ip = RequestAnalyzerTools.get_ip(request)
     return HttpResponse(ip)
@@ -125,3 +129,78 @@ class WhatsMyIp(ToolAbstract):
           "view": self.get_my_ip
       })
     ]
+
+
+class ProxyAnonymeter(ToolAbstract):
+  name = 'proxy anonymeter'
+  description = 'tell you how anonymous your proxy is (transparent, anonymous or elite)'
+  categories = ["how server see you", "network"]
+  access_type = ToolAccessType.api.value
+  login_required = False
+  active = True
+  endpoints = None
+
+  # views
+  @require_http_methods_for_class(['GET'])
+  def get_my_proxy_anonymity(self, request):
+    anonymity = RequestAnalyzerTools.get_proxy_anonymity(request)
+    return HttpResponse(anonymity)
+
+  def get_endpoints(self):
+    self.endpoints = [
+      Endpoint({
+        "path": "/get-my-proxy-anonymity/",
+        "path_name": f"tools:{self.tool_id}",
+        "method": "GET",
+        "view": self.get_my_proxy_anonymity
+      })
+    ]
+
+
+class RequestHeaders(ToolAbstract):
+  name = 'request headers'
+  description = 'tell you how the server see your request headers'
+  categories = ["how server see you", "network"]
+  access_type = ToolAccessType.api.value
+  login_required = False
+  active = True
+  endpoints = None
+
+  # views
+  def get_my_request_headers(self, request):
+    headers = RequestAnalyzerTools.get_request_headers(request)
+    return JsonResponseOverride(headers)
+
+  def get_endpoints(self):
+    self.endpoints = [
+      Endpoint({
+        "path": "/get-my-request-headers/",
+        "path_name": f"tools:{self.tool_id}",
+        "method": "ANY",
+        "view": self.get_my_request_headers
+      })
+    ]
+
+
+
+
+# class NAME(ToolAbstract):
+#   name = ''
+#   description = ''
+#   categories = ['']
+#   access_type = ToolAccessType.api.value
+#   login_required = False
+#   active = True
+#   endpoints = None
+
+#   # views
+
+#   def get_endpoints(self):
+#     self.endpoints = [
+#       Endpoint({
+#         # "path": ,
+#         # "path_name": f"tools:{self.tool_id}",
+#         # "method": "ANY",
+#         # "view": self.get_my_request_headers
+#       })
+#     ]
