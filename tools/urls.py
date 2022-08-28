@@ -4,19 +4,19 @@ from tools import views
 
 app_name = 'tools'
 
-from . import WhatsMyIp
+from . import WhatsMyIp, ProxyAnonymeter, RequestHeaders
 
 
 
 urlpatterns = [
-  path('refresh/', views.refresh_tools, name='xxx'),
-
   # path('get-my-ip/', views.get_my_ip, name='get-my-ip'),
   *WhatsMyIp().get_endpoints_paths(),
 
-  path('get-my-proxy-anonymity/', views.get_my_proxy_anonymity, name='get-my-proxy-anonymity'),
+  # path('get-my-proxy-anonymity/', views.get_my_proxy_anonymity, name='get-my-proxy-anonymity'),
+  *ProxyAnonymeter().get_endpoints_paths(),
 
-  path('get-my-request-headers/', views.get_my_request_headers, name='get-my-request-headers'),
+  # path('get-my-request-headers/', views.get_my_request_headers, name='get-my-request-headers'),
+  *RequestHeaders().get_endpoints_paths(),
 
   path('analyze-my-machine/', views.analyze_my_machine_user_agent, name='analyze-my-machine'),
   path('analyze-user-agent/', views.analyze_user_agent, name='analyze-user-agent'),
