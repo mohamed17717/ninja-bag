@@ -17,33 +17,9 @@ from pytube import YouTube
 
 import urllib.parse
 
-from . import WhatsMyIp
-
-
-def refresh_tools(request):
-  WhatsMyIp().store_in_db()
-  return HttpResponse('<h1>Tools refreshed</h1>')
-
 
 
 #--------------------- start RequestAnalyzer tools ---------------------#
-
-@require_http_methods(['GET'])
-def get_my_ip(request):
-  ip = RequestAnalyzerTools.get_ip(request)
-  return HttpResponse(ip)
-
-
-@require_http_methods(['GET'])
-def get_my_proxy_anonymity(request):
-  anonymity = RequestAnalyzerTools.get_proxy_anonymity(request)
-  return HttpResponse(anonymity)
-
-
-def get_my_request_headers(request):
-  headers = RequestAnalyzerTools.get_request_headers(request)
-  return JsonResponseOverride(headers)
-
 
 @require_http_methods(['GET'])
 def analyze_my_machine_user_agent(request):
