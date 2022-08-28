@@ -1,49 +1,5 @@
 {
-  "what is my ip ?": {
-    "description": "get your current machine ip",
-    "category": [
-      "how server see you",
-      "network"
-    ],
-    "endpoints": [
-      {
-        "url": "/get-my-ip/",
-        "method": "GET"
-      }
-    ],
-    "type": "api",
-    "tool_id": "what-is-my-ip-fd1c6285"
-  },
-  "proxy anonymeter": {
-    "description": "tell you how anonymous your proxy is (transparent, anonymous or elite)",
-    "category": [
-      "how server see you",
-      "network"
-    ],
-    "endpoints": [
-      {
-        "url": "/get-my-proxy-anonymity/",
-        "method": "GET"
-      }
-    ],
-    "type": "api",
-    "tool_id": "proxy-anonymeter-2c9405b6"
-  },
-  "request headers": {
-    "description": "tell you how the server see your request headers",
-    "category": [
-      "how server see you",
-      "network"
-    ],
-    "endpoints": [
-      {
-        "url": "/get-my-request-headers/",
-        "method": "ANY"
-      }
-    ],
-    "type": "api",
-    "tool_id": "request-headers-61ef8edf"
-  },
+
   "my machine analyzer": {
     "description": "tell you how the server see your machine throw your useragent",
     "category": [
