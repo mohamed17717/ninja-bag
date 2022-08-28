@@ -4,7 +4,7 @@ from tools import views
 
 app_name = 'tools'
 
-from . import WhatsMyIp, ProxyAnonymeter, RequestHeaders
+from .loaders import WhatsMyIp, ProxyAnonymeter, RequestHeaders
 
 
 

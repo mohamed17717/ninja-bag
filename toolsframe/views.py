@@ -10,7 +10,7 @@ from utils.helpers import Redirector
 
 from .forms import ToolIssueReportForm, SuggestToolForm
 
-from tools import WhatsMyIp, ProxyAnonymeter, RequestHeaders
+from tools.loaders import WhatsMyIp, ProxyAnonymeter, RequestHeaders
 from django.http import HttpResponse
 
 
