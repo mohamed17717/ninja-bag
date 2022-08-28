@@ -204,3 +204,8 @@ class RequestHeaders(ToolAbstract):
 #         # "view": self.get_my_request_headers
 #       })
 #     ]
+
+
+def load_tool_classes():
+  return ToolAbstract.__subclasses__()
+

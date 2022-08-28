@@ -10,14 +10,13 @@ from utils.helpers import Redirector
 
 from .forms import ToolIssueReportForm, SuggestToolForm
 
-from tools.loaders import WhatsMyIp, ProxyAnonymeter, RequestHeaders
+from tools.loaders import load_tool_classes
 from django.http import HttpResponse
 
 
 def refresh_tools(request):
-  WhatsMyIp().store_in_db()
-  ProxyAnonymeter().store_in_db()
-  RequestHeaders().store_in_db()
+  for tool_class in load_tool_classes():
+    tool_class().store_in_db()
   return HttpResponse('<h1>Tools refreshed</h1>')
 
 
