@@ -1,3 +1,4 @@
+import re
 
 from http.client import HTTPResponse
 from django.core.exceptions import PermissionDenied, BadRequest
@@ -21,7 +22,9 @@ class ToolMiddleware(object):
     return response
 
   def process_view(self, request, view_func, view_args, view_kwargs):
-    if request.path.startswith('/t/'):
+    path = request.path
+    tool_path_pattern = r'/t/[\w-]+'
+    if re.match(tool_path_pattern, path):
       tool_id = view_func.__self__.tool_id
       tool = get_object_or_404(Tool, tool_id=tool_id)
 
