@@ -1,10 +1,9 @@
 from django.http import HttpResponse, HttpResponseBadRequest, HttpResponseForbidden
-from django.contrib.staticfiles.views import serve
 from django.http import HttpResponse
 
 from accounts.models import Account
 from .models import TextSaverModel, FHostModel
-from .controller import RequestAnalyzerTools, ScrapingTools
+from .controller import ScrapingTools
 from .controller.ImageTools import MyImageHandler
 
 from utils.views_mixins import JsonResponseOverride, ImageResponse
@@ -18,41 +17,10 @@ from pytube import YouTube
 import urllib.parse
 
 
-
-#--------------------- start RequestAnalyzer tools ---------------------#
-
-@require_http_methods(['GET'])
-def analyze_my_machine_user_agent(request):
-  ua = request.META['HTTP_USER_AGENT']
-  ua_details = RequestAnalyzerTools.get_user_agent_details(ua)
-
-  return JsonResponseOverride(ua_details)
-
-
-@require_http_methods(['POST'])
-@required_post_fields(['user-agent'])
-def analyze_user_agent(request):
-  post_data = ExtractPostRequestData(request)
-  ua = post_data.get('user-agent')
-
-  ua_details = RequestAnalyzerTools.get_user_agent_details(ua)
-
-  return JsonResponseOverride(ua_details)
-
-#--------------------- end RequestAnalyzer tools ---------------------#
-
-
-
 #--------------------- start Images tools ---------------------#
 
-@require_http_methods(['GET'])
-def get_image_placeholder(request, width, height=None, color=None):
-  color = MyImageHandler.handle_color(color)
-  height = height or width
-
-  image = MyImageHandler.generate_placeholder_image(width, height, color)
-
-  return ImageResponse(image)
+def nothing(request):
+  return Redirector.go_home()
 
 
 @require_http_methods(['GET'])
