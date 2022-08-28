@@ -97,3 +97,30 @@ def require_http_methods_for_class(request_method_list):
     return inner
 
   return decorator
+
+
+def required_post_fields_for_class(required_fields=[]):
+  def decorator(func):
+
+    def wrapper(self, request, *args, **kwargs):
+      fields = {}
+      fields.update(request.POST.dict())
+      fields.update(request.FILES.dict())
+
+      try:
+        request_body = json.loads(request.data)
+        fields.update(request_body)
+      except: pass
+
+      posted_fields = fields.keys()
+
+      error_response = lambda field: HttpResponseBadRequest(f'field "{field}" is required.')
+      for required_field in required_fields:
+        if required_field not in posted_fields:
+          return error_response(required_field)
+
+      return func(self, request, *args, **kwargs)
+
+    return wrapper
+  return decorator
+
