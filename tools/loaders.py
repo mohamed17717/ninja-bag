@@ -6,10 +6,12 @@ from django.shortcuts import resolve_url
 from abc import ABC, abstractmethod, abstractproperty
 from enum import Enum
 
-from utils.decorators import require_http_methods_for_class
+from utils.decorators import require_http_methods_for_class, required_post_fields_for_class
 from utils.views_mixins import JsonResponseOverride, ImageResponse
+from utils.mixins import ExtractPostRequestData
 
 from .controller import RequestAnalyzerTools
+from .controller.ImageTools import MyImageHandler
 
 
 class ToolAccessType(Enum):
@@ -33,7 +35,14 @@ class Endpoint:
   def get_docs(self):
     docs_dict = { **self.data } 
     docs_dict.pop('view')
-    docs_dict.update({'url': resolve_url(self.data['path_name'])})
+    try:
+      url = resolve_url(self.data['path_name'])
+    except:
+      url = self.data['path']
+      parent_url = resolve_url('tools:tool-parent-path').strip('/')
+      url = f'/{parent_url}' + url.replace('<int:', '{').replace('<str:', '{').replace('>', '}')
+
+    docs_dict.update({'url': url})
     return docs_dict
 
 class ToolAbstract(ABC):
@@ -182,6 +191,190 @@ class RequestHeaders(ToolAbstract):
     ]
 
 
+class UserAgentAnalyzer(ToolAbstract):
+  name = 'User-Agent Analyzer'
+  description = 'get all possible data about the machine using its user-agent'
+  categories = ["how server see you", "network"]
+  access_type = ToolAccessType.api.value
+  login_required = False
+  active = True
+  endpoints = None
+
+  # views
+  @require_http_methods_for_class(['GET'])
+  def analyze_my_machine_user_agent(self, request):
+    ua = request.META['HTTP_USER_AGENT']
+    ua_details = RequestAnalyzerTools.get_user_agent_details(ua)
+
+    return JsonResponseOverride(ua_details)
+
+  @require_http_methods_for_class(['POST'])
+  @required_post_fields_for_class(['user-agent'])
+  def analyze_user_agent(self, request):
+    post_data = ExtractPostRequestData(request)
+    ua = post_data.get('user-agent')
+
+    ua_details = RequestAnalyzerTools.get_user_agent_details(ua)
+
+    return JsonResponseOverride(ua_details)
+
+  def get_endpoints(self):
+    self.endpoints = [
+      Endpoint({
+        "path": "/analyze-my-machine/",
+        "path_name": f"tools:{self.tool_id}-current-machine",
+        "method": "GET",
+        "view": self.analyze_my_machine_user_agent
+      }),
+
+      Endpoint({
+        "path": "/analyze-user-agent/",
+        "path_name": f"tools:{self.tool_id}-machine",
+        "method": "POST",
+        "view": self.analyze_user_agent,
+        "dataType": "json",
+        "params": {
+          "POST": [
+            {
+              "name": "user-agent",
+              "default": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/74.0.3729.169 Safari/537.36",
+              "required": True,
+              "type": "text",
+              "description": "The user-agent you want to analyze"
+            }
+          ]
+        }
+      })
+    ]
+
+
+class ImagePlaceholder(ToolAbstract):
+  name = 'image placeholder'
+  description = 'get a placeholder image with your wanted dimensions and color to set it in your page faster'
+  categories = ["developer helper", "image", "frontend helper"]
+  access_type = ToolAccessType.api.value
+  login_required = False
+  active = True
+  endpoints = None
+
+  # views
+  @require_http_methods_for_class(['GET'])
+  def get_image_placeholder(self, request, width, height=None, color=None):
+    color = MyImageHandler.handle_color(color)
+    height = height or width
+
+    image = MyImageHandler.generate_placeholder_image(width, height, color)
+
+    return ImageResponse(image)
+
+  def get_endpoints(self):
+    self.endpoints = [
+      Endpoint({
+        "path": "/get-image-placeholder/<int:width>/",
+        "path_name": f"tools:{self.tool_id}-size",
+        "view": self.get_image_placeholder,
+        "description": "return a square image with a specific size and a random color",
+        "method": "GET",
+        "params": {
+          "URL": [
+            {
+              "name": "width",
+              "default": 300,
+              "required": True,
+              "type": "number",
+              "description": "the size of the image's dimensions in px"
+            }
+          ]
+        }
+      }),
+
+      Endpoint({
+        "path": "/get-image-placeholder/<int:width>/<str:color>/",
+        "path_name": f"tools:{self.tool_id}-size-color",
+        "view": self.get_image_placeholder,
+        "description": "return a square image with a specific width and color",
+        "method": "GET",
+        "params": {
+          "URL": [
+            {
+              "name": "width",
+              "default": 300,
+              "required": True,
+              "type": "number",
+              "description": "the size of the image's dimensions in px"
+            },
+            {
+              "name": "color",
+              "default": "rgb(34,139,34)",
+              "required": True,
+              "type": "text",
+              "description": "the color of the image -- can be rgb, hex (without hashtag #) or known html colors"
+            }
+          ]
+        }
+      }),
+
+      Endpoint({
+        "path": "/get-image-placeholder/<int:width>x<int:height>/",
+        "path_name": f"tools:{self.tool_id}-w-h",
+        "view": self.get_image_placeholder,
+        "description": "return an image with specific width and height and random color",
+        "method": "GET",
+        "params": {
+          "URL": [
+            {
+              "name": "width",
+              "default": 300,
+              "required": True,
+              "type": "number",
+              "description": "the width of the image in px"
+            },
+            {
+              "name": "height",
+              "default": 200,
+              "required": True,
+              "type": "number",
+              "description": "the height of the image in px"
+            }
+          ]
+        }
+      }),
+
+      Endpoint({
+        "path": "/get-image-placeholder/<int:width>x<int:height>/<str:color>/",
+        "path_name": f"tools:{self.tool_id}-w-h-color",
+        "view": self.get_image_placeholder,
+        "description": "return an image with specific width, height and color",
+        "method": "GET",
+        "params": {
+          "URL": [
+            {
+              "name": "width",
+              "default": 300,
+              "required": True,
+              "type": "number",
+              "description": "the width of the image in px"
+            },
+            {
+              "name": "height",
+              "default": 200,
+              "required": True,
+              "type": "number",
+              "description": "the height of the image in px"
+            },
+            {
+              "name": "color",
+              "default": "rgb(34,139,34)",
+              "required": True,
+              "type": "text",
+              "description": "the color of the image -- can be rgb, hex (without hashtag #) or known html colors"
+            }
+          ]
+        }
+      })
+
+    ]
+
 
 
 # class NAME(ToolAbstract):
@@ -194,6 +387,7 @@ class RequestHeaders(ToolAbstract):
 #   endpoints = None
 
 #   # views
+#   @require_http_methods_for_class(['GET'])
 
 #   def get_endpoints(self):
 #     self.endpoints = [
