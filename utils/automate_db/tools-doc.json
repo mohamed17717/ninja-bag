@@ -1,151 +1,4 @@
-{
-
-  "my machine analyzer": {
-    "description": "tell you how the server see your machine throw your useragent",
-    "category": [
-      "how server see you",
-      "network"
-    ],
-    "endpoints": [
-      {
-        "url": "/analyze-my-machine/",
-        "method": "GET"
-      }
-    ],
-    "type": "api",
-    "tool_id": "my-machine-analyzer-c7d9f145"
-  },
-  "user-agent analyzer": {
-    "description": "get all possible data about the machine using its user-agent",
-    "category": [
-      "how server see you",
-      "network"
-    ],
-    "endpoints": [
-      {
-        "url": "/analyze-user-agent/",
-        "method": "POST",
-        "dataType": "json",
-        "params": {
-          "POST": [
-            {
-              "name": "user-agent",
-              "default": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/74.0.3729.169 Safari/537.36",
-              "required": true,
-              "type": "text",
-              "description": "The user-agent you want to analyze"
-            }
-          ]
-        }
-      }
-    ],
-    "type": "api",
-    "tool_id": "user-agent-analyzer-283c7f0c"
-  },
-  "image placeholder": {
-    "description": "get a placeholder image with your wanted dimensions and color to set it in your page faster",
-    "category": [
-      "developer helper",
-      "image",
-      "frontend helper"
-    ],
-    "endpoints": [
-      {
-        "url": "/get-image-placeholder/{size}/",
-        "description": "return a square image with a specific size and a random color",
-        "method": "GET",
-        "params": {
-          "URL": [
-            {
-              "name": "size",
-              "default": 300,
-              "required": true,
-              "type": "number",
-              "description": "the size of the image's dimensions in px"
-            }
-          ]
-        }
-      },
-      {
-        "url": "/get-image-placeholder/{size}/{color}/",
-        "description": "return a square image with a specific width and color",
-        "method": "GET",
-        "params": {
-          "URL": [
-            {
-              "name": "size",
-              "default": 300,
-              "required": true,
-              "type": "number",
-              "description": "the size of the image's dimensions in px"
-            },
-            {
-              "name": "color",
-              "default": "rgb(34,139,34)",
-              "required": true,
-              "type": "text",
-              "description": "the color of the image -- can be rgb, hex (without hashtag #) or known html colors"
-            }
-          ]
-        }
-      },
-      {
-        "url": "/get-image-placeholder/{width}x{height}/",
-        "description": "return an image with specific width and height and random color",
-        "method": "GET",
-        "params": {
-          "URL": [
-            {
-              "name": "width",
-              "default": 300,
-              "required": true,
-              "type": "number",
-              "description": "the width of the image in px"
-            },
-            {
-              "name": "height",
-              "default": 200,
-              "required": true,
-              "type": "number",
-              "description": "the height of the image in px"
-            }
-          ]
-        }
-      },
-      {
-        "url": "/get-image-placeholder/{width}x{height}/{color}/",
-        "description": "return an image with specific width, height and color",
-        "method": "GET",
-        "params": {
-          "URL": [
-            {
-              "name": "width",
-              "default": 300,
-              "required": true,
-              "type": "number",
-              "description": "the width of the image in px"
-            },
-            {
-              "name": "height",
-              "default": 200,
-              "required": true,
-              "type": "number",
-              "description": "the height of the image in px"
-            },
-            {
-              "name": "color",
-              "default": "rgb(34,139,34)",
-              "required": true,
-              "type": "text",
-              "description": "the color of the image -- can be rgb, hex (without hashtag #) or known html colors"
-            }
-          ]
-        }
-      }
-    ],
-    "type": "api",
-    "tool_id": "image-placeholder-efcd1c9f"
-  },
+{ 
   "dynamic user avatar": {
     "description": "generate specific profile picture for every user using first letters of its name",
     "category": [
@@ -211,6 +64,9 @@
     "type": "api",
     "tool_id": "dynamic-user-avatar-f2c56c79"
   },
+
+
+
   "thumbnail generator": {
     "description": "convert image to thumbnail with custom width",
     "category": [
@@ -246,6 +102,8 @@
     "type": "api",
     "tool_id": "thumbnail-generator-3d46d981"
   },
+
+
   "image meta cleaner": {
     "description": "clean image from meta data to reduce its size and make it untraceable",
     "category": [
@@ -273,6 +131,8 @@
     "type": "api",
     "tool_id": "image-meta-cleaner-b4f8ebe7"
   },
+
+
   "image base64": {
     "description": "encode image to base64 string or decode",
     "category": [
@@ -319,6 +179,8 @@
     "type": "api",
     "tool_id": "image-base64-8024e8b9"
   },
+
+
   "qr-code generator": {
     "description": "convert any text into a qrcode",
     "category": [
@@ -346,6 +208,8 @@
     "type": "api",
     "tool_id": "qr-code-generator-71dcb25b"
   },
+
+
   "facebook user-id": {
     "description": "get the id of any facebook user",
     "category": [
@@ -374,6 +238,8 @@
     "type": "api",
     "tool_id": "facebook-user-id-90382721"
   },
+
+
   "cors proxy": {
     "description": "simple proxy give your js in the browser the ability to navigate the web, and avoid cors policy <br /><br /> Url Example: <b>/cors-proxy/?url=https://google.com/?q=coffee</b>",
     "category": [
@@ -403,6 +269,8 @@
     "type": "api",
     "tool_id": "cors-proxy-02b8fb50"
   },
+
+
   "unshorten url": {
     "description": "convert shorten url to the original one",
     "category": [
@@ -447,6 +315,8 @@
     "type": "api",
     "tool_id": "unshorten-url-e80801ea"
   },
+
+
   "text saver -- simple db": {
     "description": "work as a semi db, that save any text you post to the api. you can read it anytime. it can be used as a cdn also. <b>(token is required) to map saved content to your account</b>",
     "category": [
