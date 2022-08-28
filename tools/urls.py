@@ -8,13 +8,7 @@ from .loaders import load_tool_classes
 
 
 urlpatterns = [
-  path('analyze-my-machine/', views.analyze_my_machine_user_agent, name='analyze-my-machine'),
-  path('analyze-user-agent/', views.analyze_user_agent, name='analyze-user-agent'),
-
-  path('get-image-placeholder/<int:width>/', views.get_image_placeholder, name='get-image-placeholder5'),
-  path('get-image-placeholder/<int:width>/<str:color>/', views.get_image_placeholder, name='get-image-placeholder5'),
-  path('get-image-placeholder/<int:width>x<int:height>/', views.get_image_placeholder, name='get-image-placeholder1'),
-  path('get-image-placeholder/<int:width>x<int:height>/<str:color>/', views.get_image_placeholder, name='get-image-placeholder3'),
+  path('', views.nothing, name='tool-parent-path'),
 
   path('username-to-profile-pic/<int:size>/<str:username>/', views.convert_username_to_profile_pic, name='username-to-profile-pic1'),
   path('username-to-profile-pic/<int:size>/<str:username>/<str:color>/', views.convert_username_to_profile_pic, name='username-to-profile-pic2'),
@@ -49,6 +43,5 @@ urlpatterns = [
 ]
 
 for tool_class in load_tool_classes():
-  urlpatterns.extend(
-    tool_class().get_endpoints_paths(),
-  )
+  endpoints = tool_class().get_endpoints_paths()
+  urlpatterns.extend(endpoints)
