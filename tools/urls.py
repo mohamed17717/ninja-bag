@@ -10,32 +10,6 @@ from .loaders import load_tool_classes
 urlpatterns = [
   path('', views.nothing, name='tool-parent-path'),
 
-  path('username-to-profile-pic/<int:size>/<str:username>/', views.convert_username_to_profile_pic, name='username-to-profile-pic1'),
-  path('username-to-profile-pic/<int:size>/<str:username>/<str:color>/', views.convert_username_to_profile_pic, name='username-to-profile-pic2'),
-  
-  path('image-to-thumbnail/', views.convert_image_to_thumbnail, name='image-to-thumbnail'),
-
-  path('remove-image-meta-data/', views.remove_image_meta_data, name='remove-image-meta-data'),
-
-  path('image-to-b64/', views.convert_image_to_b64, name='image-to-b64'),
-  path('b64-to-image/', views.convert_b64_to_image, name='b64-to-image'),
-
-  path('gen-qrcode/', views.generate_qrcode, name='gen-qrcode'),
-
-  path('fb-user-id/', views.get_fb_user_id, name='fb-user-id'),
-
-  path('cors-proxy/', views.cors_proxy, name='cors-proxy'),
-
-  path('unshorten-url/', views.unshorten_url_wrapper(full_track=False), name='unshorten-url'),
-  path('unshorten-url/full-track/', views.unshorten_url_wrapper(full_track=True), name='unshorten-url'),
-
-  path('save-text/<str:file_name>/', views.TextSaverView.as_view, name='textsaver'),
-  path('save-text/', views.TextSaverView.add, name='textsaver-create'),
-  path('save-text/delete/<str:file_name>/', views.TextSaverView.delete, name='textsaver-delete'),
-  path('save-text/read/<str:file_name>/', views.TextSaverView.read, name='textsaver-read'),
-  path('save-text/read-text/<str:file_name>/', views.TextSaverView.read_text, name='textsaver-read-text'),
-  path('save-text/check-line-exist/<str:file_name>/', views.TextSaverView.check_line_exist, name='textsaver-check-line-exist'),
-
   # not described yet
   path('fhost/<str:file_name>/', views.get_fhost, name='fhost'),
   path('yt/audio/', views.convert_youtube_video_to_stream_audio, name='youtube-audio-stream'),
