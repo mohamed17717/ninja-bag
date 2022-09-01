@@ -842,7 +842,7 @@ class TextSaver(ToolAbstract):
 
   # views
   @require_http_methods_for_class(['POST'])
-  def add(self, request, file_name=None):
+  def add(self, request, filename=None):
     # get account
     acc = Account.objects.get_user_acc_from_api_or_web(request, required=True)
 
@@ -851,36 +851,36 @@ class TextSaver(ToolAbstract):
       # it a form
       text = '&'.join(['='.join(map(str, item)) for item in request.POST.dict().items()])
 
-    file_path = TextSaverModel.add(acc, text, file_name)
+    file_path = TextSaverModel.add(acc, text, filename)
     file_full_url = request.build_absolute_uri(file_path)
 
     return HttpResponse(file_full_url)
 
   @require_http_methods_for_class(['GET'])
-  def read(self, request, file_name):
+  def read(self, request, filename):
     acc = Account.objects.get_user_acc_from_api_or_web(request, required=True)
 
-    location = TextSaverModel.read(acc, file_name)
+    location = TextSaverModel.read(acc, filename)
 
     response = HttpResponse(open(location), content_type='application/text charset=utf-8')
-    response['Content-Disposition'] = f'attachment; filename="{file_name}"'
+    response['Content-Disposition'] = f'attachment; filename="{filename}"'
 
     return response
 
   @require_http_methods_for_class(['GET'])
-  def read_text(self, request, file_name):
+  def read_text(self, request, filename):
     acc = Account.objects.get_user_acc_from_api_or_web(request, required=True)
-    location = TextSaverModel.read(acc, file_name)
+    location = TextSaverModel.read(acc, filename)
 
     data = FileManager.read(location)
 
     return HttpResponse(data)
 
   @require_http_methods_for_class(['GET', 'DELETE'])
-  def delete(self, request, file_name):
+  def delete(self, request, filename):
     acc = Account.objects.get_user_acc_from_api_or_web(request, required=True)
 
-    delete_status = TextSaverModel.delete(acc, file_name)
+    delete_status = TextSaverModel.delete(acc, filename)
 
     response = HttpResponse() if delete_status else HttpResponseBadRequest('file is not exist') 
     if request.user.is_authenticated and request.method == 'GET':
@@ -889,11 +889,11 @@ class TextSaver(ToolAbstract):
 
   @require_http_methods_for_class(['POST'])
   @required_post_fields_for_class(['line'])
-  def check_line_exist(self, request, file_name):
+  def check_line_exist(self, request, filename):
     acc = Account.objects.get_user_acc_from_api_or_web(request, required=True)
 
     try:
-      location = TextSaverModel.read(acc, file_name)
+      location = TextSaverModel.read(acc, filename)
     except:
       return HttpResponse('Please make sure file name is exist.', status=400)
 
@@ -908,14 +908,14 @@ class TextSaver(ToolAbstract):
 
     return HttpResponse(f'Not Found', status=404)
 
-  def as_view(self, request, file_name):
+  def as_view(self, request, filename):
     views = {
       'POST': self.add,
       'GET': self.read,
       'DELETE': self.delete,
     }
     method = views.get(request.method)
-    return method(request, file_name)
+    return method(request, filename)
 
   def get_endpoints(self):
     self.endpoints = [
@@ -1008,7 +1008,7 @@ class TextSaver(ToolAbstract):
       }),
 
       Endpoint({
-        "path": "/save-text/read/{filename}/",
+        "path": "/save-text/read/<str:filename>/",
         "path_name": f"tools:{self.tool_id}-read",
         "view": self.read,
         "method": "GET",
