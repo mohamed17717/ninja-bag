@@ -2,10 +2,9 @@ from django.urls import path
 
 from tools import views
 
-app_name = 'tools'
-
 from .loaders import load_tool_classes
 
+app_name = 'tools'
 
 urlpatterns = [
   path('', views.nothing, name='tool-parent-path'),
