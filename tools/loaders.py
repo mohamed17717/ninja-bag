@@ -278,6 +278,13 @@ class ImagePlaceholder(ToolAbstract):
     return ImageResponse(image)
 
   def get_endpoints(self):
+    param_url_width = {
+      "name": "width",
+      "default": 300,
+      "required": True,
+      "type": "number",
+      "description": "the size of the image's dimensions in px"
+    }
     self.endpoints = [
       Endpoint({
         "path": "/get-image-placeholder/<int:width>/",
@@ -285,17 +292,7 @@ class ImagePlaceholder(ToolAbstract):
         "view": self.get_image_placeholder,
         "description": "return a square image with a specific size and a random color",
         "method": "GET",
-        "params": {
-          "URL": [
-            {
-              "name": "width",
-              "default": 300,
-              "required": True,
-              "type": "number",
-              "description": "the size of the image's dimensions in px"
-            }
-          ]
-        }
+        "params": { "URL": [ param_url_width ] }
       }),
 
       Endpoint({
@@ -306,13 +303,7 @@ class ImagePlaceholder(ToolAbstract):
         "method": "GET",
         "params": {
           "URL": [
-            {
-              "name": "width",
-              "default": 300,
-              "required": True,
-              "type": "number",
-              "description": "the size of the image's dimensions in px"
-            },
+            param_url_width,
             {
               "name": "color",
               "default": "rgb(34,139,34)",
@@ -404,6 +395,21 @@ class ImageUserAvatar(ToolAbstract):
     return ImageResponse(image)
 
   def get_endpoints(self):
+    param_url_size = {
+      "name": "size",
+      "default": 300,
+      "required": True,
+      "type": "number",
+      "description": "the size of the image's dimensions in px"
+    }
+    param_url_username = {
+      "name": "username",
+      "default": "John Doe",
+      "required": True,
+      "type": "text",
+      "description": "The name of the user -- just 2 names"
+    }
+
     self.endpoints = [
       Endpoint({
         "path": "/username-to-profile-pic/<int:size>/<str:username>/",
@@ -411,24 +417,7 @@ class ImageUserAvatar(ToolAbstract):
         "view": self.convert_username_to_profile_pic,
         "method": "GET",
         "description": "generate profile picture with specific size and random color using user's first letters",
-        "params": {
-          "URL": [
-            {
-              "name": "size",
-              "default": 300,
-              "required": True,
-              "type": "number",
-              "description": "the size of the image's dimensions in px"
-            },
-            {
-              "name": "username",
-              "default": "John Doe",
-              "required": True,
-              "type": "text",
-              "description": "The name of the user -- just 2 names"
-            }
-          ]
-        }
+        "params": { "URL": [ param_url_size, param_url_username ] }
       }),
 
       Endpoint({
@@ -439,20 +428,8 @@ class ImageUserAvatar(ToolAbstract):
         "description": "generate profile picture with specific size and color using user's first letters",
         "params": {
           "URL": [
-            {
-              "name": "size",
-              "default": 300,
-              "required": True,
-              "type": "number",
-              "description": "the size of the image's dimensions in px"
-            },
-            {
-              "name": "username",
-              "default": "John Doe",
-              "required": True,
-              "type": "text",
-              "description": "The name of the user -- just 2 names"
-            },
+            param_url_size,
+            param_url_username,
             {
               "name": "color",
               "default": "rgb(34,139,34)",
@@ -762,6 +739,7 @@ class CorsProxy(ToolAbstract):
 
 
 class UrlShortener(ToolAbstract):
+  # TODO create endpoint that shorten the url and db to save it
   name = 'url shortener'
   description = 'convert shorten url to the original one'
   categories = ["network"]
@@ -792,6 +770,14 @@ class UrlShortener(ToolAbstract):
     return JsonResponseOverride(track)
 
   def get_endpoints(self):
+    param_post_url = {
+      "name": "url",
+      "default": "https://bit.ly/3i4L5Uk",
+      "required": True,
+      "type": "text",
+      "description": "shorten url you wanna to unshorten it"
+    }
+
     self.endpoints = [
       Endpoint({
         "path": "/unshorten-url/",
@@ -800,17 +786,7 @@ class UrlShortener(ToolAbstract):
         "method": "POST",
         "description": "unpack the url and return the last destination",
         "dataType": "json",
-        "params": {
-          "POST": [
-            {
-              "name": "url",
-              "default": "https://bit.ly/3i4L5Uk",
-              "required": True,
-              "type": "text",
-              "description": "shorten url you wanna to unshorten it"
-            }
-          ]
-        }
+        "params": { "POST": [ param_post_url ] }
       }),
 
       Endpoint({
@@ -820,17 +796,7 @@ class UrlShortener(ToolAbstract):
         "method": "POST",
         "description": "unpack the url and return the all redirects till the destination",
         "dataType": "json",
-        "params": {
-          "POST": [
-            {
-              "name": "url",
-              "default": "https://bit.ly/3i4L5Uk",
-              "required": True,
-              "type": "text",
-              "description": "shorten url you wanna to unshorten it"
-            }
-          ]
-        }
+        "params": { "POST": [ param_post_url ] }
       })
 
     ]
@@ -923,6 +889,14 @@ class TextSaver(ToolAbstract):
     return method(request, filename)
 
   def get_endpoints(self):
+    param_url_filename = {
+      "name": "filename",
+      "default": "default_file.txt",
+      "required": True,
+      "type": "text",
+      "description": "the name of a file you want to work with"
+    }
+
     self.endpoints = [
       Endpoint({
         "path": "/save-text/",
@@ -942,17 +916,7 @@ class TextSaver(ToolAbstract):
         "description": "save any text post to this endpoint in your request body.<br>it creates/update the file with this name",
         "dataType": "text",
         "defaultText": "Try to post that example text.",
-        "params": {
-          "URL": [
-            {
-              "name": "filename",
-              "default": "default_file.txt",
-              "required": True,
-              "type": "text",
-              "description": "the name of a file you want to create|update"
-            }
-          ]
-        }
+        "params": { "URL": [ param_url_filename ] }
       }),
 
       Endpoint({
@@ -961,17 +925,7 @@ class TextSaver(ToolAbstract):
         "view": self.delete,
         "method": "GET",
         "description": "delete the unwanted file, using ite name",
-        "params": {
-          "URL": [
-            {
-              "name": "filename",
-              "default": "default_file.txt",
-              "required": True,
-              "type": "text",
-              "description": "the name of a file you want to delete"
-            }
-          ]
-        }
+        "params": { "URL": [ param_url_filename ] }
       }),
 
       Endpoint({
@@ -981,15 +935,7 @@ class TextSaver(ToolAbstract):
         "method": "DELETE",
         "description": "delete the unwanted file, using ite name",
         "params": {
-          "URL": [
-            {
-              "name": "filename",
-              "default": "default_file.txt",
-              "required": True,
-              "type": "text",
-              "description": "the name of a file you want to delete"
-            }
-          ]
+          "URL": [ param_url_filename ]
         }
       }),
 
@@ -1000,15 +946,7 @@ class TextSaver(ToolAbstract):
         "method": "DELETE",
         "description": "delete the unwanted file, using ite name",
         "params": {
-          "URL": [
-            {
-              "name": "filename",
-              "default": "default_file.txt",
-              "required": True,
-              "type": "text",
-              "description": "the name of a file you want to delete"
-            }
-          ]
+          "URL": [ param_url_filename ]
         }
       }),
 
@@ -1018,17 +956,7 @@ class TextSaver(ToolAbstract):
         "view": self.read,
         "method": "GET",
         "description": "read your file saved content",
-        "params": {
-          "URL": [
-            {
-              "name": "filename",
-              "default": "default_file.txt",
-              "required": True,
-              "type": "text",
-              "description": "the name of a file you want to read"
-            }
-          ]
-        }
+        "params": { "URL": [ param_url_filename ] }
       }),
 
       Endpoint({
@@ -1037,17 +965,7 @@ class TextSaver(ToolAbstract):
         "view": self.read_text,
         "method": "GET",
         "description": "read file and return its content as a text",
-        "params": {
-          "URL": [
-            {
-              "name": "filename",
-              "default": "default_file.txt",
-              "required": True,
-              "type": "text",
-              "description": "the name of a file you want to read"
-            }
-          ]
-        }
+        "params": { "URL": [ param_url_filename ] }
       }),
 
       Endpoint({
@@ -1056,17 +974,7 @@ class TextSaver(ToolAbstract):
         "view": self.as_view,
         "method": "GET",
         "description": "read your file saved content",
-        "params": {
-          "URL": [
-            {
-              "name": "filename",
-              "default": "default_file.txt",
-              "required": True,
-              "type": "text",
-              "description": "the name of a file you want to read"
-            }
-          ]
-        }
+        "params": { "URL": [ param_url_filename ] }
       }),
 
       Endpoint({
@@ -1077,15 +985,7 @@ class TextSaver(ToolAbstract):
         "description": "Check if there is a line in file <b>starts with</b> your text <br> it may used to check a record set from your form, etc...",
         "dataType": "json",
         "params": {
-          "URL": [
-            {
-              "name": "filename",
-              "default": "default_file.txt",
-              "required": True,
-              "type": "text",
-              "description": "the name of a file you want to create|update"
-            }
-          ],
+          "URL": [ param_url_filename ],
           "POST": [
             {
               "name": "line",
