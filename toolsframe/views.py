@@ -1,9 +1,9 @@
 from django.shortcuts import render
 from django.views import View
+from django.views.decorators.http import require_http_methods
 
 from .models import Tool
 
-from utils.decorators import require_http_methods
 from utils.views_mixins import GenerateDefaultContext
 from utils.mixins import FormSaveMixin
 from utils.helpers import Redirector
