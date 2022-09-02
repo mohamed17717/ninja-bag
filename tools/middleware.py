@@ -1,9 +1,7 @@
 import re
 
-from http.client import HTTPResponse
 from django.core.exceptions import PermissionDenied, BadRequest
 from django.shortcuts import get_object_or_404
-from django.http import HttpResponseBadRequest, HttpResponseServerError, HttpResponse
 from django.conf import settings
 
 from toolsframe.models import Tool

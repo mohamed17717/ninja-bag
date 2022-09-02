@@ -1,11 +1,12 @@
 from django.http import HttpResponse, HttpResponseBadRequest, HttpResponseForbidden
 from django.http import HttpResponse
+from django.views.decorators.http import require_http_methods
 
 from .models import FHostModel
 
 from utils.views_mixins import JsonResponseOverride
 from utils.mixins import ExtractPostRequestData
-from utils.decorators import require_http_methods, required_post_fields, function_nickname
+from utils.decorators import required_post_fields
 from utils.helpers import Redirector
 
 import youtube_dl
