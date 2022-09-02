@@ -2,18 +2,19 @@ from django.utils.text import slugify
 from django.http import HttpResponse, HttpResponseBadRequest
 from django.urls import path
 from django.shortcuts import resolve_url
+from django.utils.decorators import method_decorator
+from django.views.decorators.http import require_http_methods
 
 from abc import ABC, abstractmethod, abstractproperty
 from enum import Enum
 
-from utils.decorators import require_http_methods_for_class, required_post_fields_for_class
+from utils.decorators import required_post_fields
 from utils.views_mixins import JsonResponseOverride, ImageResponse
 from utils.mixins import ExtractPostRequestData
 from utils.helpers import FileManager, Redirector
 
-from .controller import RequestAnalyzerTools
+from .controller import RequestAnalyzerTools, ScrapingTools
 from .controller.ImageTools import MyImageHandler
-from .controller import ScrapingTools
 from .models import TextSaverModel
 
 from accounts.models import Account
@@ -73,6 +74,10 @@ class ToolAbstract(ABC):
   def tool_id(self) -> str:
     return slugify(self.name)
 
+  @property
+  def db_name(self) -> str:
+    return None
+
   @abstractproperty
   def endpoints(self) -> list: pass
 
@@ -129,7 +134,7 @@ class WhatsMyIp(ToolAbstract):
   endpoints = None
 
   # views
-  @require_http_methods_for_class(['GET'])
+  @method_decorator(require_http_methods(['GET']))
   def get_my_ip(self, request):
     ip = RequestAnalyzerTools.get_ip(request)
     return HttpResponse(ip)
@@ -155,7 +160,7 @@ class ProxyAnonymeter(ToolAbstract):
   endpoints = None
 
   # views
-  @require_http_methods_for_class(['GET'])
+  @method_decorator(require_http_methods(['GET']))
   def get_my_proxy_anonymity(self, request):
     anonymity = RequestAnalyzerTools.get_proxy_anonymity(request)
     return HttpResponse(anonymity)
@@ -206,15 +211,15 @@ class UserAgentAnalyzer(ToolAbstract):
   endpoints = None
 
   # views
-  @require_http_methods_for_class(['GET'])
+  @method_decorator(require_http_methods(['GET']))
   def analyze_my_machine_user_agent(self, request):
     ua = request.META['HTTP_USER_AGENT']
     ua_details = RequestAnalyzerTools.get_user_agent_details(ua)
 
     return JsonResponseOverride(ua_details)
 
-  @require_http_methods_for_class(['POST'])
-  @required_post_fields_for_class(['user-agent'])
+  @method_decorator(require_http_methods(['POST']))
+  @method_decorator(required_post_fields(['user-agent']))
   def analyze_user_agent(self, request):
     post_data = ExtractPostRequestData(request)
     ua = post_data.get('user-agent')
@@ -263,7 +268,7 @@ class ImagePlaceholder(ToolAbstract):
   endpoints = None
 
   # views
-  @require_http_methods_for_class(['GET'])
+  @method_decorator(require_http_methods(['GET']))
   def get_image_placeholder(self, request, width, height=None, color=None):
     color = MyImageHandler.handle_color(color)
     height = height or width
@@ -391,7 +396,7 @@ class ImageUserAvatar(ToolAbstract):
   endpoints = None
 
   # views
-  @require_http_methods_for_class(['GET'])
+  @method_decorator(require_http_methods(['GET']))
   def convert_username_to_profile_pic(self, request, size, username, color=None):
     color = MyImageHandler.handle_color(color)
     image = MyImageHandler.generate_avatar_image(size, username, color)
@@ -472,8 +477,8 @@ class ImageThumbnail(ToolAbstract):
   endpoints = None
 
   # views
-  @require_http_methods_for_class(['POST'])
-  @required_post_fields_for_class(['image'])
+  @method_decorator(require_http_methods(['POST']))
+  @method_decorator(required_post_fields(['image']))
   def convert_image_to_thumbnail(self, request):
     image_file = request.FILES.get('image')
     new_width = int(request.POST.get('width') or 128)
@@ -522,8 +527,8 @@ class ImageMetaData(ToolAbstract):
   endpoints = None
 
   # views
-  @require_http_methods_for_class(['POST'])
-  @required_post_fields_for_class(['image'])
+  @method_decorator(require_http_methods(['POST']))
+  @method_decorator(required_post_fields(['image']))
   def remove_image_meta_data(self, request):
     image_file = request.FILES.get('image')
 
@@ -564,8 +569,8 @@ class ImageBase64(ToolAbstract):
   endpoints = None
 
   # views
-  @require_http_methods_for_class(['POST'])
-  @required_post_fields_for_class(['image'])
+  @method_decorator(require_http_methods(['POST']))
+  @method_decorator(required_post_fields(['image']))
   def convert_image_to_b64(self, request):
     image_file = request.FILES.get('image')
 
@@ -573,8 +578,8 @@ class ImageBase64(ToolAbstract):
 
     return HttpResponse(b64)
 
-  @require_http_methods_for_class(['POST'])
-  @required_post_fields_for_class(['image'])
+  @method_decorator(require_http_methods(['POST']))
+  @method_decorator(required_post_fields(['image']))
   def convert_b64_to_image(self, request):
     post_data = ExtractPostRequestData(request)
     image_b64 = post_data.get('image')
@@ -637,8 +642,8 @@ class ImageQrCode(ToolAbstract):
   endpoints = None
 
   # views
-  @require_http_methods_for_class(['POST'])
-  @required_post_fields_for_class(['text'])
+  @method_decorator(require_http_methods(['POST']))
+  @method_decorator(required_post_fields(['text']))
   def generate_qrcode(self, request):
     post_data = ExtractPostRequestData(request)
     string = post_data.get('text')
@@ -681,8 +686,8 @@ class Facebook(ToolAbstract):
   endpoints = None
 
   # views
-  @require_http_methods_for_class(['POST'])
-  @required_post_fields_for_class(['url'])
+  @method_decorator(require_http_methods(['POST']))
+  @method_decorator(required_post_fields(['url']))
   def get_fb_user_id(self, request):
     post_data = ExtractPostRequestData(request)
     acc_url = post_data.get('url')
@@ -766,8 +771,8 @@ class UrlShortener(ToolAbstract):
   endpoints = None
 
   # views
-  @require_http_methods_for_class(['POST'])
-  @required_post_fields_for_class(['url'])
+  @method_decorator(require_http_methods(['POST']))
+  @method_decorator(required_post_fields(['url']))
   def unshorten_url(self, request):
     post_data = ExtractPostRequestData(request)
     shortened_url = post_data.get('url')
@@ -776,8 +781,8 @@ class UrlShortener(ToolAbstract):
 
     return HttpResponse(track[-1])
 
-  @require_http_methods_for_class(['POST'])
-  @required_post_fields_for_class(['url'])
+  @method_decorator(require_http_methods(['POST']))
+  @method_decorator(required_post_fields(['url']))
   def unshorten_url_track(self, request):
     post_data = ExtractPostRequestData(request)
     shortened_url = post_data.get('url')
@@ -841,7 +846,7 @@ class TextSaver(ToolAbstract):
   endpoints = None
 
   # views
-  @require_http_methods_for_class(['POST'])
+  @method_decorator(require_http_methods(['POST']))
   def add(self, request, filename=None):
     # get account
     acc = Account.objects.get_user_acc_from_api_or_web(request, required=True)
@@ -856,7 +861,7 @@ class TextSaver(ToolAbstract):
 
     return HttpResponse(file_full_url)
 
-  @require_http_methods_for_class(['GET'])
+  @method_decorator(require_http_methods(['GET']))
   def read(self, request, filename):
     acc = Account.objects.get_user_acc_from_api_or_web(request, required=True)
 
@@ -867,7 +872,7 @@ class TextSaver(ToolAbstract):
 
     return response
 
-  @require_http_methods_for_class(['GET'])
+  @method_decorator(require_http_methods(['GET']))
   def read_text(self, request, filename):
     acc = Account.objects.get_user_acc_from_api_or_web(request, required=True)
     location = TextSaverModel.read(acc, filename)
@@ -876,7 +881,7 @@ class TextSaver(ToolAbstract):
 
     return HttpResponse(data)
 
-  @require_http_methods_for_class(['GET', 'DELETE'])
+  @method_decorator(require_http_methods(['GET', 'DELETE']))
   def delete(self, request, filename):
     acc = Account.objects.get_user_acc_from_api_or_web(request, required=True)
 
@@ -887,8 +892,8 @@ class TextSaver(ToolAbstract):
       response = Redirector.go_previous_page(request)
     return response
 
-  @require_http_methods_for_class(['POST'])
-  @required_post_fields_for_class(['line'])
+  @method_decorator(require_http_methods(['POST']))
+  @method_decorator(required_post_fields(['line']))
   def check_line_exist(self, request, filename):
     acc = Account.objects.get_user_acc_from_api_or_web(request, required=True)
 
@@ -1108,7 +1113,7 @@ class TextSaver(ToolAbstract):
 #   endpoints = None
 
 #   # views
-#   @require_http_methods_for_class(['GET'])
+#   @method_decorator(require_http_methods(['GET']))
 
 #   def get_endpoints(self):
 #     self.endpoints = [
