@@ -20,7 +20,7 @@ class UpcomingToolManager(models.Manager):
 
 class ToolQuerySet(models.QuerySet):
   def get_tools_that_has_db(self):
-    return self.filter(tool_db__isnull=False).select_related('tool_db')
+    return self.filter(has_db=True)
 
   def get_tools_that_has_db_for_aside_section(self, user):
     # tools that user has records in && flag tell if there is new record
