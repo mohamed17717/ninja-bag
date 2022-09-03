@@ -1,7 +1,8 @@
+import importlib
 from django.utils.text import slugify
 from django.http import HttpResponse, HttpResponseBadRequest
 from django.urls import path
-from django.shortcuts import resolve_url
+from django.shortcuts import resolve_url, get_object_or_404
 from django.utils.decorators import method_decorator
 from django.views.decorators.http import require_http_methods
 
@@ -75,8 +76,15 @@ class ToolAbstract(ABC):
     return slugify(self.name)
 
   @property
-  def db_name(self) -> str:
+  def db_table_path(self) -> str:
     return None
+
+  def get_db_table(self):
+    if self.db_table_path:
+      module_path, class_name = self.db_table_path.rsplit('.', 1)
+      module = importlib.import_module(module_path)
+      cls = getattr(module, class_name)
+      return cls
 
   @abstractproperty
   def endpoints(self) -> list: pass
@@ -107,7 +115,9 @@ class ToolAbstract(ABC):
       'description': self.description,
       'app_type': self.access_type,
       'endpoints': self.get_endpoints_docs(),
-      'login_required': self.login_required
+      'login_required': self.login_required,
+      'manager_class': self.get_import_path(),
+      'has_db': bool(self.db_table_path)
     }
     tool, created = models.Tool.objects.get_or_create(
       tool_id=self.tool_id, defaults=obj_fields
@@ -122,7 +132,15 @@ class ToolAbstract(ABC):
       category, created = models.Category.objects.get_or_create(name=category_name)
       tool.category.add(category)
 
+  def get_db_record(self):
+    from toolsframe import models
 
+    tool = get_object_or_404(models.Tool, tool_id=self.tool_id)
+    return tool
+
+  def get_import_path(self):
+    cls = self.__class__
+    return f'{cls.__module__}.{cls.__name__}'
 
 class WhatsMyIp(ToolAbstract):
   name = 'what is my ip ?'
@@ -810,6 +828,7 @@ class TextSaver(ToolAbstract):
   login_required = True
   active = True
   endpoints = None
+  db_table_path = 'tools.models.TextSaverModel'
 
   # views
   @method_decorator(require_http_methods(['POST']))
