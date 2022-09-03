@@ -20,7 +20,6 @@ class WebRequest(models.Model):
   post = models.TextField(blank=True,null=True)
   raw_post = models.TextField(blank=True,null=True)
   is_secure = models.BooleanField()
-  is_ajax = models.BooleanField()
   user = models.ForeignKey(User,blank=True,null=True, on_delete=models.DO_NOTHING)
 
   def __str__(self) -> str:

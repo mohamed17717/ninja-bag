@@ -20,10 +20,10 @@
   <body>
     {% include 'components/loading-page.html' %}
 
-    <div id="api">
+    <div id="api" class="flex flex-col min-h-screen">
       {% include 'components/header.html' %}
 
-      <div class="content flex justify-evenly items-start flex-col md:flex-row">
+      <div class="content flex justify-evenly items-start flex-col md:flex-row grow w-full">
         <main class="flex-grow pr-5 pb-10 w-full">
           {% include 'tool-components/tool-info.html' %}
 

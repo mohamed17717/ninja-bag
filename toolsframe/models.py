@@ -1,10 +1,9 @@
+import importlib
 from django.db import models
 from django.urls import reverse
 from django.contrib.auth import get_user_model
 from django.utils.text import slugify
-from jsonfield import JSONField
 
-from utils.helpers import dynamic_import
 from utils import emoji
 from utils.mixins import OptimizeImageField
 
@@ -12,7 +11,6 @@ import secrets
 
 from .managers import  (
   UpcomingToolManager,
-  ToolViewsFunctionsManager,
   ToolManager
 )
 
@@ -45,12 +43,14 @@ class Tool(models.Model):
   logo = models.ImageField(upload_to='tool_logo', blank=True, null=True)
   description = models.TextField(blank=True, null=True) # SEO && after title
   url_reverser = models.CharField(max_length=64, default='toolsframe:tool') # 'app_name:home'
-  endpoints = JSONField(blank=True, null=True)
+  endpoints = models.JSONField(blank=True, null=True)
+  manager_class = models.CharField(max_length=64, blank=True, null=True)
 
   category = models.ManyToManyField(Category, related_name='category_tools')
 
   login_required = models.BooleanField(default=False)
   active = models.BooleanField(default=True, db_index=True)
+  has_db = models.BooleanField(default=False)
 
   uses_count = models.IntegerField(default=0)
   views_count = models.IntegerField(default=0)
@@ -85,23 +85,25 @@ class Tool(models.Model):
 
     return url
 
+  def get_manager_instance(self):
+    module_path, class_name = self.manager_class.rsplit('.', 1)
+    module = importlib.import_module(module_path)
+    cls = getattr(module, class_name)
+    return cls()
+
   @property
   def db_class(self):
-    db_obj = getattr(self, 'tool_db', None)
-    db_name = db_obj and db_obj.name
-
-    db_class = None
-    if db_name:
-      db_class = dynamic_import(f'tools.models.{db_name}')
-
-    return db_class
+    manager_instance = self.get_manager_instance()
+    db = manager_instance.get_db_table()
+    return db
 
   def get_db_records(self, user):
     db = self.db_class
     return db and db.list_all(user) or []
 
   def increase_uses_count(self):
-    return Tool.objects.increase_uses_count(self.pk)
+    self.uses_count += 1
+    self.save()
 
 
 class UpcomingTool(models.Model):
@@ -165,27 +167,3 @@ class ToolIssueReport(models.Model):
     return f'{self.pk} - {username} {username} ({description}) {status}'
 
 
-# handle (tool record) in database and (tool views and models)
-class ToolViewsFunctions(models.Model):
-  name = models.CharField(max_length=120, unique=True)
-  tool = models.ForeignKey(Tool, on_delete=models.SET_NULL, related_name='tool_views',blank=True, null=True)
-
-  created = models.DateField(auto_now_add=True)
-  updated = models.DateField(auto_now=True)
-
-  objects = ToolViewsFunctionsManager()
-
-  def __str__(self):
-    tool_status = emoji.HAPPY if self.tool else emoji.SAD
-    return f'{self.name} {tool_status}'
-
-class ToolDatabaseClass(models.Model):
-  name = models.CharField(max_length=120, unique=True)
-  tool = models.OneToOneField(Tool, on_delete=models.SET_NULL, related_name='tool_db', blank=True, null=True)
-
-  created = models.DateField(auto_now_add=True)
-  updated = models.DateField(auto_now=True)
-
-  def __str__(self):
-    tool_status = emoji.HAPPY if self.tool else emoji.SAD
-    return f'{self.name} {tool_status}'

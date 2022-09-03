@@ -5,12 +5,21 @@ from django.views.generic.base import TemplateView
 
 from .models import Tool
 
-from utils.decorators import require_http_methods
 from utils.views_mixins import GenerateDefaultContext
 from utils.mixins import FormSaveMixin
 from utils.helpers import Redirector
 
 from .forms import ToolIssueReportForm, SuggestToolForm
+
+from tools.loaders import load_tool_classes
+from django.http import HttpResponse
+
+
+def refresh_tools(request):
+  for tool_class in load_tool_classes():
+    tool_class().store_in_db()
+  return HttpResponse('<h1>Tools refreshed</h1>')
+
 
 
 @require_http_methods(['GET'])

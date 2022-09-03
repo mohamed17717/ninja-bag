@@ -18,27 +18,9 @@ class UpcomingToolManager(models.Manager):
 
 # ------------------------------------------------------------- #
 
-class ToolViewsFunctionsQuerySet(models.QuerySet):
-  def get_active(self):
-    return self.filter(active=True)
-
-  def reverse_view_func_to_tool(self, func):
-    view_obj = self.filter(name=func.__name__).first()
-    tool = view_obj and view_obj.tool
-    return tool
-
-class ToolViewsFunctionsManager(models.Manager):
-  def get_queryset(self):
-    return ToolViewsFunctionsQuerySet(model=self.model, using=self._db, hints=self._hints)
-
-  def reverse_view_func_to_tool(self, func):
-    return self.get_queryset().reverse_view_func_to_tool(func)
-
-# ------------------------------------------------------------- #
-
 class ToolQuerySet(models.QuerySet):
   def get_tools_that_has_db(self):
-    return self.filter(tool_db__isnull=False).select_related('tool_db')
+    return self.filter(has_db=True)
 
   def get_tools_that_has_db_for_aside_section(self, user):
     # tools that user has records in && flag tell if there is new record

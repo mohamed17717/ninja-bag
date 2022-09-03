@@ -51,7 +51,8 @@ MIDDLEWARE = [
   'social_django.middleware.SocialAuthExceptionMiddleware',
   'app.middleware.WebRequestMiddleware',
   'app.middleware.RequestBodyToDataMiddleware',
-  'debug_toolbar.middleware.DebugToolbarMiddleware'
+  'tools.middleware.ToolMiddleware',
+  'debug_toolbar.middleware.DebugToolbarMiddleware',
 ]
 
 ROOT_URLCONF = 'dj.urls'
@@ -83,6 +84,8 @@ DATABASES = {
     'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
   }
 }
+
+DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 AUTH_PASSWORD_VALIDATORS = [
   {'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator', },

@@ -22,10 +22,10 @@ class TextSaverModel(models.Model):
   objects = ToolDatabaseManager()
 
   def get_absolute_url_read(self):
-    return reverse('tools:textsaver-read', kwargs={'file_name': self.file_name})
+    return reverse(f'tools:text-saver-simple-db-read', kwargs={'filename': self.file_name})
 
   def get_absolute_url_delete(self):
-    return reverse('tools:textsaver-delete', kwargs={'file_name': self.file_name})
+    return reverse(f'tools:text-saver-simple-db-delete', kwargs={'filename': self.file_name})
 
   # handler methods
   @staticmethod
@@ -36,12 +36,12 @@ class TextSaverModel(models.Model):
 
   @staticmethod
   def get_file_path(file_name):
-    path = reverse('tools:textsaver-read', kwargs={'file_name': file_name})
+    path = reverse('tools:text-saver-simple-db-read', kwargs={'filename': file_name})
     return path
 
   @staticmethod
   def get_delete_path(file_name):
-    path = reverse('tools:textsaver-delete', kwargs={'file_name': file_name})
+    path = reverse('tools:text-saver-simple-db-delete', kwargs={'filename': file_name})
     return path
 
   @staticmethod
@@ -118,3 +118,4 @@ class FHostModel(models.Model):
 
   def __str__(self):
     return self.file_name
+

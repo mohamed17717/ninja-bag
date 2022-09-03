@@ -5,9 +5,7 @@ from .models import (
   Tool,
   UpcomingTool,
   SuggestedTool,
-  ToolIssueReport,
-  ToolViewsFunctions,
-  ToolDatabaseClass
+  ToolIssueReport
 )
 
 admin.site.register(Category)
@@ -15,6 +13,3 @@ admin.site.register(Tool)
 admin.site.register(UpcomingTool)
 admin.site.register(SuggestedTool)
 admin.site.register(ToolIssueReport)
-
-admin.site.register(ToolViewsFunctions)
-admin.site.register(ToolDatabaseClass)

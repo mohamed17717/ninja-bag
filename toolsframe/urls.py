@@ -1,10 +1,12 @@
 from django.urls import path
 
-from .views import index, get_tool_page, SuggestTool, ReportToolIssue, toggle_color_mode, PrivacyPolicyView
+from .views import index, get_tool_page, SuggestTool, ReportToolIssue, toggle_color_mode, refresh_tools, PrivacyPolicyView
 
 app_name = 'toolsframe'
 
 urlpatterns = [
+  path('refresh/', refresh_tools, name='xxx'),
+
   path('', index, name='homepage'),
   path('privacy-policy/', PrivacyPolicyView.as_view(), name='privacy_policy'),
 

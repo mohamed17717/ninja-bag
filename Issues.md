@@ -6,6 +6,8 @@
 - [ ] also validate file size in general
 - [ ] file-server tool -> create new endpoint to list possible files
 
+- [ ] tool uses count and views count doesn't change
+
 ## NEW TOOLS
 
 - [ ] tool return image meta
