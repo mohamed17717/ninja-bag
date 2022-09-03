@@ -1,5 +1,7 @@
 from django.shortcuts import render
 from django.views import View
+from django.views.decorators.http import require_http_methods
+from django.views.generic.base import TemplateView
 
 from .models import Tool
 
@@ -68,3 +70,9 @@ class ReportToolIssue(FormSaveMixin, View):
       obj.user = request.user
     return obj
 
+
+
+
+
+class PrivacyPolicyView(TemplateView):
+  template_name = "privacy_policy.html"
