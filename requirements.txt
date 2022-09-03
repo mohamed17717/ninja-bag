@@ -25,6 +25,7 @@ pyparsing==2.4.7
 pytest==6.2.4
 pytest-django==4.4.0
 python-dateutil==2.8.1
+python-dotenv==0.20.0
 python3-openid==3.2.0
 pytube @ git+https://github.com/pytube/pytube@2e307d8d615ef30aa837fe2275954146dab07ca6
 pytz==2020.4
