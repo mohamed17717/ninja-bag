@@ -99,14 +99,6 @@ class FileManager:
     return dirs
 
 
-def dynamic_import(name):
-  components = name.split('.')
-  mod = __import__(components[0])
-  for comp in components[1:]:
-    mod = getattr(mod, comp)
-  return mod
-
-
 class SizeCalculator:
   def convert_size(self, size, unit):
     """ Take size in bits convert it in whatever unit """
