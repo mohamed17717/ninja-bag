@@ -23,11 +23,14 @@ class ToolMiddleware(object):
     path = request.path
     tool_path_pattern = r'/t/[\w-]+'
     if re.match(tool_path_pattern, path):
-      tool_id = view_func.__self__.tool_id
-      tool = get_object_or_404(Tool, tool_id=tool_id)
+      try:
+        tool_id = view_func.__self__.tool_id
+        tool = get_object_or_404(Tool, tool_id=tool_id)
 
-      # check tool activity
-      if tool.active is False:
-        raise PermissionDenied('You can\'t access this tool.' )
+        # check tool activity
+        if tool.active is False:
+          raise PermissionDenied('You can\'t access this tool.' )
 
-      tool.increase_uses_count()
+        tool.increase_uses_count()
+      except AttributeError as e:
+        pass
