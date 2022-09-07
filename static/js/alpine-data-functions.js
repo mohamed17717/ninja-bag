@@ -288,10 +288,11 @@ function getFooterData() {
   return {
     year: new Date().getFullYear(),
     author: "Mohamed Mahmoud",
-    email: "mo.err17@gmail.com",
+    email: "d3v.mhmd@gmail.com",
+    url: 'https://devmhmd.com',
 
     getAuthor() {
-      return `<b><a href="mailto:${this.email}" target="_blank">${this.author}</a></b>`;
+      return `<b><a href="mailto:${this.url}" target="_blank">${this.author}</a></b>`;
     },
 
     getPhrase() {
