@@ -110,5 +110,4 @@ media/
 *.pid
 
 # css
-static/css/*
 deploy-todo.txt
