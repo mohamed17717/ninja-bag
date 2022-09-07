@@ -11,7 +11,7 @@ as an example
 
 ## Live Demo
 
-I hope you give a look on my [ninja-bag](https://ninja-bag.site) and give me a feedback in **_suggest box_** 🤓
+I hope you give a look on my [ninja-bag](https://ninja-bag.devmhmd.com) and give me a feedback in **_suggest box_** 🤓
 
 ### server info
 
