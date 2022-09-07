@@ -5,7 +5,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<link rel="stylesheet" media="screen" href="{% if request %}{{request.scheme}}://{{request.META.HTTP_HOST}}{% else %}http://ninja-bag.site{% endif %}{% static 'css/all-style.css' %}">
+<link rel="stylesheet" media="screen" href="{% if request %}{{request.scheme}}://{{request.META.HTTP_HOST}}{% else %}http://ninja-bag.devmhmd.com{% endif %}{% static 'css/all-style.css' %}">
 
 {% if is_light_mode %}
 <link rel="stylesheet" media="screen" href="{{request.scheme}}://{{request.META.HTTP_HOST}}{% static 'css/light-mode.min.css.css' %}">
