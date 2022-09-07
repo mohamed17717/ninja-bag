@@ -10,7 +10,7 @@ from utils.decorators import required_post_fields
 from utils.helpers import Redirector
 
 import youtube_dl
-from pytube import YouTube
+from pytube import YouTube, extract
 
 import urllib.parse
 
@@ -51,6 +51,16 @@ def convert_youtube_video_to_stream_audio(request):
   post_data = ExtractPostRequestData(request)
   video_url = post_data.get('video_url')
 
+  # Override class to do different behavior
+  class YouTubeCustom(YouTube):
+    def __init__(self, url, generate_url=lambda url: url, *args, **kwargs):
+      self.video_id = extract.video_id(url)
+
+      self.watch_url = generate_url(f"https://youtube.com/watch?v={self.video_id}")
+      self.embed_url =generate_url(f"https://www.youtube.com/embed/{self.video_id}")
+
+      super().__init__(url, *args, **kwargs)
+
   def generate_url_with_proxy(url):
     base_url = "https://api.webscrapingapi.com/v1"
 
@@ -79,7 +89,7 @@ def convert_youtube_video_to_stream_audio(request):
     return audio_url
 
   def convert_video_url_to_audio_url_method2(video_url) -> str:
-    yt = YouTube(video_url, generate_url_with_proxy=generate_url_with_proxy)
+    yt = YouTubeCustom(video_url, generate_url=generate_url_with_proxy)
     stream = yt.streams.get_audio_only()
     data = yt.vid_info['videoDetails']
 
